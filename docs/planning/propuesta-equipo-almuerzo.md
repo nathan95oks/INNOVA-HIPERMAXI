@@ -78,8 +78,14 @@ Cuando un caso supera las capacidades del agente, deriva al área de soporte hum
 | 🟠 EP-05 | Integración con el Portal Web | Conectar el widget y el agente al portal existente de Hipermaxi | EP-03, EP-04 |
 | 🔴 EP-06 | Derivación a Soporte Humano | Escalar casos complejos con trazabilidad | EP-03 |
 | ⚫ EP-07 | Trazabilidad e historial | Registro de todas las interacciones | EP-03 |
+| 🟤 EP-08 | Costos de Implementación | Estimación de costos reales de infraestructura, LLM y desarrollo | EP-03, EP-05 |
+| 🔶 EP-09 | Modelo de Negocio | Propuesta de valor, monetización y sostenibilidad de la solución | EP-01 (propuesta confirmada) |
 
 **Nota sobre EP-07:** Prioridad baja para el MVP. Suficiente con demostrar el concepto en el pitch.
+
+**Nota sobre EP-08:** Se desbloquea una vez que el desarrollo técnico esté definido (stack, LLM elegido, arquitectura). Permite presentar números reales al jurado.
+
+**Nota sobre EP-09:** Se desbloquea una vez confirmada la propuesta de solución. No depende del desarrollo; puede avanzar en paralelo desde Diego.
 
 ---
 
@@ -142,13 +148,75 @@ Estructura del pitch para el jurado (5 minutos).
 
 ---
 
+## EP-08 — Costos de Implementación
+
+**Estado:** 🔒 Bloqueado — Se desbloquea al completar EP-03 y EP-05 (stack definido + integración técnica confirmada)
+
+**Responsable:** Luis / Nathanael (infra) + Diego (presentación)
+
+**Objetivo:** Estimar los costos reales de operar la solución para que el pitch tenga números concretos y creíbles ante el jurado.
+
+### Dimensiones a estimar
+
+**Infraestructura cloud**
+- Hosting del backend / API del agente (ej. Railway, Render, AWS Lambda)
+- Base de datos vectorial para la base de conocimiento (ej. Pinecone, Weaviate, Supabase pgvector)
+- Almacenamiento de logs e historial de conversaciones
+
+**Plataforma IA / LLM**
+- Costo por token (input + output) según el modelo elegido
+- Estimación de volumen mensual de consultas (ej. X proveedores × Y consultas/mes)
+- Comparativa de costos: Claude API vs OpenAI vs modelo open-source hosteado
+
+**Desarrollo e integración**
+- Horas estimadas de desarrollo para la integración con el portal existente
+- Costo de mantenimiento mensual (actualizaciones de SOPs, ajustes del agente)
+
+**Entregable:** tabla de costos con escenario mínimo (MVP), escenario medio (operación real año 1) y escenario de escala (red completa de proveedores Hipermaxi).
+
+---
+
+## EP-09 — Modelo de Negocio
+
+**Estado:** 🔒 Bloqueado — Se desbloquea al confirmar la propuesta de solución (EP-01 completado)
+
+**Responsable:** Diego
+
+**Objetivo:** Definir cómo la solución genera valor sostenible para Hipermaxi y qué propuesta presentar al jurado más allá del MVP técnico.
+
+### Componentes a definir
+
+**Propuesta de valor**
+- Para Hipermaxi: reducción de carga operativa en soporte, trazabilidad, formalización de canales
+- Para el proveedor: autoservicio 24/7, resolución inmediata, menos fricción con el portal
+
+**Modelo de entrega**
+- Opción A — Solución interna: Hipermaxi contrata el desarrollo e integra el agente al portal como producto propio
+- Opción B — SaaS vertical: la solución se comercializa como producto para otras cadenas de retail/supermercados en Bolivia y la región
+- Opción C — Licencia + implementación: venta de la solución base con customización por cliente
+
+**Métricas de impacto para el pitch**
+- % estimado de reducción de consultas manuales (WhatsApp / llamadas)
+- Tiempo promedio de resolución actual vs con el agente
+- ROI estimado para Hipermaxi (horas de soporte ahorradas × costo hora)
+
+**Escalabilidad**
+- Replicabilidad del modelo a otros módulos del portal (ej. logística, devoluciones)
+- Expansión a otros proveedores / otras empresas del grupo
+
+**Entregable:** sección de modelo de negocio lista para incluir en el pitch de 5 minutos, con 1–2 slides de impacto y sostenibilidad.
+
+---
+
 ## Preguntas para confirmar en el almuerzo
 
-1. **¿Las 7 épicas propuestas cubren el alcance del MVP?** ¿Falta alguna? ¿Sobra alguna para las 48 horas?
+1. **¿Las 9 épicas propuestas cubren el alcance del MVP?** ¿Falta alguna? ¿Sobra alguna para las 48 horas?
 2. **EP-07 Trazabilidad** — ¿la dejamos como concepto en el pitch o intentamos implementarla?
-3. **Plataforma IA** — ¿ya tienen una decisión sobre qué LLM usar? (define EP-02 y EP-03)
+3. **Plataforma IA** — ¿ya tienen una decisión sobre qué LLM usar? (define EP-02 y EP-03, y desbloquea EP-08)
 4. **Stack propio** — ¿Luis y Nathanael tienen ya una propuesta después del Bloque 1?
 5. **Integración con el portal** — ¿el equipo de Hipermaxi puede darnos acceso o documentación técnica del portal?
+6. **EP-08 Costos** — ¿Luis/Nathanael pueden estimar costos de infra una vez elegido el stack? ¿Cuándo queda desbloqueado?
+7. **EP-09 Modelo de negocio** — ¿Diego puede avanzar esto en paralelo al desarrollo técnico del Bloque 2?
 
 ---
 
