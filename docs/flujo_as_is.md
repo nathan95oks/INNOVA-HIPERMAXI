@@ -2,182 +2,236 @@
 
 > **Proyecto:** Asistente Virtual de Soporte — Portal de Proveedores Hipermaxi  
 > **Sprint:** EP-01 · Subtask S02  
-> **Basado en:** SOP-SR-01, SOP-SR-02, SOP-SR-03, SOP-04, SOP-05, SOP-06
+> **Basado en:** SOP-SR-01, SOP-SR-02, SOP-SR-03, SOP-04, SOP-05, SOP-06  
+> **Versión:** 2.0 — diagramas separados, fricciones con reprocesos documentados
 
 ---
 
-## S1 — Actores y canales actuales
+## S1 — Mapeo de actores y canales actuales
 
-| Actor | Rol | Canales actuales | Fricción |
-|---|---|---|---|
-| **Proveedor** (Encargado HUB / Sistemas) | Solicitante | WhatsApp, correo, llamada | Sin trazabilidad |
-| **Soporte Hipermaxi** | Área técnica interna | WhatsApp +591 78401543, teléfono, soporteti@ | Canal informal como principal |
-| **Área de Compras** | Validación comercial | soportehub@, Excel manual | Proceso opaco para el proveedor |
-| **Sistema GLPI** | Gestión de tickets | Registro manual por Soporte | Sin notificaciones automáticas |
+| Actor | Rol en el proceso | Canales actuales | Tipo de canal | Fricción asociada |
+|---|---|---|---|---|
+| **Proveedor** (Enc. HUB / Sistemas / Comercial) | Solicitante y operador del portal | WhatsApp, correo electrónico, llamada telefónica | Informal + formal | Sin trazabilidad en canales informales |
+| **Soporte Hipermaxi** | Atención técnica y orientación | WhatsApp +591 78401543, teléfono corporativo, soporteti@hipermaxi.com | Informal predominante | Canal informal usado como principal |
+| **Área de Compras** | Validación comercial y aprobación | soportehub@hipermaxi.com, Excel de registro manual | Formal pero manual | Proceso opaco para el proveedor |
+| **Área de Facturación** | Habilitación de OC para facturar | Contacto directo con el proveedor | Informal | No hay notificación automática al proveedor |
+| **Comprador asignado** | Resolución de casos AVD con error | WhatsApp, llamada directa | Informal | Sin registro del incidente |
+| **Sistema GLPI** | Gestión de tickets de soporte | Registro manual por Soporte | Interno | Sin visibilidad para el proveedor |
 
 ---
 
 ## S2 — AS-IS: Solicitud de credenciales (SOP-SR-01)
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph PROVEEDOR
         A([Proveedor necesita\nacceso al portal])
-        C[Envía correo a\nsoportehub@ con Excel]
-        E[Completa Excel\ny reenvía]
-        H[Recibe credenciales\nen correo HUB]
+        C[Envía correo a\nsoportehub@ con datos]
+        E[Completa Excel\ncon información]
+        F[Reenvía Excel\ncompleto]
+        J[Recibe credenciales\nen correo HUB]
+        K([Confirma acceso\nal portal])
     end
 
-    subgraph SOPORTE
-        B[Informa canal formal\nWhatsApp / llamada]
-        G[Crea credenciales\ny envía al HUB]
+    subgraph SOPORTE["SOPORTE (+591 78401543)"]
+        B["Atiende contacto\n(WhatsApp / llamada)\n⚠ canal informal"]
+        H[Crea cuenta y\ncredenciales en sistema]
+        I[Envía credenciales\nal encargado HUB]
+        L[Registra ticket\nen GLPI manual]
     end
 
-    subgraph COMPRAS
+    subgraph COMPRAS["ÁREA DE COMPRAS (soportehub@)"]
         D[Recibe correo y\nenvía plantilla Excel]
-        F[Valida info y aprueba\nDeriva a Soporte]
+        G{Información\ncompleta?}
+        G2[Aprueba y deriva\na Soporte por soporteti@]
     end
 
-    subgraph GLPI
-        I[(Ticket registrado\nmanualmente)]
-    end
-
-    A -- "WhatsApp / llamada\n⚠ canal informal" --> B
-    B --> C
-    C -- "⚠ sin confirmación\nde recepción" --> D
+    A -- "⚠ No sabe el proceso\nllama por WhatsApp" --> B
+    B -- "Indica correo\nformal" --> C
+    C -- "⚠ Sin confirmación\nde recepción" --> D
     D --> E
-    E -- "⚠ Excel propenso\na errores" --> F
+    E --> F
     F --> G
-    G --> H
-    G --> I
+    G -- "No: datos\nincompletos\n⚠ REPROCESO" --> E
+    G -- Sí --> G2
+    G2 --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
 ```
 
-**Puntos de fricción identificados:**
-- ⚠ F1 — El proveedor contacta por WhatsApp/llamada antes de saber el proceso formal
-- ⚠ F2 — No hay confirmación automática de recepción del correo
-- ⚠ F3 — El Excel manual es propenso a errores y genera rechazos
-- ⚠ F6 — El estado del ticket no es visible para el proveedor
+**Puntos de fricción — SOP-SR-01:**
+
+| # | Fricción | Paso donde ocurre | Reproceso generado | Impacto |
+|---|---|---|---|---|
+| F1 | Proveedor no sabe el proceso formal y usa WhatsApp | Paso inicial | Llamada + redirección al correo formal | Alto |
+| F2 | Sin confirmación de recepción del correo a soportehub | Envío del correo | El proveedor llama para verificar si llegó | Alto |
+| F3 | Excel con datos incompletos — solicitud devuelta | Validación de Compras | Completar y reenviar el Excel (1–3 días extra) | Alto |
+| F6 | Sin visibilidad del estado del ticket en GLPI | Todo el proceso | El proveedor llama a Soporte para saber en qué paso está | Medio |
 
 ---
 
 ## S3 — AS-IS: Carga de factura (SOP-05)
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph PROVEEDOR
-        A([Tiene OC aprobada\ny quiere facturar])
-        C["Llama a Soporte\n(WhatsApp)\n⚠ canal informal"]
-        E[Intenta cargar\nfactura PDF]
-        G[Corrige factura\ny reintenta]
+        A([Proveedor tiene OC\naprobada y quiere facturar])
+        C["Contacta Soporte\npor WhatsApp / llamada\n⚠ canal informal"]
+        E[Intenta cargar\nfactura PDF en el portal]
+        G["Corrige factura\n(monto, formato, datos)"]
+        I([Factura registrada\ncorrectamente])
     end
 
-    subgraph PORTAL_WEB
-        B{¿OC habilitada\npor Facturación?}
-        F{¿Factura\nsin observaciones?}
-        H([Factura registrada\ncorrectamente])
+    subgraph PORTAL["PORTAL WEB — MÓDULO OC"]
+        B{"¿OC habilitada\npor Facturación?"}
+        F{"¿Factura sin\nobservaciones?"}
     end
 
-    subgraph SOPORTE
-        D[Explica que Facturación\ndebe habilitar primero]
+    subgraph SOPORTE["SOPORTE"]
+        D["Explica que Facturación\ndebe habilitar la OC\n⚠ información que debería\nestar en el portal"]
+    end
+
+    subgraph FACTURACION["ÁREA DE FACTURACIÓN"]
+        H[Habilita la OC\npara facturación]
     end
 
     A --> B
-    B -- "No\n⚠ botón invisible\nsin contexto" --> C
+    B -- "No: botón invisible\n⚠ Proveedor cree que\nes error del sistema" --> C
     C --> D
-    D --> A
+    D -- "Indica que contacte\na Facturación" --> H
+    H -- "Notificación no\nautomática ⚠" --> A
     B -- Sí --> E
     E --> F
-    F -- "Observada\n⚠ reproceso" --> G
+    F -- "Observada:\nmonto / precio /\nproducto no coincide\n⚠ REPROCESO" --> G
     G --> E
-    F -- OK --> H
+    F -- OK --> I
 ```
 
-**Puntos de fricción identificados:**
-- ⚠ F4 — El botón de factura no aparece sin contexto: el proveedor cree que es un error del sistema
-- ⚠ F2 — La consulta se resuelve por WhatsApp, sin registro
-- ⚠ Reproceso — Si la factura tiene observaciones, el proveedor debe corregir y reintentar sin guía clara
+**Puntos de fricción — SOP-05:**
+
+| # | Fricción | Paso donde ocurre | Reproceso generado | Impacto |
+|---|---|---|---|---|
+| F4a | Botón de factura invisible — proveedor cree que es error del sistema | Intento de carga | Llamada a Soporte + explicación + contacto a Facturación (2–3 días) | Alto |
+| F4b | Sin notificación automática cuando la OC queda habilitada | Habilitación por Facturación | Proveedor debe volver a intentar manualmente sin saber cuándo | Alto |
+| F4c | Factura observada sin guía clara de corrección | Validación del portal | Corregir factura y volver a cargar (1–2 intentos adicionales) | Medio |
+| F2 | Consulta resuelta por WhatsApp sin registro | Contacto a Soporte | Sin trazabilidad de la interacción | Alto |
 
 ---
 
 ## S4 — AS-IS: Aviso de Despacho (SOP-06)
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph PROVEEDOR
-        A([Tiene OC y necesita\nregistrar despacho])
-        B[Crea Aviso de\nDespacho en portal]
-        C[Confirma el AVD]
-        E["Llama a Soporte\n(WhatsApp / teléfono)"]
-        G[Contacta a su\ncomprador asignado]
+        A([Proveedor tiene OC\ny necesita registrar despacho])
+        B[Crea Aviso de\nDespacho en el portal]
+        C{Revisa cantidades\ny montos antes\nde confirmar?}
+        D["Confirma el AVD\n⚠ SIN ADVERTENCIA\nde irreversibilidad"]
+        F["Detecta el error\ndespués de confirmar"]
+        G["Contacta a Soporte\npor WhatsApp / llamada\n⚠ canal informal"]
+        L([Caso resuelto:\nnueva OC o corrección\ncon días de demora])
     end
 
-    subgraph PORTAL_WEB
-        D{AVD confirmado\n= bloqueado}
+    subgraph PORTAL["PORTAL WEB — AVD"]
+        E{"Estado AVD:\nCONFIRMADO\n= bloqueado para edición"}
     end
 
-    subgraph COMPRAS
-        H[Compras evalúa\nla situación]
-        I([Define acción:\nnueva OC o corrección])
+    subgraph SOPORTE["SOPORTE"]
+        H["Explica restricción:\nAVD confirmado no\npuede editarse"]
+        I["Indica que contacte\nal comprador asignado\n⚠ fuera del portal"]
+    end
+
+    subgraph COMPRAS["COMPRADOR ASIGNADO"]
+        J[Evalúa el caso\nfuera del portal]
+        K{¿Solución posible?}
+        K2[Genera nueva OC\no gestiona corrección]
     end
 
     A --> B
     B --> C
-    C --> D
-    D -- "Error detectado\n⚠ no se puede editar\nsin advertencia previa" --> E
-    E --> G
+    C -- "Frecuentemente NO\n⚠ proveedores nuevos" --> D
+    C -- Sí --> D
+    D --> E
+    E -- "Error detectado\npost-confirmación" --> F
+    F --> G
     G --> H
     H --> I
+    I -- "⚠ Proceso se mueve\nfuera del portal\nsin trazabilidad" --> J
+    J --> K
+    K -- Sí --> K2
+    K2 --> L
+    K -- "No: caso complejo" --> L
 ```
 
-**Puntos de fricción identificados:**
-- ⚠ F5 — El sistema confirma el AVD sin advertencia de irreversibilidad
-- ⚠ F5 — Un AVD con error obliga al proveedor a contactar a su comprador por fuera del portal
-- ⚠ F2 — La resolución pasa por WhatsApp/llamada sin trazabilidad
+**Puntos de fricción — SOP-06:**
+
+| # | Fricción | Paso donde ocurre | Reproceso generado | Impacto |
+|---|---|---|---|---|
+| F5a | Sistema confirma AVD sin advertencia de irreversibilidad | Confirmación del AVD | Error no prevenible — obliga a gestión externa | Alto |
+| F5b | AVD con error obliga al proveedor a salir del portal | Post-confirmación | Llamada a Soporte + derivación a comprador (1–5 días) | Alto |
+| F5c | Resolución del error AVD ocurre fuera del portal | Gestión con comprador | Sin trazabilidad del incidente en el sistema | Alto |
+| F2 | Toda la gestión del error va por WhatsApp / llamada | Contacto a Soporte | Sin registro auditable de la incidencia | Alto |
 
 ---
 
-## S5 — Consolidado de puntos de fricción
+## S5 — Consolidado de puntos de fricción y reprocesos
 
 ```mermaid
-flowchart TD
-    subgraph FRICCION_ALTA["⚠ Impacto Alto"]
-        F1["F1 · Sin confirmación de recepción\nProveedor no sabe si su correo llegó"]
-        F2["F2 · Canal informal como principal\nWhatsApp y llamadas sin trazabilidad"]
-        F4["F4 · Botón de factura sin contexto\nProveedor cree que es error del sistema"]
-        F5["F5 · AVD irreversible sin advertencia\nError no prevenible desde el portal"]
+flowchart LR
+    subgraph FRICCIONES_ALTAS["⚠ Fricciones de impacto alto"]
+        F1["F1 · Proceso desconocido\nProveedor usa WhatsApp\nantes de saber el canal formal\nSOPs: SR-01, SR-02, SR-03"]
+        F2["F2 · Canales informales\ncomo canal principal\nWhatsApp y llamadas sin trazabilidad\nSOPs: Todos"]
+        F4["F4 · Botón de factura\ninvisible sin contexto\nProveedor cree que es error del sistema\nSOP: 05"]
+        F5["F5 · AVD irreversible\nsin advertencia previa\nError post-confirmación sin solución en portal\nSOP: 06"]
     end
 
-    subgraph FRICCION_MEDIA["⚡ Impacto Medio"]
-        F3["F3 · Excel manual propenso a errores\nRechazos por datos incompletos"]
-        F6["F6 · Estado de solicitud opaco\nSin visibilidad del avance del ticket"]
+    subgraph FRICCIONES_MEDIAS["⚡ Fricciones de impacto medio"]
+        F3["F3 · Excel manual\npropenso a errores\nRechazos por datos incompletos\nSOPs: SR-01, SR-02"]
+        F6["F6 · Estado de solicitud\nopaco para el proveedor\nSin visibilidad del avance del ticket\nSOPs: SR-01, SR-02, SR-03"]
     end
 
-    subgraph SOLUCION["✅ Lo que resuelve el Agente IA"]
-        R1["Confirma recepción en tiempo real"]
-        R2["Centraliza todas las consultas con registro"]
-        R3["Valida campos antes de enviar"]
-        R4["Explica el estado del botón con contexto"]
-        R5["Alerta antes de confirmar el AVD"]
-        R6["Muestra estado del ticket en cualquier momento"]
+    subgraph REPROCESOS["📋 Reprocesos documentados"]
+        R1["R1 · 1–3 días extra\npor Excel incompleto"]
+        R2["R2 · 2–3 días extra\npor OC no habilitada"]
+        R3["R3 · 1–5 días extra\npor error en AVD"]
+        R4["R4 · Llamadas repetidas\npor falta de estado visible"]
     end
 
-    F1 --> R1
-    F2 --> R2
-    F3 --> R3
-    F4 --> R4
-    F5 --> R5
-    F6 --> R6
+    subgraph SOLUCION_IA["✅ Solución del Agente IA"]
+        S1["Guía del proceso formal\ndesde el primer contacto"]
+        S2["Canal centralizado\ncon trazabilidad completa"]
+        S3["Validación de campos\nantes de enviar"]
+        S4["Contexto del botón\nde factura en tiempo real"]
+        S5["Alerta obligatoria\nantes de confirmar AVD"]
+        S6["Dashboard de estado\nen tiempo real"]
+    end
+
+    F1 --> S1
+    F2 --> S2
+    F3 --> S3
+    F4 --> S4
+    F5 --> S5
+    F6 --> S6
+
+    F3 --> R1
+    F4 --> R2
+    F5 --> R3
+    F6 --> R4
 ```
 
 ---
 
-## Resumen ejecutivo
+## S6 — Tabla resumen ejecutivo completa
 
-| # | Fricción | Proceso | Impacto | Solución IA |
-|---|---|---|---|---|
-| F1 | Sin confirmación de recepción de correo | SR-01, SR-02, SR-03 | Alto | Confirmación en tiempo real |
-| F2 | WhatsApp/llamadas como canal principal | Todos | Alto | Canal centralizado con trazabilidad |
-| F3 | Excel manual propenso a errores | SR-01, SR-02 | Medio | Formulario guiado con validación |
-| F4 | Botón de factura invisible sin contexto | SOP-05 | Alto | Explicación contextual en el portal |
-| F5 | AVD irreversible sin advertencia previa | SOP-06 | Alto | Alerta de confirmación obligatoria |
-| F6 | Estado del ticket opaco | SR-01 a SR-03 | Medio | Dashboard de estado en tiempo real |
+| # | Fricción | SOP(s) | Actor afectado | Reproceso generado | Días extra aprox. | Impacto | Solución IA |
+|---|---|---|---|---|---|---|---|
+| F1 | Proveedor desconoce el proceso formal — usa WhatsApp primero | SR-01, SR-02, SR-03 | Proveedor HUB / Comercial | Llamada + redirección al canal formal | 0–1 día | Alto | Guía del proceso desde el primer contacto |
+| F2 | WhatsApp y llamadas como canal principal — sin trazabilidad | Todos | Proveedor / Soporte | Sin registro auditable de la interacción | Variable | Alto | Canal centralizado con historial |
+| F3 | Excel manual con datos incompletos — solicitud rechazada | SR-01, SR-02 | Proveedor Comercial | Completar y reenviar el Excel | 1–3 días | Alto | Formulario guiado con validación en tiempo real |
+| F4a | Botón de factura invisible sin contexto para el proveedor | SOP-05 | Proveedor HUB | Llamada a Soporte + esperar habilitación por Facturación | 2–3 días | Alto | Explicación contextual + derivación a Facturación con un clic |
+| F4b | Sin notificación cuando la OC queda habilitada para facturar | SOP-05 | Proveedor HUB | Reintentar manualmente sin saber cuándo | 1–2 días | Alto | Notificación automática al proveedor |
+| F5a | AVD confirmado sin advertencia de irreversibilidad | SOP-06 | Proveedor HUB | Error no prevenible — gestión externa | 1–5 días | Alto | Alerta obligatoria antes de confirmar |
+| F5b | Resolución del error AVD ocurre fuera del portal | SOP-06 | Proveedor / Soporte / Compras | Llamada + derivación al comprador asignado | 1–5 días | Alto | Registro del incidente + derivación trazable |
+| F6 | Estado del ticket opaco — el proveedor no sabe en qué paso está | SR-01, SR-02, SR-03 | Proveedor HUB / Comercial | Llamadas repetidas a Soporte para saber el estado | 0–1 día | Medio | Dashboard de estado en tiempo real |
