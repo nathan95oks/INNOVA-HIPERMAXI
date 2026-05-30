@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Personas — Hipermaxi Portal de Proveedores</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --border: #E2E0D8;
+    --border-strong: #C8C5BB;
+    --text-primary: #1A1A18;
+    --text-secondary: #6B6A64;
+    --text-muted: #9B9A94;
+    --purple-light: #EEEDFE;
+    --purple-mid: #7F77DD;
+    --purple-dark: #3C3489;
+    --blue-light: #E6F1FB;
+    --blue-mid: #378ADD;
+    --blue-dark: #0C447C;
+    --teal-light: #E1F5EE;
+    --teal-mid: #1D9E75;
+    --teal-dark: #085041;
+    --coral-light: #FAECE7;
+    --coral-mid: #D85A30;
+    --coral-dark: #712B13;
+    --amber-light: #FAEEDA;
+    --amber-mid: #BA7517;
+    --amber-dark: #633806;
+    --green-light: #EAF3DE;
+    --green-mid: #639922;
+    --green-dark: #27500A;
+    --gray-light: #F1EFE8;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  /* ── DOC HEADER ─────────────────────────────────────────────────────────── */
+  .doc-header {
+    background: var(--text-primary);
+    color: #F7F6F2;
+    padding: 48px 64px 40px;
+    border-bottom: 3px solid var(--purple-mid);
+  }
+  .doc-header .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #9B9A94;
+    letter-spacing: .08em;
+    margin-bottom: 16px;
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .doc-header h1 {
+    font-size: 32px; font-weight: 600; letter-spacing: -.02em;
+    margin-bottom: 8px; color: #F7F6F2;
+  }
+  .doc-header p {
+    font-size: 15px; color: #9B9A94; max-width: 640px;
+  }
+  .doc-header .sop-refs {
+    margin-top: 20px; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .sop-pill {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 500;
+    padding: 4px 10px; border-radius: 4px;
+    background: #2C2C2A; color: #9B9A94;
+    border: 1px solid #444441;
+  }
+
+  /* ── LAYOUT ─────────────────────────────────────────────────────────────── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 48px 64px; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .persona-block { margin-bottom: 64px; }
+
+  /* ── PERSONA HEADER ──────────────────────────────────────────────────────── */
+  .persona-header {
+    display: flex; align-items: flex-start; gap: 24px;
+    padding: 28px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 16px;
+  }
+  .persona-header.primary { border-left: 4px solid var(--purple-mid); }
+  .persona-header.secondary { border-left: 4px solid var(--blue-mid); }
+
+  .avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 600; flex-shrink: 0;
+  }
+  .avatar.p1 { background: var(--purple-light); color: var(--purple-dark); }
+  .avatar.p2 { background: var(--blue-light); color: var(--blue-dark); }
+
+  .persona-info h2 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .persona-info .role { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .tag-purple { background: var(--purple-light); color: var(--purple-dark); }
+  .tag-blue   { background: var(--blue-light);   color: var(--blue-dark); }
+  .tag-teal   { background: var(--teal-light);   color: var(--teal-dark); }
+  .tag-amber  { background: var(--amber-light);  color: var(--amber-dark); }
+  .tag-green  { background: var(--green-light);  color: var(--green-dark); }
+
+  /* ── METRICS ROW ─────────────────────────────────────────────────────────── */
+  .metrics {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-bottom: 16px;
+  }
+  .metric {
+    background: var(--gray-light);
+    border-radius: var(--radius-md); padding: 14px 16px;
+    text-align: center;
+  }
+  .metric .val { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+  .metric .lbl { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* ── QUOTE ───────────────────────────────────────────────────────────────── */
+  .quote {
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
+    font-style: italic;
+    font-size: 13px; line-height: 1.7;
+  }
+  .quote.p1 { background: var(--purple-light); border-left: 3px solid var(--purple-mid); color: var(--purple-dark); }
+  .quote.p2 { background: var(--blue-light);   border-left: 3px solid var(--blue-mid);   color: var(--blue-dark); }
+  .quote .author {
+    font-style: normal; font-size: 10px; font-family: var(--mono);
+    margin-top: 8px; opacity: .75;
+  }
+
+  /* ── GRID 4 CARDS ────────────────────────────────────────────────────────── */
+  .grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+  .info-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 18px 20px;
+  }
+  .info-card.teal  { background: var(--teal-light);  border-color: #5DCAA5; }
+  .info-card.coral { background: var(--coral-light); border-color: #F0997B; }
+  .info-card.green { background: var(--green-light); border-color: #97C459; }
+  .info-card.blue  { background: var(--blue-light);  border-color: #85B7EB; }
+
+  .info-card h3 {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .info-card ul { list-style: none; }
+  .info-card ul li {
+    font-size: 13px; line-height: 1.55;
+    padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,.06);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .info-card ul li:last-child { border-bottom: none; }
+
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 5px;
+  }
+
+  /* SOP reference inline */
+  .sop-ref {
+    font-family: var(--mono);
+    font-size: 9px; font-weight: 500;
+    padding: 1px 6px; border-radius: 3px;
+    background: #E2E0D8; color: var(--text-secondary);
+    margin-left: 4px; white-space: nowrap;
+    vertical-align: middle;
+  }
+  .sop-ref.high { background: #FAECE7; color: var(--coral-dark); }
+
+  /* ── SCENARIO ────────────────────────────────────────────────────────────── */
+  .scenario {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 18px 20px; margin-bottom: 16px;
+  }
+  .scenario h3 {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 500; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;
+  }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .step {
+    background: var(--gray-light); border-radius: var(--radius-sm);
+    padding: 12px;
+  }
+  .step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; margin-bottom: 8px;
+    color: #fff;
+  }
+  .step-num.p1 { background: var(--purple-dark); }
+  .step-num.p2 { background: var(--blue-dark); }
+  .step p { font-size: 12px; line-height: 1.5; color: var(--text-primary); margin-bottom: 4px; }
+  .step .emo { font-size: 11px; color: var(--text-secondary); }
+
+  /* ── DIFF STRIP ──────────────────────────────────────────────────────────── */
+  .diff-strip {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 20px; margin-bottom: 16px;
+  }
+  .diff-strip h3 {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .diff-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .diff-item {
+    font-size: 12px; color: var(--text-secondary);
+    padding: 4px 10px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 20px;
+  }
+
+  /* ── COMPARISON TABLE ────────────────────────────────────────────────────── */
+  .comparison {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 64px;
+  }
+  .comparison h2 {
+    font-size: 16px; font-weight: 600; padding: 20px 24px 0;
+    margin-bottom: 4px;
+  }
+  .comparison .sub { font-size: 12px; color: var(--text-secondary); padding: 0 24px 16px; }
+  .comparison table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .comparison thead th {
+    background: var(--gray-light);
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--text-muted);
+    padding: 10px 16px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .comparison tbody tr { border-bottom: 1px solid var(--border); }
+  .comparison tbody tr:last-child { border-bottom: none; }
+  .comparison tbody td { padding: 12px 16px; vertical-align: top; }
+  .comparison tbody td:first-child { color: var(--text-secondary); font-weight: 500; width: 180px; }
+
+  /* ── DIVIDER ─────────────────────────────────────────────────────────────── */
+  .divider {
+    height: 1px; background: var(--border);
+    margin: 48px 0;
+  }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────────────── */
+  .doc-footer {
+    background: var(--text-primary); color: #6B6A64;
+    padding: 24px 64px; font-family: var(--mono); font-size: 11px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 24px; }
+    .doc-header { padding: 32px 24px; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .grid4 { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .doc-footer { padding: 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── DOC HEADER ─────────────────────────────────────────────────────────── -->
+<header class="doc-header">
+  <div class="meta">
+    <span>PROYECTO: HIPERMAXI INNOVA HACK 2026</span>
+    <span>ENTREGABLE: EP-01 · USER PERSONAS</span>
+    <span>VERSIÓN: 1.1</span>
+  </div>
+  <h1>User Personas</h1>
+  <p>Perfiles de usuario del Portal Web de Proveedores de Hipermaxi, con mapa de necesidades y frustraciones vinculado a SOPs.</p>
+  <div class="sop-refs">
+    <span class="sop-pill">SOP-SR-01 · Credenciales</span>
+    <span class="sop-pill">SOP-SR-02 · Activación Código</span>
+    <span class="sop-pill">SOP-SR-03 · Reenvío Credenciales</span>
+    <span class="sop-pill">SOP-04 · Carga de Productos</span>
+    <span class="sop-pill">SOP-05 · Facturación OC</span>
+    <span class="sop-pill">SOP-06 · Aviso de Despacho</span>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PERSONA 1                                                              -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="persona-block">
+    <div class="section-label">Persona principal · 1 de 2</div>
+
+    <div class="persona-header primary">
+      <div class="avatar p1">CM</div>
+      <div class="persona-info">
+        <h2>Carlos Medina</h2>
+        <p class="role">Encargado HUB — Operador principal del portal · Receptor de credenciales</p>
+        <div class="tags">
+          <span class="tag tag-purple">Usuario principal del portal</span>
+          <span class="tag tag-teal">Receptor de credenciales (SOP-SR-01)</span>
+          <span class="tag tag-amber">Experiencia técnica: media-baja</span>
+          <span class="tag tag-purple">Zona: Santa Cruz / Cochabamba</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="val">38</div><div class="lbl">Años aprox.</div></div>
+      <div class="metric"><div class="val">3–5</div><div class="lbl">OC operadas al mes</div></div>
+      <div class="metric"><div class="val">~60%</div><div class="lbl">Consultas por WhatsApp</div></div>
+      <div class="metric"><div class="val">2+ h</div><div class="lbl">Perdidas por incidencia</div></div>
+    </div>
+
+    <div class="quote p1">
+      "Mando el correo al soporte, pero nunca sé si lo recibieron. A veces llamo al WhatsApp y me dicen que espere, y ya se me pasa el plazo de la factura."
+      <div class="author">— Frase representativa · SOP-05 / SOP-SR-01</div>
+    </div>
+
+    <div class="grid4">
+
+      <div class="info-card teal">
+        <h3>🎯 Objetivos</h3>
+        <ul>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Acceder al portal sin depender de soporte <span class="sop-ref">SOP-SR-01</span></span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Cargar facturas correctamente a tiempo <span class="sop-ref">SOP-05</span></span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Registrar productos en el catálogo sin errores <span class="sop-ref">SOP-04</span></span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Gestionar AVDs sin cometer errores irreversibles <span class="sop-ref">SOP-06</span></span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Obtener respuestas rápidas sin llamar ni esperar</span></li>
+        </ul>
+      </div>
+
+      <div class="info-card coral">
+        <h3>😞 Frustraciones</h3>
+        <ul>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>No sabe si su correo fue recibido por Compras <span class="sop-ref high">SOP-SR-01</span></span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>El botón de factura no aparece y no entiende por qué <span class="sop-ref high">SOP-05</span></span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>Confirma el AVD con error y ya no puede editarlo <span class="sop-ref high">SOP-06</span></span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>No sabe qué campos son obligatorios en los formularios <span class="sop-ref high">SOP-04</span></span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>Usa WhatsApp porque no tiene otra opción accesible <span class="sop-ref high">Todos</span></span></li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="border-color: #AFA9EC; background: #EEEDFE;">
+        <h3>📱 Comportamientos</h3>
+        <ul>
+          <li><span class="dot" style="background:#7F77DD"></span>
+            <span>Prefiere resolver solo antes de llamar a soporte</span></li>
+          <li><span class="dot" style="background:#7F77DD"></span>
+            <span>Accede al portal desde la computadora de oficina</span></li>
+          <li><span class="dot" style="background:#7F77DD"></span>
+            <span>Toma capturas de pantalla cuando algo falla</span></li>
+          <li><span class="dot" style="background:#7F77DD"></span>
+            <span>Repite pasos a prueba y error sin guía clara</span></li>
+          <li><span class="dot" style="background:#7F77DD"></span>
+            <span>WhatsApp es su canal principal de consulta <span class="sop-ref">SOP-SR-01</span></span></li>
+        </ul>
+      </div>
+
+      <div class="info-card blue">
+        <h3>✨ Necesidades del sistema</h3>
+        <ul>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Confirmación de recepción de solicitudes en tiempo real <span class="sop-ref">SOP-SR-01</span></span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Guía paso a paso para cargar factura PDF <span class="sop-ref">SOP-05</span></span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Alerta antes de confirmar AVD: acción irreversible <span class="sop-ref">SOP-06</span></span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Indicador de campos obligatorios en formularios <span class="sop-ref">SOP-04</span></span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Escalado claro a humano cuando no pueda resolverse</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="scenario">
+      <h3>Escenario típico de uso</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num p1">1</div>
+          <p>Intenta cargar factura — no ve el botón en el formulario de OC</p>
+          <p class="emo">Confusión: cree que es error del sistema · <span style="font-family:monospace;font-size:10px">SOP-05</span></p>
+        </div>
+        <div class="step">
+          <div class="step-num p1">2</div>
+          <p>Escribe al WhatsApp de soporte (+591 78401543) y espera 30–60 min</p>
+          <p class="emo">Frustración: tiene un plazo que cumplir</p>
+        </div>
+        <div class="step">
+          <div class="step-num p1">3</div>
+          <p>Soporte explica que Facturación debe habilitar primero la OC</p>
+          <p class="emo">Alivio parcial: no sabía que existía ese paso</p>
+        </div>
+        <div class="step">
+          <div class="step-num p1">4</div>
+          <p>Contacta a Facturación por separado y repite el proceso días después</p>
+          <p class="emo">Desgaste: el proceso es demasiado manual</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PERSONA 2                                                              -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="persona-block">
+    <div class="section-label">Persona secundaria · 2 de 2</div>
+
+    <div class="persona-header secondary">
+      <div class="avatar p2">LV</div>
+      <div class="persona-info">
+        <h2>Lucía Vargas</h2>
+        <p class="role">Encargada Comercial / Ventas — Acceso limitado al portal · Rol de apoyo en procesos de habilitación</p>
+        <div class="tags">
+          <span class="tag tag-blue">Acceso limitado al portal</span>
+          <span class="tag tag-green">Rol: validación y coordinación</span>
+          <span class="tag tag-amber">Experiencia técnica: baja</span>
+          <span class="tag tag-blue">Empresa PYME proveedora</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="val">41</div><div class="lbl">Años aprox.</div></div>
+      <div class="metric"><div class="val">1–2</div><div class="lbl">Procesos de habilitación al mes</div></div>
+      <div class="metric"><div class="val">0</div><div class="lbl">Accesos directos al portal</div></div>
+      <div class="metric"><div class="val">+3 días</div><div class="lbl">Espera por activación de código</div></div>
+    </div>
+
+    <div class="quote p2">
+      "Yo doy los datos que me piden para el Excel, pero después no sé qué pasó con eso. A veces me llama el encargado HUB para pedirme que reenvíe algo y yo ni sé de qué proceso es."
+      <div class="author">— Frase representativa · SOP-SR-02 / SOP-SR-01</div>
+    </div>
+
+    <div class="grid4">
+
+      <div class="info-card teal">
+        <h3>🎯 Objetivos</h3>
+        <ul>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Saber qué datos exactos necesita aportar en cada proceso <span class="sop-ref">SOP-SR-01</span></span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Conocer el estado de activación del código proveedor <span class="sop-ref">SOP-SR-02</span></span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Coordinar con el HUB sin repetir información innecesaria</span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Tener acceso a los manuales sin depender de soporte <span class="sop-ref">SOP-04</span></span></li>
+          <li><span class="dot" style="background:#1D9E75"></span>
+            <span>Recibir confirmación cuando su parte del proceso esté completa</span></li>
+        </ul>
+      </div>
+
+      <div class="info-card coral">
+        <h3>😞 Frustraciones</h3>
+        <ul>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>No sabe qué información exacta debe aportar al Excel <span class="sop-ref high">SOP-SR-01</span></span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>Nunca sabe en qué estado está el proceso de activación <span class="sop-ref high">SOP-SR-02</span></span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>La información le llega de segunda mano a través del HUB</span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>No tiene acceso a guías ni procedimientos del portal <span class="sop-ref high">SOP-04</span></span></li>
+          <li><span class="dot" style="background:#D85A30"></span>
+            <span>Cuando hay una corrección, el proceso vuelve a empezar <span class="sop-ref high">SOP-SR-02</span></span></li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="border-color: #C0DD97; background: #EAF3DE;">
+        <h3>📱 Comportamientos</h3>
+        <ul>
+          <li><span class="dot" style="background:#3B6D11"></span>
+            <span>Gestiona todo por correo electrónico — no usa WhatsApp para trabajo</span></li>
+          <li><span class="dot" style="background:#3B6D11"></span>
+            <span>Espera que el HUB le avise si hay algo pendiente de su parte</span></li>
+          <li><span class="dot" style="background:#3B6D11"></span>
+            <span>Tiene poca iniciativa para contactar a soporte directamente</span></li>
+          <li><span class="dot" style="background:#3B6D11"></span>
+            <span>Consulta al Gerente Comercial de Hipermaxi cuando hay bloqueos <span class="sop-ref">SOP-SR-02</span></span></li>
+          <li><span class="dot" style="background:#3B6D11"></span>
+            <span>No distingue bien entre los distintos procesos del portal</span></li>
+        </ul>
+      </div>
+
+      <div class="info-card blue">
+        <h3>✨ Necesidades del sistema</h3>
+        <ul>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Lista clara de datos que debe aportar por proceso <span class="sop-ref">SOP-SR-01</span> <span class="sop-ref">SOP-SR-02</span></span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Visibilidad del estado de activación sin intermediarios <span class="sop-ref">SOP-SR-02</span></span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Notificación cuando se requiere acción de su parte</span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Acceso a guías y manuales sin necesidad de credenciales del portal <span class="sop-ref">SOP-04</span></span></li>
+          <li><span class="dot" style="background:#185FA5"></span>
+            <span>Lenguaje simple — sin tecnicismos del sistema</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="scenario">
+      <h3>Escenario típico de uso</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num p2">1</div>
+          <p>El HUB le pide que complete el Excel para activar un nuevo código proveedor</p>
+          <p class="emo">Confusión: no sabe exactamente qué datos van · <span style="font-family:monospace;font-size:10px">SOP-SR-02</span></p>
+        </div>
+        <div class="step">
+          <div class="step-num p2">2</div>
+          <p>Completa lo que puede, envía el Excel al HUB y espera sin saber qué sigue</p>
+          <p class="emo">Incertidumbre: no hay retroalimentación de su aporte</p>
+        </div>
+        <div class="step">
+          <div class="step-num p2">3</div>
+          <p>Compras devuelve la solicitud por falta del nombre del Gerente Comercial</p>
+          <p class="emo">Frustración: dato que sí tenía pero no sabía que era obligatorio</p>
+        </div>
+        <div class="step">
+          <div class="step-num p2">4</div>
+          <p>Reenvía el Excel corregido — días después el HUB le confirma que el código está activo</p>
+          <p class="emo">Alivio: pero nunca supo en qué etapa estaba el proceso</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-strip">
+      <h3>Diferencias clave vs. Carlos Medina (Encargado HUB)</h3>
+      <div class="diff-items">
+        <span class="diff-item">Lucía <strong>no opera</strong> el portal directamente</span>
+        <span class="diff-item">Su rol es <strong>aportar datos</strong>, no ejecutar procesos</span>
+        <span class="diff-item">Prefiere <strong>correo formal</strong> sobre WhatsApp</span>
+        <span class="diff-item">Necesita <strong>lenguaje simple</strong>, sin tecnicismos</span>
+        <span class="diff-item">No distingue entre los distintos SOPs del portal</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- TABLA COMPARATIVA                                                       -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="comparison">
+    <h2>Comparación entre personas</h2>
+    <p class="sub">Resumen de diferencias clave para informar decisiones de diseño del agente IA</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Dimensión</th>
+          <th>Carlos Medina · Encargado HUB</th>
+          <th>Lucía Vargas · Encargada Comercial</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Acceso al portal</td>
+          <td>Acceso completo como usuario operador</td>
+          <td>Sin acceso directo al portal</td>
+        </tr>
+        <tr>
+          <td>SOPs principales</td>
+          <td>SOP-SR-01, SOP-04, SOP-05, SOP-06</td>
+          <td>SOP-SR-01, SOP-SR-02 (datos de entrada)</td>
+        </tr>
+        <tr>
+          <td>Canal preferido</td>
+          <td>WhatsApp (canal informal predominante)</td>
+          <td>Correo electrónico formal</td>
+        </tr>
+        <tr>
+          <td>Nivel técnico</td>
+          <td>Medio-bajo — opera el portal con dificultades</td>
+          <td>Bajo — no conoce los módulos del sistema</td>
+        </tr>
+        <tr>
+          <td>Frustración principal</td>
+          <td>Procesos bloqueados sin explicación (SOP-05, 06)</td>
+          <td>Opacidad del proceso — nunca sabe el estado (SOP-SR-02)</td>
+        </tr>
+        <tr>
+          <td>Necesidad de IA</td>
+          <td>Guía paso a paso dentro del portal + alertas preventivas</td>
+          <td>Checklist de datos requeridos + notificaciones de estado</td>
+        </tr>
+        <tr>
+          <td>Escenario de alto impacto</td>
+          <td>Carga de factura bloqueada + AVD con error irreversible</td>
+          <td>Excel rechazado por campo incompleto que no sabía que era obligatorio</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer class="doc-footer">
+  <span>Hipermaxi · Portal de Proveedores · Innova Hack 2026</span>
+  <span>user_personas.html · v1.1 · EP-01</span>
+</footer>
+
+</body>
+</html>
