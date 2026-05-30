@@ -1,0 +1,422 @@
+/* All styles scoped under #hx-widget — prevents collisions with Bootstrap 3.3.7 */
+
+#hx-widget {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+}
+
+#hx-widget *,
+#hx-widget *::before,
+#hx-widget *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Launcher button ─────────────────────────────── */
+
+#hx-widget .hx-launcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #C8102E;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 999999;
+  transition: background 0.2s, transform 0.15s;
+}
+
+#hx-widget .hx-launcher:hover {
+  background: #A00D24;
+  transform: scale(1.07);
+}
+
+#hx-widget .hx-launcher--open {
+  background: #444;
+}
+
+#hx-widget .hx-launcher__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  background: #FF4444;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* ── Chat window ─────────────────────────────────── */
+
+#hx-widget .hx-window {
+  position: fixed;
+  bottom: 94px;
+  right: 24px;
+  width: 360px;
+  height: 520px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  z-index: 999998;
+  overflow: hidden;
+  animation: hx-slide-up 0.2s ease;
+}
+
+@keyframes hx-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+#hx-widget .hx-window__header {
+  background: #C8102E;
+  color: white;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+#hx-widget .hx-window__dot {
+  width: 8px;
+  height: 8px;
+  background: #4CAF50;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+#hx-widget .hx-window__title {
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+#hx-widget .hx-window__status {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+#hx-widget .hx-window__close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0.8;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+#hx-widget .hx-window__close:hover { opacity: 1; }
+
+#hx-widget .hx-window__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: #F7F7F7;
+  display: flex;
+  flex-direction: column;
+}
+
+#hx-widget .hx-window__footer {
+  border-top: 1px solid #E8E8E8;
+  background: white;
+  flex-shrink: 0;
+}
+
+/* ── Messages ────────────────────────────────────── */
+
+#hx-widget .hx-messages {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+#hx-widget .hx-message {
+  display: flex;
+  flex-direction: column;
+  max-width: 82%;
+}
+
+#hx-widget .hx-message--user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+#hx-widget .hx-message--agent {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+#hx-widget .hx-message__bubble {
+  padding: 9px 13px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#hx-widget .hx-message--user .hx-message__bubble {
+  background: #C8102E;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+#hx-widget .hx-message--agent .hx-message__bubble {
+  background: white;
+  color: #333;
+  border: 1px solid #E8E8E8;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+#hx-widget .hx-message__time {
+  font-size: 11px;
+  color: #AAA;
+  margin-top: 3px;
+  padding: 0 4px;
+}
+
+/* ── Typing indicator ────────────────────────────── */
+
+#hx-widget .hx-typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 11px 14px;
+  background: white;
+  border: 1px solid #E8E8E8;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  width: fit-content;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
+#hx-widget .hx-typing__dot {
+  width: 7px;
+  height: 7px;
+  background: #C8102E;
+  border-radius: 50%;
+  animation: hx-bounce 1.2s infinite ease-in-out;
+}
+
+#hx-widget .hx-typing__dot:nth-child(2) { animation-delay: 0.2s; }
+#hx-widget .hx-typing__dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes hx-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%            { transform: translateY(-6px); }
+}
+
+/* ── Input bar ───────────────────────────────────── */
+
+#hx-widget .hx-input {
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 12px;
+  gap: 8px;
+}
+
+#hx-widget .hx-input__field {
+  flex: 1;
+  border: 1px solid #DDD;
+  border-radius: 20px;
+  padding: 9px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  line-height: 1.4;
+  max-height: 80px;
+  overflow-y: auto;
+  color: #333;
+  background: white;
+}
+
+#hx-widget .hx-input__field:focus {
+  border-color: #C8102E;
+}
+
+#hx-widget .hx-input__field:disabled {
+  background: #F5F5F5;
+  color: #AAA;
+  cursor: not-allowed;
+}
+
+#hx-widget .hx-input__btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #C8102E;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+#hx-widget .hx-input__btn:hover:not(:disabled) { background: #A00D24; }
+
+#hx-widget .hx-input__btn:disabled {
+  background: #CCC;
+  cursor: not-allowed;
+}
+
+/* ── Confirm modal ───────────────────────────────── */
+
+#hx-widget .hx-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000000;
+}
+
+#hx-widget .hx-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 380px;
+  width: calc(100% - 48px);
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.2);
+  animation: hx-modal-in 0.18s ease;
+}
+
+@keyframes hx-modal-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+#hx-widget .hx-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+#hx-widget .hx-modal__icon { font-size: 22px; }
+
+#hx-widget .hx-modal__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+#hx-widget .hx-modal__body {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+#hx-widget .hx-modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+#hx-widget .hx-modal__btn {
+  padding: 9px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+#hx-widget .hx-modal__btn--cancel {
+  background: #F0F0F0;
+  color: #333;
+}
+
+#hx-widget .hx-modal__btn--cancel:hover { background: #E0E0E0; }
+
+#hx-widget .hx-modal__btn--confirm {
+  background: #C8102E;
+  color: white;
+}
+
+#hx-widget .hx-modal__btn--confirm:hover { background: #A00D24; }
+
+/* ── Copilot highlights (applied to portal DOM) ──── */
+/* These are NOT scoped to #hx-widget intentionally — they target portal elements */
+
+.hx-highlight {
+  outline: 2px solid #C8102E !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 5px rgba(200, 16, 46, 0.12) !important;
+  border-radius: 3px;
+  position: relative !important;
+}
+
+.hx-tooltip {
+  position: absolute !important;
+  bottom: calc(100% + 8px) !important;
+  left: 0 !important;
+  background: #C8102E !important;
+  color: white !important;
+  padding: 5px 10px !important;
+  border-radius: 5px !important;
+  font-size: 12px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+  white-space: nowrap !important;
+  z-index: 999997 !important;
+  pointer-events: none !important;
+  line-height: 1.4 !important;
+}
+
+.hx-tooltip::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 14px !important;
+  border: 5px solid transparent !important;
+  border-top-color: #C8102E !important;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+
+@media (max-width: 420px) {
+  #hx-widget .hx-window {
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+
+  #hx-widget .hx-launcher {
+    bottom: 16px;
+    right: 16px;
+  }
+}
