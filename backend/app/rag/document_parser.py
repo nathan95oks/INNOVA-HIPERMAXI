@@ -73,11 +73,12 @@ STEP_PATTERNS: list[re.Pattern] = [
 
 # Mapeo manual basado en los nombres conocidos de los SOPs de Hipermaxi
 _KNOWN_SOP_MAP: dict[str, str] = {
-    "CREDENCIALES": "SOP-SR-01",
-    "ACTIVACION": "SOP-SR-02",
-    "ACTIVACIÓ": "SOP-SR-02",
+    # Claves más específicas primero para que no sean eclipsadas por las generales
     "REENVIO": "SOP-SR-03",
     "REENVÍ": "SOP-SR-03",
+    "ACTIVACION": "SOP-SR-02",
+    "ACTIVACIÓ": "SOP-SR-02",
+    "CREDENCIALES": "SOP-SR-01",
     "PRODUCTO": "SOP-04",
     "FACTURA": "SOP-05",
     "AVD": "SOP-06",

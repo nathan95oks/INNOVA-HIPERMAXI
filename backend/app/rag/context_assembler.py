@@ -33,7 +33,7 @@ class AssembledContext:
 
 def assemble_context(
     retrieved_chunks: list[dict],
-    max_context_tokens: int = 2000,
+    max_context_tokens: int = 4000,
     include_adjacent: bool = True,
     vector_store: VectorStoreRepository | None = None,
 ) -> AssembledContext:
@@ -68,7 +68,7 @@ def assemble_context(
     # ── 2. Expandir con chunks adyacentes ──
     if include_adjacent and vector_store is not None:
         for chunk in list(unique_chunks):
-            adjacent = vector_store.get_adjacent_chunks(chunk["id"], window=1)
+            adjacent = vector_store.get_adjacent_chunks(chunk["id"], window=2)
             for adj in adjacent:
                 if adj["id"] not in seen_ids:
                     seen_ids.add(adj["id"])

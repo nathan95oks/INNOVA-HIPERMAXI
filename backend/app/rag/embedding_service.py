@@ -15,7 +15,8 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 
 # ──────────────────────────────────────────────
@@ -54,7 +55,7 @@ class IEmbeddingModel(ABC):
 
 class GeminiEmbeddingModel(IEmbeddingModel):
     """
-    Embeddings vía Gemini API text-embedding-004.
+    Embeddings vía Gemini API gemini-embedding-001 (nuevo SDK google-genai).
 
     Usa task_type diferenciado:
     - RETRIEVAL_DOCUMENT para indexar chunks (ingesta)
@@ -64,12 +65,12 @@ class GeminiEmbeddingModel(IEmbeddingModel):
     optimiza el embedding según el contexto de uso.
     """
 
-    _MODEL_ID = "models/text-embedding-004"
+    _MODEL_ID = "gemini-embedding-001"
     _DIMENSIONS = 768
     _BATCH_SIZE = 100  # Máximo de textos por request a la API
 
     def __init__(self, api_key: str):
-        genai.configure(api_key=api_key)
+        self._client = genai.Client(api_key=api_key)
 
     def embed_texts(self, texts: list[str]) -> list[list[float]]:
         """
@@ -80,20 +81,16 @@ class GeminiEmbeddingModel(IEmbeddingModel):
 
         for i in range(0, len(texts), self._BATCH_SIZE):
             batch = texts[i : i + self._BATCH_SIZE]
-            result = genai.embed_content(
+            result = self._client.models.embed_content(
                 model=self._MODEL_ID,
-                content=batch,
-                task_type="RETRIEVAL_DOCUMENT",
+                contents=batch,
+                config=types.EmbedContentConfig(
+                    task_type="RETRIEVAL_DOCUMENT",
+                    output_dimensionality=self._DIMENSIONS,
+                ),
             )
-            # embed_content retorna un dict con "embedding"
-            # Para un solo texto retorna list[float],
-            # para multiples retorna list[list[float]]
-            embeddings = result["embedding"]
-            if isinstance(embeddings[0], float):
-                # Solo un texto en el batch
-                all_embeddings.append(embeddings)
-            else:
-                all_embeddings.extend(embeddings)
+            for emb in result.embeddings:
+                all_embeddings.append(emb.values)
 
         return all_embeddings
 
@@ -102,16 +99,19 @@ class GeminiEmbeddingModel(IEmbeddingModel):
         Genera embedding para un query de búsqueda.
         Usa task_type=RETRIEVAL_QUERY.
         """
-        result = genai.embed_content(
+        result = self._client.models.embed_content(
             model=self._MODEL_ID,
-            content=query,
-            task_type="RETRIEVAL_QUERY",
+            contents=query,
+            config=types.EmbedContentConfig(
+                task_type="RETRIEVAL_QUERY",
+                output_dimensionality=self._DIMENSIONS,
+            ),
         )
-        return result["embedding"]
+        return result.embeddings[0].values
 
     @property
     def model_name(self) -> str:
-        return "text-embedding-004"
+        return "gemini-embedding-001"
 
     @property
     def dimensions(self) -> int:

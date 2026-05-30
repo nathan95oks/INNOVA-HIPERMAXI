@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - VECTOR_STORE_DIR=/app/knowledge/vector_store
+      - RAG_SCORE_THRESHOLD=0.65
+      - RAG_TOP_K=5
+      - DEV_MODE=false
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    volumes:
+      - vector_store_data:/app/knowledge/vector_store
+      - sop_images:/app/knowledge/images
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  vector_store_data:
+  sop_images:

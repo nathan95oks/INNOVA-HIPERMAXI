@@ -16,7 +16,8 @@ from __future__ import annotations
 
 import json
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 from .rag.context_assembler import AssembledContext
 
@@ -83,17 +84,16 @@ class CopilotGeminiClient:
     """
 
     def __init__(self, api_key: str, system_instruction: str):
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel(
-            model_name="gemini-2.5-flash",
+        self._client = genai.Client(api_key=api_key)
+        self._model_name = "gemini-2.5-flash"
+        self._system_instruction = system_instruction
+        self._gen_config = types.GenerateContentConfig(
             system_instruction=system_instruction,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                response_schema=RESPONSE_SCHEMA,
-                temperature=0.2,  # Baja para consistencia operativa
-                top_p=0.8,
-                max_output_tokens=1024,
-            ),
+            response_mime_type="application/json",
+            response_schema=RESPONSE_SCHEMA,
+            temperature=0.2,  # Baja para consistencia operativa
+            top_p=0.8,
+            max_output_tokens=4096,
         )
 
     def generate_response(
@@ -118,20 +118,41 @@ class CopilotGeminiClient:
         rag_prompt = self._build_prompt(user_message, context)
 
         # Construir historial de chat (últimos 6 turnos = 3 pares)
-        history: list[dict] = []
+        history: list[types.Content] = []
         if conversation_history:
             for turn in conversation_history[-6:]:
-                history.append({
-                    "role": turn["role"],
-                    "parts": [turn["content"]],
-                })
+                role = turn["role"] if turn["role"] in ("user", "model") else "user"
+                history.append(
+                    types.Content(
+                        role=role,
+                        parts=[types.Part(text=turn["content"])],
+                    )
+                )
 
         # Crear chat con historial y enviar
-        chat = self.model.start_chat(history=history)
+        chat = self._client.chats.create(
+            model=self._model_name,
+            config=self._gen_config,
+            history=history,
+        )
         response = chat.send_message(rag_prompt)
 
         # Parsear JSON (Gemini con response_mime_type lo garantiza)
-        return json.loads(response.text)
+        text = response.text or ""
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            # Respuesta truncada — intentar recuperar el campo mensaje si existe
+            import re
+            match = re.search(r'"mensaje"\s*:\s*"((?:[^"\\]|\\.)*)"', text)
+            mensaje = match.group(1) if match else "Error al procesar la respuesta. Por favor intenta de nuevo."
+            return {
+                "mensaje": mensaje,
+                "accion_ui": {"tipo": "none"},
+                "sop_referencia": "N/A",
+                "requiere_escalamiento": False,
+                "confianza": 0.5,
+            }
 
     def _build_prompt(
         self,
