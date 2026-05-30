@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de Necesidades y Frustraciones — Hipermaxi</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F3EF;
+    --surface: #FFFFFF;
+    --border: #E2E0D6;
+    --text-primary: #1A1A18;
+    --text-secondary: #6B6A64;
+    --text-muted: #9B9A94;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+
+    /* Persona 1 — purple */
+    --p1-light: #EEEDFE;
+    --p1-mid:   #7F77DD;
+    --p1-dark:  #3C3489;
+
+    /* Persona 2 — blue */
+    --p2-light: #E6F1FB;
+    --p2-mid:   #378ADD;
+    --p2-dark:  #0C447C;
+
+    /* Semantic */
+    --need-bg:   #E1F5EE;
+    --need-dot:  #1D9E75;
+    --need-dark: #085041;
+    --frus-bg:   #FAECE7;
+    --frus-dot:  #D85A30;
+    --frus-dark: #712B13;
+    --sop-bg:    #F1EFE8;
+    --sop-tc:    #5F5E5A;
+    --sop-hi:    #FAECE7;
+    --sop-hi-tc: #993C1D;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ──────────────────────────────────────────────────────────── */
+  header {
+    background: var(--text-primary);
+    padding: 44px 64px 36px;
+    border-bottom: 3px solid var(--p1-mid);
+  }
+  header .meta {
+    font-family: var(--mono); font-size: 10px;
+    color: #6B6A64; letter-spacing: .09em;
+    display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  header h1 { font-size: 30px; font-weight: 600; color: #F4F3EF; letter-spacing: -.02em; margin-bottom: 6px; }
+  header p  { font-size: 14px; color: #6B6A64; max-width: 600px; }
+  .sop-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .sop-chip {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    padding: 3px 9px; border-radius: 4px;
+    background: #2C2C2A; color: #888780; border: 1px solid #3D3D3A;
+  }
+
+  /* ── LAYOUT ──────────────────────────────────────────────────────────── */
+  .page { max-width: 1200px; margin: 0 auto; padding: 48px 64px; }
+
+  .section-tag {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .1em; color: var(--text-muted);
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+
+  h2.block-title {
+    font-size: 20px; font-weight: 600; margin-bottom: 4px;
+  }
+  .block-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+
+  /* ── PERSONA PILL ────────────────────────────────────────────────────── */
+  .persona-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 14px 6px 8px;
+    border-radius: 24px; margin-bottom: 20px;
+    font-size: 13px; font-weight: 500;
+  }
+  .persona-pill .av {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .p1-pill { background: var(--p1-light); color: var(--p1-dark); }
+  .p1-pill .av { background: var(--p1-mid); color: #fff; }
+  .p2-pill { background: var(--p2-light); color: var(--p2-dark); }
+  .p2-pill .av { background: var(--p2-mid); color: #fff; }
+
+  /* ── MAP GRID ────────────────────────────────────────────────────────── */
+  /* Each persona: full-width table with SOPs as columns */
+  .map-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+
+  .map-table { width: 100%; border-collapse: collapse; }
+
+  /* Column header row */
+  .map-table .col-head th {
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    padding: 12px 16px; text-align: left;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: #F9F8F4;
+  }
+  .map-table .col-head th:last-child { border-right: none; }
+  .map-table .col-head .sop-col {
+    color: var(--sop-tc);
+  }
+  .map-table .col-head .dim-col {
+    color: var(--text-muted); width: 140px;
+  }
+
+  /* Data rows */
+  .map-table tbody tr { border-bottom: 1px solid var(--border); }
+  .map-table tbody tr:last-child { border-bottom: none; }
+
+  .map-table td {
+    padding: 14px 16px; vertical-align: top;
+    border-right: 1px solid var(--border); font-size: 13px;
+  }
+  .map-table td:last-child { border-right: none; }
+
+  /* Row label cell */
+  .row-label {
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    background: #F9F8F4; width: 140px;
+    vertical-align: middle !important;
+  }
+  .row-label.needs { color: var(--need-dark); }
+  .row-label.frus  { color: var(--frus-dark); }
+
+  /* Cell items */
+  .cell-items { display: flex; flex-direction: column; gap: 6px; }
+
+  .item {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; line-height: 1.5; color: var(--text-primary);
+  }
+  .item .dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+  }
+  .dot-need { background: var(--need-dot); }
+  .dot-frus { background: var(--frus-dot); }
+
+  /* SOP badge inline */
+  .sop {
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    padding: 1px 5px; border-radius: 3px; white-space: nowrap;
+    vertical-align: middle; margin-left: 3px;
+  }
+  .sop-n { background: var(--sop-bg);    color: var(--sop-tc); }
+  .sop-h { background: var(--sop-hi);    color: var(--sop-hi-tc); }
+
+  /* Empty cell */
+  .empty { color: var(--text-muted); font-style: italic; font-size: 11px; }
+
+  /* Impact badge */
+  .impact {
+    display: inline-block; font-family: var(--mono);
+    font-size: 9px; font-weight: 600; padding: 2px 7px;
+    border-radius: 3px; margin-top: 4px;
+  }
+  .impact-hi  { background: #FAECE7; color: #D85A30; }
+  .impact-med { background: #FAEEDA; color: #BA7517; }
+
+  /* Section row separators */
+  .section-row td {
+    background: #F9F8F4;
+    font-family: var(--mono); font-size: 9px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text-muted); padding: 7px 16px;
+    border-right: none !important;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────────────────────────────── */
+  .divider { height: 1px; background: var(--border); margin: 8px 0 48px; }
+
+  /* ── LEGEND ──────────────────────────────────────────────────────────── */
+  .legend {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    margin-bottom: 48px; font-size: 12px; color: var(--text-secondary);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot  { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── CROSS TABLE ─────────────────────────────────────────────────────── */
+  .cross-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; margin-bottom: 48px;
+  }
+  .cross-head {
+    padding: 20px 24px 4px;
+  }
+  .cross-head h2 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+  .cross-head p  { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; }
+
+  .cross-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .cross-table th {
+    font-family: var(--mono); font-size: 9px; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    color: var(--text-muted); background: #F9F8F4;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .cross-table th:last-child { border-right: none; }
+  .cross-table td {
+    padding: 11px 14px; border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border); vertical-align: top;
+  }
+  .cross-table td:last-child { border-right: none; }
+  .cross-table tr:last-child td { border-bottom: none; }
+  .cross-table td.sop-id {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--text-secondary); width: 130px;
+    background: #F9F8F4;
+  }
+  .check { color: var(--need-dot); font-size: 13px; }
+  .cross-p1 { background: #FBFAFF; }
+  .cross-p2 { background: #F6FAFF; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────────── */
+  footer {
+    background: var(--text-primary); color: #555550;
+    padding: 20px 64px; font-family: var(--mono); font-size: 10px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+  }
+
+  @media (max-width: 768px) {
+    .page { padding: 24px; }
+    header { padding: 28px 24px; }
+    footer { padding: 16px 24px; }
+    .map-table { display: block; overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="meta">
+    <span>HIPERMAXI · INNOVA HACK 2026</span>
+    <span>ENTREGABLE: EP-01 · MAPA DE NECESIDADES Y FRUSTRACIONES</span>
+    <span>VERSIÓN: 1.0</span>
+  </div>
+  <h1>Mapa de Necesidades y Frustraciones</h1>
+  <p>Por persona de usuario, vinculado a procesos SOPs del Portal Web de Proveedores de Hipermaxi.</p>
+  <div class="sop-list">
+    <span class="sop-chip">SOP-SR-01 · Credenciales</span>
+    <span class="sop-chip">SOP-SR-02 · Activación Código</span>
+    <span class="sop-chip">SOP-SR-03 · Reenvío Credenciales</span>
+    <span class="sop-chip">SOP-04 · Carga Productos</span>
+    <span class="sop-chip">SOP-05 · Facturación OC</span>
+    <span class="sop-chip">SOP-06 · Aviso de Despacho</span>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- LEYENDA -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--need-dot)"></div>Necesidad</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--frus-dot)"></div>Frustración</div>
+    <div class="legend-item">
+      <span class="sop sop-h">SOP-XX</span>&nbsp;SOP con fricción alta
+    </div>
+    <div class="legend-item">
+      <span class="sop sop-n">SOP-XX</span>&nbsp;SOP referenciado
+    </div>
+    <div class="legend-item"><span class="impact impact-hi">Alto</span>&nbsp;Impacto alto</div>
+    <div class="legend-item"><span class="impact impact-med">Medio</span>&nbsp;Impacto medio</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <!-- PERSONA 1                                                            -->
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <div class="section-tag">Persona principal · 1 de 2</div>
+  <h2 class="block-title">Carlos Medina — Encargado HUB</h2>
+  <p class="block-sub">Usuario principal del portal · Receptor de credenciales · Operador de todos los módulos</p>
+
+  <div class="persona-pill p1-pill">
+    <div class="av">CM</div>
+    Encargado HUB · Acceso completo al portal
+  </div>
+
+  <div class="map-wrap">
+    <table class="map-table">
+      <thead>
+        <tr class="col-head">
+          <th class="dim-col">Dimensión</th>
+          <th class="sop-col">SOP-SR-01<br><span style="font-weight:400;opacity:.7">Credenciales</span></th>
+          <th class="sop-col">SOP-SR-03<br><span style="font-weight:400;opacity:.7">Reenvío cred.</span></th>
+          <th class="sop-col">SOP-04<br><span style="font-weight:400;opacity:.7">Carga productos</span></th>
+          <th class="sop-col">SOP-05<br><span style="font-weight:400;opacity:.7">Facturación OC</span></th>
+          <th class="sop-col">SOP-06<br><span style="font-weight:400;opacity:.7">AVD</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- NECESIDADES -->
+        <tr class="section-row"><td colspan="6">Necesidades</td></tr>
+        <tr>
+          <td class="row-label needs">Información</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Saber exactamente qué datos lleva el Excel antes de enviarlo</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Confirmar que el encargado HUB vigente es el correcto</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Conocer qué campos son obligatorios antes de intentar guardar</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Entender por qué no aparece el botón de factura</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Saber el impacto de confirmar el AVD antes de hacerlo</span></div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="row-label needs">Proceso</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Guía paso a paso del flujo de solicitud de credenciales</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Proceso claro para actualizar al encargado HUB</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Instrucciones de formato para imágenes (JPG/PNG)</span></div>
+            <div class="item"><span class="dot dot-need"></span><span>Validación previa antes de intentar guardar el producto</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Saber que debe contactar a Facturación para habilitar la OC</span></div>
+            <div class="item"><span class="dot dot-need"></span><span>Guía de formatos aceptados (solo PDF)</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Alerta de confirmación: "Esta acción es irreversible"</span></div>
+            <div class="item"><span class="dot dot-need"></span><span>Instrucciones para derivar a Compras si hay error post-confirmación</span></div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="row-label needs">Estado</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Confirmación de que su correo fue recibido por Compras</span></div>
+            <div class="item"><span class="dot dot-need"></span><span>Visibilidad del estado del ticket en GLPI</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Seguimiento de la solicitud de reenvío sin llamar a soporte</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Confirmación visual cuando el producto se registró correctamente</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Notificación cuando la OC quede habilitada para facturar</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Estado del AVD visible en todo momento</span></div>
+          </div></td>
+        </tr>
+
+        <!-- FRUSTRACIONES -->
+        <tr class="section-row"><td colspan="6">Frustraciones</td></tr>
+        <tr>
+          <td class="row-label frus">Proceso opaco</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>No sabe si el correo a soportehub llegó <span class="sop sop-h">SOP-SR-01</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>No sabe si el HUB es el vigente hasta que falla el envío <span class="sop sop-h">SOP-SR-03</span></span></div>
+            <span class="impact impact-med">Medio</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>El sistema no guarda sin decir qué campo falta <span class="sop sop-h">SOP-04</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>El botón de factura no aparece sin explicación <span class="sop sop-h">SOP-05</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Confirma el AVD sin saber que no puede revertirlo <span class="sop sop-h">SOP-06</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="row-label frus">Canal informal</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Debe llamar por WhatsApp para conocer el proceso formal <span class="sop sop-h">SOP-SR-01</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Reenvío de credenciales depende de llamar o escribir por WhatsApp <span class="sop sop-n">SOP-SR-03</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Consultas sobre el formulario van por WhatsApp sin registro <span class="sop sop-n">SOP-04</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Llama a soporte para preguntar algo que el sistema debería explicar <span class="sop sop-h">SOP-05</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Debe contactar a su comprador por WhatsApp si el AVD tiene error <span class="sop sop-h">SOP-06</span></span></div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="row-label frus">Reproceso</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Solicitud devuelta si el Excel tiene datos incompletos <span class="sop sop-n">SOP-SR-01</span></span></div>
+          </div></td>
+          <td><div class="cell-items empty">— No aplica directamente</div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Intenta guardar, falla, prueba por ensayo y error sin guía <span class="sop sop-h">SOP-04</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Factura observada obliga a corregir y volver a cargar <span class="sop sop-n">SOP-05</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>AVD con error obliga a gestionar una nueva OC con Compras <span class="sop sop-h">SOP-06</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <!-- PERSONA 2                                                            -->
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <div class="section-tag">Persona secundaria · 2 de 2</div>
+  <h2 class="block-title">Lucía Vargas — Encargada Comercial / Ventas</h2>
+  <p class="block-sub">Acceso limitado al portal · Aporta datos para procesos de habilitación · No opera módulos directamente</p>
+
+  <div class="persona-pill p2-pill">
+    <div class="av">LV</div>
+    Encargada Comercial · Sin acceso directo al portal
+  </div>
+
+  <div class="map-wrap">
+    <table class="map-table">
+      <thead>
+        <tr class="col-head">
+          <th class="dim-col">Dimensión</th>
+          <th class="sop-col">SOP-SR-01<br><span style="font-weight:400;opacity:.7">Credenciales</span></th>
+          <th class="sop-col">SOP-SR-02<br><span style="font-weight:400;opacity:.7">Activación código</span></th>
+          <th class="sop-col">SOP-SR-03<br><span style="font-weight:400;opacity:.7">Reenvío cred.</span></th>
+          <th class="sop-col">SOP-04<br><span style="font-weight:400;opacity:.7">Carga productos</span></th>
+          <th class="sop-col">SOP-05 / 06<br><span style="font-weight:400;opacity:.7">Factura / AVD</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- NECESIDADES -->
+        <tr class="section-row"><td colspan="6">Necesidades</td></tr>
+        <tr>
+          <td class="row-label needs">Información</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Lista exacta de datos que debe aportar al Excel</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Saber qué es el "Código Proveedor" y dónde encontrarlo</span></div>
+            <div class="item"><span class="dot dot-need"></span><span>Entender el rol del Gerente Comercial Hipermaxi en el proceso</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Confirmar quién es el encargado HUB vigente en su empresa</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Acceso a guías y manuales sin necesitar credenciales del portal</span></div>
+          </div></td>
+          <td><div class="cell-items empty">
+            — Rol indirecto: no opera estos módulos
+          </div></td>
+        </tr>
+        <tr>
+          <td class="row-label needs">Proceso</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Guía del proceso completo en lenguaje simple, sin tecnicismos</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Paso a paso de qué hace Compras y qué hace Soporte después</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Instrucciones claras para actualizar el encargado HUB</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Descripción de qué módulos existen y para qué sirven</span></div>
+          </div></td>
+          <td><div class="cell-items empty">
+            — Rol indirecto
+          </div></td>
+        </tr>
+        <tr>
+          <td class="row-label needs">Estado</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Confirmación cuando su parte del proceso esté completa</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Visibilidad del estado de activación del código sin intermediarios</span></div>
+            <div class="item"><span class="dot dot-need"></span><span>Notificación cuando se requiere acción adicional de su parte</span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-need"></span><span>Notificación cuando las credenciales fueron reenviadas exitosamente</span></div>
+          </div></td>
+          <td><div class="cell-items empty">
+            — Rol indirecto
+          </div></td>
+          <td><div class="cell-items empty">
+            — Rol indirecto
+          </div></td>
+        </tr>
+
+        <!-- FRUSTRACIONES -->
+        <tr class="section-row"><td colspan="6">Frustraciones</td></tr>
+        <tr>
+          <td class="row-label frus">Proceso opaco</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>No sabe qué pasa con el Excel después de enviarlo <span class="sop sop-h">SOP-SR-01</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Nunca sabe en qué etapa está la activación del código <span class="sop sop-h">SOP-SR-02</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>No sabe si el HUB ya recibió las credenciales reenviadas <span class="sop sop-n">SOP-SR-03</span></span></div>
+            <span class="impact impact-med">Medio</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>No tiene acceso a manuales ni guías del portal <span class="sop sop-n">SOP-04</span></span></div>
+            <span class="impact impact-med">Medio</span>
+          </div></td>
+          <td><div class="cell-items empty">— Rol indirecto</div></td>
+        </tr>
+        <tr>
+          <td class="row-label frus">Intermediarios</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>La información le llega de segunda mano a través del HUB <span class="sop sop-n">SOP-SR-01</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Debe preguntar al HUB si el código ya está activo <span class="sop sop-h">SOP-SR-02</span></span></div>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>El HUB la llama para pedirle datos que no sabe por qué se necesitan <span class="sop sop-n">SOP-SR-03</span></span></div>
+          </div></td>
+          <td><div class="cell-items empty">— No aplica</div></td>
+          <td><div class="cell-items empty">— No aplica</div></td>
+        </tr>
+        <tr>
+          <td class="row-label frus">Reproceso</td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Solicitud rechazada por campo incompleto que no sabía que era obligatorio <span class="sop sop-h">SOP-SR-01</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+          <td><div class="cell-items">
+            <div class="item"><span class="dot dot-frus"></span><span>Proceso reinicia desde cero si falta el nombre del Gerente Comercial <span class="sop sop-h">SOP-SR-02</span></span></div>
+            <span class="impact impact-hi">Alto</span>
+          </div></td>
+          <td><div class="cell-items empty">— No aplica directamente</div></td>
+          <td><div class="cell-items empty">— No aplica</div></td>
+          <td><div class="cell-items empty">— No aplica</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <!-- CROSS REFERENCE: SOP × PERSONA                                       -->
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <div class="cross-wrap">
+    <div class="cross-head">
+      <h2>Matriz SOP × Persona</h2>
+      <p>Qué SOPs afectan a cada persona y cuál es la fricción principal en cada cruce</p>
+    </div>
+    <table class="cross-table">
+      <thead>
+        <tr>
+          <th>SOP</th>
+          <th>Proceso</th>
+          <th class="cross-p1">Carlos Medina · HUB</th>
+          <th class="cross-p2">Lucía Vargas · Comercial</th>
+          <th>Fricción principal</th>
+          <th>Impacto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sop-id">SOP-SR-01</td>
+          <td>Solicitud de credenciales</td>
+          <td class="cross-p1"><span class="check">✓</span> Receptor y operador</td>
+          <td class="cross-p2"><span class="check">✓</span> Aporta datos al Excel</td>
+          <td>Sin confirmación de recepción · proceso por WhatsApp</td>
+          <td><span class="impact impact-hi">Alto</span></td>
+        </tr>
+        <tr>
+          <td class="sop-id">SOP-SR-02</td>
+          <td>Activación de código proveedor</td>
+          <td class="cross-p1">Rol secundario (valida activación)</td>
+          <td class="cross-p2"><span class="check">✓</span> Aporta datos · no ve estado</td>
+          <td>Proceso opaco para Lucía — no sabe en qué etapa está</td>
+          <td><span class="impact impact-hi">Alto</span></td>
+        </tr>
+        <tr>
+          <td class="sop-id">SOP-SR-03</td>
+          <td>Reenvío de credenciales</td>
+          <td class="cross-p1"><span class="check">✓</span> Receptor de reenvío</td>
+          <td class="cross-p2">Rol indirecto (puede ser convocada)</td>
+          <td>HUB anterior ya no trabaja — proceso reinicia desde cero</td>
+          <td><span class="impact impact-med">Medio</span></td>
+        </tr>
+        <tr>
+          <td class="sop-id">SOP-04</td>
+          <td>Carga de productos al catálogo</td>
+          <td class="cross-p1"><span class="check">✓</span> Operador principal</td>
+          <td class="cross-p2">Sin acceso · puede consultar guías</td>
+          <td>Campos obligatorios no señalizados · prueba y error</td>
+          <td><span class="impact impact-hi">Alto</span></td>
+        </tr>
+        <tr>
+          <td class="sop-id">SOP-05</td>
+          <td>Facturación en órdenes de compra</td>
+          <td class="cross-p1"><span class="check">✓</span> Operador principal</td>
+          <td class="cross-p2">Sin rol directo</td>
+          <td>Botón invisible sin contexto · llama a soporte por algo evitable</td>
+          <td><span class="impact impact-hi">Alto</span></td>
+        </tr>
+        <tr>
+          <td class="sop-id">SOP-06</td>
+          <td>Aviso de Despacho (AVD)</td>
+          <td class="cross-p1"><span class="check">✓</span> Operador principal</td>
+          <td class="cross-p2">Sin rol directo</td>
+          <td>Confirmación irreversible sin advertencia previa</td>
+          <td><span class="impact impact-hi">Alto</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <span>Hipermaxi · Portal de Proveedores · Innova Hack 2026</span>
+  <span>mapa_necesidades_frustraciones.html · v1.0 · EP-01</span>
+</footer>
+
+</body>
+</html>
