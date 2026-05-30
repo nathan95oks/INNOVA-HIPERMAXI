@@ -1,0 +1,158 @@
+
+<style>
+.persona-wrap { max-width: 680px; padding: 1.5rem 0; font-family: var(--font-sans); }
+.persona-header { display: flex; align-items: center; gap: 20px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+.avatar { width: 72px; height: 72px; border-radius: 50%; background: #CECBF6; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 500; color: #3C3489; flex-shrink: 0; }
+.header-info h2 { margin: 0 0 2px; font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.header-info .role { font-size: 13px; color: var(--color-text-secondary); margin: 0 0 8px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+.tag-purple { background: #EEEDFE; color: #3C3489; }
+.tag-teal { background: #E1F5EE; color: #085041; }
+.tag-amber { background: #FAEEDA; color: #633806; }
+.section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+.card h3 { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; display: flex; align-items: center; gap: 6px; }
+.card h3 i { font-size: 15px; }
+.card ul { margin: 0; padding: 0; list-style: none; }
+.card ul li { font-size: 14px; color: var(--color-text-primary); line-height: 1.6; padding: 5px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.card ul li:last-child { border-bottom: none; }
+.card ul li::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 9px; vertical-align: middle; flex-shrink: 0; }
+.list-pain li::before { background: #D85A30; }
+.list-goal li::before { background: #1D9E75; }
+.list-behavior li::before { background: #7F77DD; }
+.list-need li::before { background: #378ADD; }
+.quote-card { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+.quote-card p { font-size: 15px; color: #3C3489; line-height: 1.7; margin: 0; font-style: italic; }
+.quote-card .author { font-size: 12px; color: #534AB7; margin-top: 8px; font-style: normal; font-weight: 500; }
+.metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem; text-align: center; }
+.metric .val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.metric .lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+.scenario-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; }
+.scenario-card h3 { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 10px; display: flex; align-items: center; gap: 6px; }
+.scenario-steps { display: flex; flex-direction: column; gap: 6px; }
+.step { display: flex; align-items: flex-start; gap: 12px; padding: 8px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); }
+.step-num { width: 22px; height: 22px; border-radius: 50%; background: #534AB7; color: #EEEDFE; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step p { font-size: 13px; color: var(--color-text-primary); margin: 0; line-height: 1.5; }
+.step .step-emotion { font-size: 11px; color: var(--color-text-secondary); margin-top: 3px; }
+.full-card { grid-column: 1 / -1; }
+</style>
+
+<div class="persona-wrap">
+  <h2 style="sr-only">User Persona — Proveedor del Portal Hipermaxi</h2>
+
+  <div class="persona-header">
+    <div class="avatar">CM</div>
+    <div class="header-info">
+      <h2>Carlos Medina</h2>
+      <p class="role">Encargado HUB / Administrador del portal — Proveedor de Hipermaxi</p>
+      <div class="tags">
+        <span class="tag tag-purple">Proveedor PYME</span>
+        <span class="tag tag-teal">Zona: Santa Cruz / Cochabamba</span>
+        <span class="tag tag-amber">Experiencia técnica: media-baja</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric">
+      <div class="val">38</div>
+      <div class="lbl">Años aprox.</div>
+    </div>
+    <div class="metric">
+      <div class="val">3–5</div>
+      <div class="lbl">OC al mes</div>
+    </div>
+    <div class="metric">
+      <div class="val">~60%</div>
+      <div class="lbl">Consultas por WhatsApp</div>
+    </div>
+    <div class="metric">
+      <div class="val">2+</div>
+      <div class="lbl">Horas pérdidas por incidencia</div>
+    </div>
+  </div>
+
+  <div class="quote-card">
+    <p>"Mando el correo al soporte, pero nunca sé si lo recibieron. A veces llamo al WhatsApp y me dicen que espere, y ya se me pasa el plazo de la factura."</p>
+    <div class="author">— Frase representativa de consultas frecuentes al equipo de soporte</div>
+  </div>
+
+  <div class="section-grid">
+    <div class="card">
+      <h3><i class="ti ti-target" aria-hidden="true"></i> Objetivos</h3>
+      <ul class="list-goal">
+        <li>Cargar facturas y AVDs sin depender de soporte</li>
+        <li>Registrar productos en el catálogo correctamente</li>
+        <li>Saber en qué estado están sus órdenes de compra</li>
+        <li>Obtener respuestas rápidas sin llamar ni esperar</li>
+        <li>Activar su código proveedor sin fricción</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-mood-sad" aria-hidden="true"></i> Frustraciones</h3>
+      <ul class="list-pain">
+        <li>No sabe por qué no aparece el botón de factura</li>
+        <li>Envía correos y no recibe confirmación de recepción</li>
+        <li>Confirma un AVD con error y ya no puede editarlo</li>
+        <li>Desconoce qué campos son obligatorios en los formularios</li>
+        <li>Usa WhatsApp porque no tiene otra opción accesible</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-device-mobile" aria-hidden="true"></i> Comportamientos</h3>
+      <ul class="list-behavior">
+        <li>Prefiere resolver solo antes de llamar a soporte</li>
+        <li>Accede al portal desde la computadora de oficina</li>
+        <li>Usa WhatsApp como canal principal de consulta</li>
+        <li>Toma capturas de pantalla cuando algo falla</li>
+        <li>Repite pasos a prueba y error sin guía clara</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-sparkles" aria-hidden="true"></i> Necesidades del sistema</h3>
+      <ul class="list-need">
+        <li>Respuestas inmediatas en lenguaje simple</li>
+        <li>Guías paso a paso dentro del portal</li>
+        <li>Estado visible de sus solicitudes y tickets</li>
+        <li>Saber exactamente qué campo falta o qué archivo está mal</li>
+        <li>Escalado claro a humano cuando no puede resolverse</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="scenario-card">
+    <h3><i class="ti ti-route" aria-hidden="true"></i> Escenario típico de uso</h3>
+    <div class="scenario-steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <p>Intenta cargar su factura y no ve el botón en el formulario de OC</p>
+          <p class="step-emotion">Emoción: confusión — cree que es un error del sistema</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <p>Escribe al WhatsApp de soporte y espera respuesta por 30–60 minutos</p>
+          <p class="step-emotion">Emoción: frustración — tiene un plazo que cumplir</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <p>El agente le explica que el área de Facturación debe habilitar primero la OC</p>
+          <p class="step-emotion">Emoción: alivio parcial — pero no sabía que existía ese paso</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <p>Contacta a Facturación por separado y repite el proceso días después</p>
+          <p class="step-emotion">Emoción: desgaste — siente que el proceso es muy manual</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
