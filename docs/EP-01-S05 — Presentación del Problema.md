@@ -75,6 +75,28 @@ Un agente de IA integrado directamente al Portal Web de Proveedores de Hipermaxi
 
 ---
 
+### Arquitectura de Accesibilidad y Seguridad: 3 Niveles de Asistencia
+
+Para proteger los datos confidenciales y asegurar que los proveedores tengan asistencia en cada etapa de su ciclo de vida en el portal, el widget de la IA opera bajo tres niveles progresivos:
+
+1. **Nivel 1 — Pantalla de Login (Público / Sin autenticar):**
+   * **Contexto:** Estrictamente restringido a onboarding y accesos.
+   * **Propósito:** Ayudar a los proveedores que no pueden entrar al sistema.
+   * **Operación:** Resuelve dudas sobre la solicitud de nuevas credenciales (`SOP-SR-01`) y el reenvío de accesos (`SOP-SR-03`). Guía al usuario en el flujo del Excel formal de Compras sin exponer ningún tipo de datos internos.
+
+2. **Nivel 2 — Portal General (Privado Base / Autenticado):**
+   * **Contexto:** Funcionalidades generales del portal.
+   * **Propósito:** Asistencia operativa diaria no crítica.
+   * **Operación:** Ayuda al proveedor a interactuar con el catálogo de productos (`SOP-04`) y solicita la activación de códigos de proveedor (`SOP-SR-02`). Puede validar campos obligatorios y tipos de imágenes directamente en pantalla en modo Copiloto.
+
+3. **Nivel 3 — Módulos Críticos (Privado Operativo / Transaccional):**
+   * **Contexto:** Módulos de Facturación y Despachos.
+   * **Propósito:** Evitar errores humanos irreversibles y validar consistencia contable.
+   * **Operación:** Asiste en la carga de facturas para Órdenes de Compra (`SOP-05`) y en Avisos de Despacho (`SOP-06`).
+   * **Copiloto & Seguridad Avanzada:** Valida el formato PDF, contrasta montos e introduce **alertas obligatorias de confirmación manual** antes de registrar acciones transaccionales irreversibles.
+
+---
+
 ### Dos Modalidades de Interacción
 
 #### Modalidad Consulta — "Pregúntame lo que necesitas"
@@ -82,9 +104,9 @@ Un agente de IA integrado directamente al Portal Web de Proveedores de Hipermaxi
 El proveedor hace una pregunta en lenguaje natural y el asistente responde usando la base de conocimiento de Hipermaxi.
 
 **Ejemplos:**
-- *"¿Cómo solicito mis credenciales de acceso?"* → El agente explica el proceso paso a paso (SOP-SR-01)
-- *"¿Por qué no aparece el botón para cargar mi factura?"* → El agente diagnostica y orienta (SOP-05)
-- *"¿Qué formato necesita la imagen de mi producto?"* → JPG o PNG, el agente lo confirma (SOP-04)
+- *"¿Cómo solicito mis credenciales de acceso?"* → El agente explica el proceso paso a paso (SOP-SR-01) en el Nivel 1.
+- *"¿Por qué no aparece el botón para cargar mi factura?"* → El agente explica que la OC no ha sido habilitada por Facturación (SOP-05) en el Nivel 3.
+- *"¿Qué formato necesita la imagen de mi producto?"* → JPG o PNG, el agente lo confirma (SOP-04) en el Nivel 2.
 
 **Valor:** Elimina la necesidad de llamar o escribir por WhatsApp para preguntas que ya tienen respuesta documentada.
 
@@ -95,9 +117,9 @@ El proveedor hace una pregunta en lenguaje natural y el asistente responde usand
 El proveedor le indica al asistente lo que necesita hacer en lenguaje natural. El agente toma el control del portal mediante automatización del navegador, ejecuta las acciones directamente y el proveedor observa en tiempo real cómo se completan los pasos en pantalla.
 
 **Ejemplos:**
-- *"Agregá este producto a mi catálogo"* → El agente navega al módulo, completa los campos con la información proporcionada, carga las imágenes y espera confirmación antes de guardar
-- *"Cargá la factura de la OC #4521"* → El agente verifica si la OC está habilitada, accede al formulario y sube el archivo, solicitando aprobación antes de enviar
-- *"Registrá mi aviso de despacho"* → El agente completa el AVD y **pausa antes de confirmar**, alertando al proveedor que esta acción es irreversible
+- *"Agregá este producto a mi catálogo"* → El agente navega al módulo de catálogo, completa los campos con la información proporcionada, carga las imágenes y espera confirmación antes de guardar. (Nivel 2)
+- *"Cargá la factura de la OC #4521"* → El agente verifica si la OC está habilitada, accede al formulario y sube el archivo, solicitando aprobación antes de enviar. (Nivel 3)
+- *"Registrá mi aviso de despacho"* → El agente completa el AVD y **pausa antes de confirmar**, alertando al proveedor que esta acción es irreversible. (Nivel 3)
 
 **Puntos de confirmación obligatorios en acciones críticas:**
 - Guardar un producto nuevo en catálogo

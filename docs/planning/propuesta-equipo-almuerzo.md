@@ -27,13 +27,37 @@ Hipermaxi gestiona su red de proveedores mediante canales informales — WhatsAp
 
 ## La Solución Propuesta
 
-Un asistente virtual embebido en el Portal Web de Hipermaxi que opera en dos modalidades:
+Un asistente virtual embebido en el Portal Web de Hipermaxi que opera en dos modalidades principales (**Modalidad Consulta** y **Modalidad Copiloto**) y se segmenta en **tres niveles de acceso y seguridad** según el estado de autenticación del usuario:
+
+### Estructura de 3 Niveles del Asistente
+
+* **Nivel 1 — Público (Sin autenticar):**
+  * **Ubicación:** Visible únicamente en la pantalla de login del Portal de Proveedores.
+  * **Alcance:** Contexto estrictamente restringido. Asistencia exclusiva para problemas de acceso y onboarding.
+  * **Casos de Uso:** Solicitud de Nuevas Credenciales (`SOP-SR-01`) y Reenvío de accesos por pérdida u olvido (`SOP-SR-03`).
+  * **Seguridad:** No expone datos de negocio. Solo asiste guiando el proceso formal de envío de planillas y validación de encargado.
+
+* **Nivel 2 — Privado Base (Usuario autenticado):**
+  * **Ubicación:** Disponible dentro del portal una vez iniciada la sesión.
+  * **Alcance:** Soporte funcional sobre el uso general de la plataforma y el catálogo.
+  * **Casos de Uso:** Asistencia al Cargar Productos al Catálogo (`SOP-04`) y Activación de Código de Proveedor (`SOP-SR-02`).
+  * **Copiloto:** Puede guiar y validar campos obligatorios o formatos de imagen en tiempo real en la pantalla del catálogo.
+
+* **Nivel 3 — Privado Operativo / Transaccional (Acceso avanzado):**
+  * **Ubicación:** Se activa al interactuar con módulos que manejan transacciones financieras u operativas críticas.
+  * **Alcance:** Soporte en procesos con impacto financiero directo o flujos irreversibles.
+  * **Casos de Uso:** Carga de Facturas en Órdenes de Compra (`SOP-05`) y Avisos de Despacho (`SOP-06`).
+  * **Copiloto & Seguridad:** Mayor nivel de resguardo. El copiloto valida montos, formatos (PDF para facturas) y pausa obligatoriamente antes de confirmar un AVD o enviar una factura, alertando sobre la irreversibilidad y validando la consistencia de los datos con el backend.
+
+---
+
+### Modalidades de Operación
 
 **Modalidad Consulta** — El proveedor hace una pregunta en lenguaje natural y el agente responde usando la base de conocimiento de Hipermaxi (SOPs, manuales, procedimientos).
 
-**Modalidad Copiloto** — El agente guía al proveedor paso a paso dentro de los módulos del portal (credenciales, facturación, catálogo, AVD).
+**Modalidad Copiloto** — El agente guía al proveedor paso a paso dentro de los módulos del portal en tiempo real (resaltando elementos, rellenando formularios validados y previniendo errores).
 
-Cuando un caso supera las capacidades del agente, deriva al área de soporte humano correspondiente con trazabilidad completa.
+Cuando un caso supera las capacidades del agente, deriva al área de soporte humano correspondiente (Compras/Facturación/TI via GLPI) con trazabilidad completa.
 
 ---
 
