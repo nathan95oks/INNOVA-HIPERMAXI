@@ -55,8 +55,8 @@ Cuando un caso supera las capacidades del agente, deriva al área de soporte hum
 | Bloque | Horario | Foco |
 |---|---|---|
 | Bloque 1 | Sáb 10:15–13:00 | Problem framing — EP-01 |
-| **ALMUERZO** | **Sáb 13:00–14:00** | **Revisión de equipo ← estamos aquí** |
-| Bloque 2 | Sáb 14:00–17:30 | Desarrollo técnico + prototipo |
+| ALMUERZO** | Sáb 13:00–14:00 | Revisión de equipo |
+| **Bloque 2** | Sáb 14:00–17:30 | Desarrollo técnico + prototipo ← estamos aquí |
 | Bloque 3 | Sáb 18:00–20:30 | Mock-up avanzado + integración |
 | Bloque 4 | Sáb 21:00–Dom 12:00 | Desarrollo nocturno + demo funcional |
 | Bloque Final | Dom 09:00–12:00 | Pulido + validación del pitch |
@@ -205,19 +205,5 @@ Estructura del pitch para el jurado (5 minutos).
 - Expansión a otros proveedores / otras empresas del grupo
 
 **Entregable:** sección de modelo de negocio lista para incluir en el pitch de 5 minutos, con 1–2 slides de impacto y sostenibilidad.
-
----
-
-## Preguntas para confirmar en el almuerzo
-
-1. **¿Las 9 épicas propuestas cubren el alcance del MVP?** ¿Falta alguna? ¿Sobra alguna para las 48 horas?
-2. **EP-07 Trazabilidad** — ¿la dejamos como concepto en el pitch o intentamos implementarla?
-3. **Plataforma IA** — ¿ya tienen una decisión sobre qué LLM usar? (define EP-02 y EP-03, y desbloquea EP-08)
-4. **Stack propio** — ¿Luis y Nathanael tienen ya una propuesta después del Bloque 1?
-5. **Integración con el portal** — ¿el equipo de Hipermaxi puede darnos acceso o documentación técnica del portal?
-6. **EP-08 Costos** — ¿Luis/Nathanael pueden estimar costos de infra una vez elegido el stack? ¿Cuándo queda desbloqueado?
-7. **EP-09 Modelo de negocio** — ¿Diego puede avanzar esto en paralelo al desarrollo técnico del Bloque 2?
-
----
 
 *Documento generado durante el Bloque 1 · Innova Hack Santa Cruz 2026*
