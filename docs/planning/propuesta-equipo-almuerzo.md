@@ -18,8 +18,8 @@ Hipermaxi gestiona su red de proveedores mediante canales informales — WhatsAp
 |---|---|---|
 | Diego | Product Manager / Business Analyst | Product Owner |
 | Melina | Frontend + UI/UX | Scrum Master + Dev Team |
-| Adrián | Frontend | Dev Team |
-| Carla | Backend | Dev Team |
+| Carla | Frontend | Dev Team |
+| Adrian | Backend | Dev Team |
 | Luis | Backend | Dev Team |
 | Nathanael | Backend / Infra | Dev Team |
 
