@@ -104,7 +104,9 @@ class OutputGuardrail:
         # 6. Sanitizar el mensaje (prevenir XSS si se renderiza en HTML)
         sanitized = self._sanitize_html(mensaje)
         # 6b. Eliminar códigos SOP internos que no debe ver el proveedor
-        response["mensaje"] = self._remove_sop_codes(sanitized)
+        sanitized = self._remove_sop_codes(sanitized)
+        # 6c. Eliminar emojis (tono profesional/serio)
+        response["mensaje"] = self._remove_emojis(sanitized)
 
         # 7. Asegurar que requiere_escalamiento es bool
         response["requiere_escalamiento"] = bool(
@@ -147,3 +149,20 @@ class OutputGuardrail:
         cleaned = re.sub(r'\(\s*\)', '', cleaned)
         cleaned = re.sub(r'\s{2,}', ' ', cleaned)
         return cleaned.strip()
+
+    def _remove_emojis(self, text: str) -> str:
+        """Elimina emojis para mantener un tono profesional."""
+        emoji_pattern = re.compile(
+            "[\U0001F000-\U0001FFFF"
+            "\U00002600-\U000027BF"
+            "\U00002300-\U000023FF"
+            "\U00002B00-\U00002BFF"
+            "\U0001F900-\U0001F9FF"
+            "\U0001FA00-\U0001FA6F"
+            "\U0001FA70-\U0001FAFF"
+            "\u2705\u26A0\uFE0F\u2714\u2716"
+            "]+",
+            flags=re.UNICODE,
+        )
+        cleaned = emoji_pattern.sub('', text)
+        return re.sub(r'\s{2,}', ' ', cleaned).strip()

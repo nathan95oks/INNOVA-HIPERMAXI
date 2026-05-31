@@ -625,14 +625,12 @@
       const div = document.createElement('div');
       div.className = 'msg bot';
       let extra = '';
-      if (sop && sop !== 'N/A') {
-        extra += `<div><span class="sop-badge">📄 ${escapeHtml(sop)}</span></div>`;
-      }
+      // SOP badge oculto: el proveedor no necesita ver los códigos internos
       if (isAlert) {
-        extra += `<div class="alert-box">⚠️ <strong>Atención:</strong> Confirme esta acción solo si está seguro. Esta operación puede ser irreversible.</div>`;
+        extra += `<div class="alert-box"><strong>Atención:</strong> Confirme esta acción solo si está seguro. Esta operación puede ser irreversible.</div>`;
       }
       if (isEscalate) {
-        extra += `<div class="escalate-box">🔁 Este caso requiere atención de un agente humano. Comuníquese con <strong>soportehub@hipermaxi.com</strong></div>`;
+        extra += `<div class="escalate-box">Este caso requiere atención de un agente humano. Comuníquese con <strong>soportehub@hipermaxi.com</strong></div>`;
       }
       div.innerHTML = `
         <div class="msg-bubble">${formatMessage(text)}${extra}</div>
@@ -683,10 +681,36 @@
       return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    function formatMessage(text) {
-      // Allow basic HTML tags (b, i, strong, em) already sanitized by backend guardrail
-      // Convert newlines to <br>
-      return escapeHtml(text).replace(/\n/g, '<br>');
+    function formatMessage(rawText) {
+      // 1. Eliminar emojis
+      const text = rawText.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{2300}-\u{23FF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}✅⚠️📧📸📝🔁]/gu, '').trim();
+
+      // 2. Escapar HTML
+      let html = escapeHtml(text);
+
+      // 3. Negritas: **texto** → <strong>texto</strong>
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+      // 4. Cursiva: *texto* → <em>texto</em>
+      html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+
+      // 5. Listas: líneas que empiezan con •, -, * → <li>
+      const lines = html.split('\n');
+      const result = [];
+      let inList = false;
+      for (const line of lines) {
+        const listMatch = line.match(/^\s*[•\-\*]\s+(.+)/);
+        if (listMatch) {
+          if (!inList) { result.push('<ul>'); inList = true; }
+          result.push(`<li>${listMatch[1]}</li>`);
+        } else {
+          if (inList) { result.push('</ul>'); inList = false; }
+          result.push(line ? `<p>${line}</p>` : '');
+        }
+      }
+      if (inList) result.push('</ul>');
+
+      return result.filter(l => l !== '').join('');
     }
   </script>
 </body>
