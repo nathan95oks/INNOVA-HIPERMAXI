@@ -121,7 +121,58 @@ const FLOWS = {
 
 function isDoubtIntent(text) {
   const t = (text || '').toLowerCase()
-  return !!t.match(/no\s+s[eé]|no\s+entiendo|no\s+puedo|qu[eé]\s+hago|ayuda|donde\s+est[aá]\s+el\s+error|por\s+qu[eé]\s+falla/)
+  return !!t.match(/no\s+s[eé]|no\s+entiendo|no\s+puedo|qu[eé]\s+hago|donde\s+est[aá]\s+el\s+error|por\s+qu[eé]\s+falla/)
+}
+
+// Preguntas informativas / FAQ — respuesta de texto plano sin contexto DOM
+const FAQ_RESPONSES = {
+  producto_datos:
+    'Para registrar un producto en el Catálogo Electrónico necesitás:\n\n' +
+    '• **Descripción** del producto (nombre completo)\n' +
+    '• **Código de barra** (EAN-13 o DUN-14)\n' +
+    '• **Etiqueta** (código interno Hipermaxi)\n' +
+    '• **Imagen** en formato JPG o PNG (mín. 800×800 px)\n\n' +
+    'Todos estos campos son obligatorios — el sistema no permite guardar hasta completarlos.',
+
+  factura_datos:
+    'Para cargar una factura en una Orden de Compra necesitás:\n\n' +
+    '• El **PDF de la factura** emitida a nombre de Hipermaxi S.A.\n' +
+    '• Que el número de factura coincida con la OC correspondiente\n' +
+    '• Ingresar desde el módulo **Órdenes de Compra** del portal\n\n' +
+    'El sistema valida automáticamente el monto y los datos fiscales.',
+
+  plazo_factura:
+    'Tenés **48 horas hábiles** desde que Hipermaxi confirma la recepción de la mercadería para cargar la factura. Pasado ese plazo el sistema bloquea el acceso y debés contactar a Cuentas por Pagar.',
+
+  avd:
+    'El Aviso de Despacho (AVD) se registra **antes** de enviar la mercadería. Necesitás:\n\n' +
+    '• Número de OC activa\n' +
+    '• Fecha estimada de entrega\n' +
+    '• Transportista y número de guía\n\n' +
+    'Sin AVD registrado, el depósito de Hipermaxi no acepta la mercadería.',
+
+  credenciales:
+    'Para solicitar o recuperar credenciales de acceso al portal:\n\n' +
+    '1. Usá la opción **"¿Olvidaste tu contraseña?"** en la pantalla de login\n' +
+    '2. Si sos proveedor nuevo, contactá a tu ejecutivo comercial de Hipermaxi para que solicite la activación\n' +
+    '3. Si el problema persiste, escribí a **soporte.proveedores@hipermaxi.com**',
+}
+
+function isInfoQuestion(text) {
+  const t = (text || '').toLowerCase()
+  return !!t.match(
+    /qu[eé]\s+(datos|campos|informaci[oó]n|info|requisitos|documentos|archivos|necesito|se\s+pide)|para\s+registrar|para\s+cargar\s+una\s+factura|para\s+hacer\s+un\s+avd|c[oó]mo\s+funciona|qu[eé]\s+es\s+(el|la|un|una)\s*(avd|factura|cat[aá]logo|portal)|cu[aá]nto\s+(tarda|demora|tiempo)|plazo|fecha\s+l[ií]mite|cu[aá]les?\s+son\s+(los|las)\s*(requisitos|campos|datos|documentos|pasos)/
+  )
+}
+
+function buildInfoResponse(text) {
+  const t = (text || '').toLowerCase()
+  if (t.match(/avd|despacho/)) return FAQ_RESPONSES.avd
+  if (t.match(/plazo|tarda|demora|tiempo|fecha\s+l[ií]mite/)) return FAQ_RESPONSES.plazo_factura
+  if (t.match(/credencial|contrase|clave|acceso|login/)) return FAQ_RESPONSES.credenciales
+  if (t.match(/factura/)) return FAQ_RESPONSES.factura_datos
+  if (t.match(/producto|cat[aá]logo|registr/)) return FAQ_RESPONSES.producto_datos
+  return null
 }
 
 function isInvoiceCopilotIntent(text) {
@@ -233,17 +284,12 @@ function buildInvoiceCopilotFlow(context) {
 function buildDoubtFlow(context) {
   const issues = context?.issues || []
   if (!issues.length) {
+    // Sin contexto DOM (pregunta informativa) o sin issues detectados → solo texto
     return [
       {
         type: 'agent_response',
         payload: {
-          text: 'Revisé la pantalla y no detecté un error evidente en este momento. Si querés, ejecutamos una verificación guiada paso a paso.',
-        },
-      },
-      {
-        type: 'copilot_action',
-        payload: {
-          action: 'diagnose_page_context',
+          text: 'No detecté un error visible en esta pantalla. Contame con más detalle qué paso te está dando problema y te ayudo.',
         },
       },
     ]
@@ -313,13 +359,28 @@ wss.on('connection', (ws) => {
 
     if (msg.type === 'user_message') {
       const text = msg.payload?.text ?? ''
+      const context = msg.payload?.context ?? null
+      const history = msg.payload?.history ?? []
+
+      if (history.length) {
+        console.log('[mock] history:', history.map((m) => `${m.role}: ${m.text.slice(0, 40)}`).join(' | '))
+      }
+
       if (isInvoiceCopilotIntent(text)) {
-        sendDynamicFlow(ws, buildInvoiceCopilotFlow(msg.payload?.context))
+        sendDynamicFlow(ws, buildInvoiceCopilotFlow(context))
         return
       }
       if (isDoubtIntent(text)) {
-        sendDynamicFlow(ws, buildDoubtFlow(msg.payload?.context))
+        sendDynamicFlow(ws, buildDoubtFlow(context))
         return
+      }
+      // Pregunta informativa / FAQ: responder con texto plano sin tocar el DOM
+      if (isInfoQuestion(text)) {
+        const answer = buildInfoResponse(text)
+        if (answer) {
+          sendDynamicFlow(ws, [{ type: 'agent_response', payload: { text: answer } }])
+          return
+        }
       }
       sendFlow(ws, detectFlow(text))
     } else if (msg.type === 'copilot_confirm') {

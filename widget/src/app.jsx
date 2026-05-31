@@ -169,6 +169,45 @@ function isInvoiceHelpIntent(text) {
   return /(c[oó]mo|como).*(carg|llen|sub).*(factura)|(carg|llen|sub).*(factura)|factura/.test(t)
 }
 
+// Preguntas puramente informativas / FAQ que no requieren contexto del DOM.
+// Devuelve true sólo cuando el mensaje es operativo (copiloto, guía visual).
+function needsPageContext(text) {
+  const t = (text || '').toLowerCase()
+
+  // Señales de preguntas informativas: "qué datos", "qué necesito", "cómo funciona",
+  // "cuánto tarda", "qué es", "para qué sirve", "cuáles son los requisitos", etc.
+  const infoPatterns = [
+    /qu[eé]\s+(datos|campos|información|info|requisitos|documentos|archivos|pasos)\s+(necesito|debo|hay|tiene|pide|requiere)/,
+    /qu[eé]\s+(es|son|hace|significa|incluye|contiene)\b/,
+    /para\s+qu[eé]\s+(sirve|es|se usa)/,
+    /c[oó]mo\s+(funciona|se usa|se llama|se define|se calcula)/,
+    /cu[aá]nto\s+(tarda|demora|cuesta|vale|tiempo)/,
+    /cu[aá]les?\s+(son|documento|campos|pasos|requisito)/,
+    /\b(diferencia|ventaja|beneficio|pol[ií]tica|proceso|procedimiento|plazo|fecha l[ií]mite)\b/,
+    /\b(qu[eé]|cu[aá]l|cu[aá]ndo|por qu[eé]|d[oó]nde)\b.{0,40}\?$/,
+    /preguntas?\s+frecuentes?|faq|ayuda\s+general/,
+  ]
+
+  if (infoPatterns.some((re) => re.test(t))) return false
+
+  // Señales de acción operativa que sí necesitan DOM: "no puedo", "me da error",
+  // "no me deja", "ayuda con esto", "no sé qué hacer", copiloto de formulario.
+  const actionPatterns = [
+    /no\s+(puedo|me\s+deja|encuentro|aparece|funciona|carga|abre)/,
+    /me\s+(sale|da|aparece|muestra)\s+(un?\s+)?(error|problema|aviso)/,
+    /ayuda(me)?\s+(con|a)\s+(esto|el\s+formulario|la\s+pantalla|aqu[ií])/,
+    /no\s+s[eé]\s+(qué\s+hacer|c[oó]mo\s+seguir|por\s+d[oó]nde)/,
+    /qu[eé]\s+hago\s+(aqu[ií]|ahora|con\s+esto)/,
+    /est[aá]\s+(fallando|roto|vac[ií]o|mal)/,
+  ]
+
+  if (actionPatterns.some((re) => re.test(t))) return true
+
+  // Por defecto: si el texto es corto y no hay interrogación informativa,
+  // asumir que podría ser operativo y adjuntar contexto (conservador).
+  return true
+}
+
 function maybeMoveLauncherAwayFromTarget(el) {
   const launcher = document.querySelector('#hx-widget .hx-launcher')
   if (!launcher || !el) return
@@ -197,6 +236,9 @@ export function App({ level, wsUrl, context = 'portal' }) {
   const [unreadCount, setUnreadCount] = useState(0)
   const isOpenRef = useRef(false)
   const wsRef = useRef(null)
+  // Últimos N mensajes (rol + texto) para contexto de conversación
+  const HISTORY_LIMIT = 5
+  const historyRef = useRef([])
 
   const pushAgentMessage = useCallback((text) => {
     setMessages((prev) => [
@@ -208,6 +250,7 @@ export function App({ level, wsUrl, context = 'portal' }) {
         timestamp: new Date(),
       },
     ])
+    historyRef.current = [...historyRef.current, { role: 'agent', text }].slice(-HISTORY_LIMIT)
     if (!isOpenRef.current) {
       setUnreadCount((n) => n + 1)
     }
@@ -440,16 +483,25 @@ export function App({ level, wsUrl, context = 'portal' }) {
         ...prev,
         { id: crypto.randomUUID(), type: 'user', text, timestamp: new Date() },
       ])
+      historyRef.current = [...historyRef.current, { role: 'user', text }].slice(-HISTORY_LIMIT)
       setIsTyping(true)
 
       if (tryLocalCopilotShortcut(text)) {
         return
       }
 
-      const pageContext = buildPageContext()
+      // Solo adjuntar contexto de página cuando el mensaje es operativo
+      // (el usuario necesita guía visual). Para preguntas informativas / FAQ
+      // el contexto DOM no aporta valor y hace el payload innecesariamente grande.
+      const pageContext = needsPageContext(text) ? buildPageContext() : null
       wsRef.current?.sendMessage({
         type: 'user_message',
-        payload: { text, level, context: pageContext },
+        payload: {
+          text,
+          level,
+          history: historyRef.current.slice(0, -1), // excluye el mensaje actual (ya añadido)
+          ...(pageContext && { context: pageContext }),
+        },
       })
     },
     [level]
