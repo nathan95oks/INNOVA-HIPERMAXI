@@ -10,7 +10,9 @@ export function CopilotBubble({ onExpand }) {
       aria-label="Estoy señalando algo en la pantalla. Tocá para volver al chat."
       title="Volver al chat"
     >
-      <span class="hx-copilot-bubble__avatar" aria-hidden="true">HX</span>
+      <span class="hx-copilot-bubble__avatar" aria-hidden="true">
+        <img src="https://portal.hipermaxi.com//Images/icon.png" alt="Hipermaxi" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;" />
+      </span>
       <span class="hx-copilot-bubble__label">Mirá la pantalla</span>
       <span class="hx-copilot-bubble__dots" aria-hidden="true">
         <span class="hx-copilot-bubble__dot" />

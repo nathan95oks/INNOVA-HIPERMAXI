@@ -32,7 +32,9 @@ export function MessageList({ messages }) {
       {messages.map((msg) => (
         <li key={msg.id} class={`hx-message hx-message--${msg.type}`}>
           {(msg.type === 'agent' || msg.type === 'escalation') && (
-            <div class="hx-message__avatar" aria-hidden="true">HX</div>
+            <div class="hx-message__avatar" aria-hidden="true">
+              <img src="https://portal.hipermaxi.com//Images/icon.png" alt="Hipermaxi" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;" />
+            </div>
           )}
           <div class="hx-message__content">
             <div class="hx-message__bubble">

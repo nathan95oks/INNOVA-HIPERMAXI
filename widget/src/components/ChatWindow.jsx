@@ -38,7 +38,9 @@ export function ChatWindow({ messages, isTyping, onSend, onClose, wsStatus }) {
         <MessageList messages={messages} />
         {isTyping && (
           <div class="hx-typing-row">
-            <div class="hx-message__avatar" aria-hidden="true">HX</div>
+            <div class="hx-message__avatar" aria-hidden="true">
+              <img src="https://portal.hipermaxi.com//Images/icon.png" alt="Hipermaxi" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;" />
+            </div>
             <TypingIndicator />
           </div>
         )}
