@@ -58,10 +58,10 @@ widget-bundle (Vanilla JS / Preact)
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-04-S02-T01 | Scaffold del proyecto: estructura de carpetas, configuración de bundler (Vite o esbuild) | To Do |
-| EP-04-S02-T02 | CSS scoped — todos los estilos del widget bajo namespace `#hx-widget` para evitar colisiones con Bootstrap 3.3.7 | To Do |
-| EP-04-S02-T03 | Script de inyección: `widget.js` que crea el nodo raíz y monta el widget sin dependencias externas | To Do |
-| EP-04-S02-T04 | Verificación de compatibilidad: prueba de inyección en página HTML con Bootstrap 3.3.7 + jQuery | To Do |
+| EP-04-S02-T01 | Scaffold del proyecto: estructura de carpetas, configuración de bundler (Vite o esbuild) | Done — `widget/` |
+| EP-04-S02-T02 | CSS scoped — todos los estilos del widget bajo namespace `#hx-widget` para evitar colisiones con Bootstrap 3.3.7 | Done — `widget/src/styles/widget.css` |
+| EP-04-S02-T03 | Script de inyección: `widget.js` que crea el nodo raíz y monta el widget sin dependencias externas | Done — `widget/src/main.jsx` |
+| EP-04-S02-T04 | Verificación de compatibilidad: prueba de inyección en página HTML con Bootstrap 3.3.7 + jQuery | Done — `widget/index.html` |
 
 ---
 
@@ -73,11 +73,11 @@ widget-bundle (Vanilla JS / Preact)
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-04-S03-T01 | Componente `ChatLauncher` — botón flotante con toggle open/close y estado de notificación | To Do |
-| EP-04-S03-T02 | Componente `ChatWindow` — contenedor con header (título + botón cerrar), body (mensajes) y footer (input) | To Do |
-| EP-04-S03-T03 | Componente `MessageList` — render de mensajes tipo `user` y `agent` con timestamps | To Do |
-| EP-04-S03-T04 | Componente `TypingIndicator` — animación de puntos mientras el agente responde | To Do |
-| EP-04-S03-T05 | Componente `InputBar` — campo de texto con envío por Enter y por botón, deshabilitado mientras el agente responde | To Do |
+| EP-04-S03-T01 | Componente `ChatLauncher` — botón flotante con toggle open/close y estado de notificación | Done — `widget/src/components/ChatLauncher.jsx` |
+| EP-04-S03-T02 | Componente `ChatWindow` — contenedor con header (título + botón cerrar), body (mensajes) y footer (input) | Done — `widget/src/components/ChatWindow.jsx` |
+| EP-04-S03-T03 | Componente `MessageList` — render de mensajes tipo `user` y `agent` con timestamps | Done — `widget/src/components/MessageList.jsx` |
+| EP-04-S03-T04 | Componente `TypingIndicator` — animación de puntos mientras el agente responde | Done — `widget/src/components/TypingIndicator.jsx` |
+| EP-04-S03-T05 | Componente `InputBar` — campo de texto con envío por Enter y por botón, deshabilitado mientras el agente responde | Done — `widget/src/components/InputBar.jsx` |
 
 ---
 
@@ -89,10 +89,10 @@ widget-bundle (Vanilla JS / Preact)
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-04-S04-T01 | `WebSocketClient` — clase que gestiona conexión, envío (`sendMessage`) y recepción de mensajes | To Do |
-| EP-04-S04-T02 | Manejo de eventos: `onOpen`, `onMessage`, `onClose`, `onError` con actualización reactiva del estado del chat | To Do |
-| EP-04-S04-T03 | Reconexión automática con backoff exponencial (3 intentos: 1s, 2s, 4s) | To Do |
-| EP-04-S04-T04 | Formato de mensajes acordado con EP-03: `{ type: "user_message" | "agent_response" | "copilot_action", payload: {...} }` | To Do |
+| EP-04-S04-T01 | `WebSocketClient` — clase que gestiona conexión, envío (`sendMessage`) y recepción de mensajes | Done — `widget/src/lib/WebSocketClient.js` |
+| EP-04-S04-T02 | Manejo de eventos: `onOpen`, `onMessage`, `onClose`, `onError` con actualización reactiva del estado del chat | Done — `widget/src/lib/WebSocketClient.js` |
+| EP-04-S04-T03 | Reconexión automática con backoff exponencial (3 intentos: 1s, 2s, 4s) | Done — `widget/src/lib/WebSocketClient.js` |
+| EP-04-S04-T04 | Formato de mensajes acordado con EP-03: `{ type: "user_message" | "agent_response" | "copilot_action", payload: {...} }` | Done — contrato definido en CLAUDE.md |
 
 ---
 
@@ -106,7 +106,7 @@ widget-bundle (Vanilla JS / Preact)
 |---|---|---|
 | EP-04-S05-T01 | `HighlightHelper` — función `highlight(selector: string, message: string)` que aplica clase CSS de resaltado + tooltip al elemento DOM indicado | To Do |
 | EP-04-S05-T02 | `clearHighlights()` — limpia todos los resaltados activos al avanzar al siguiente paso | To Do |
-| EP-04-S05-T03 | Componente `ConfirmModal` — diálogo con descripción de la acción a ejecutar, botón "Confirmar" y botón "Cancelar" | To Do |
+| EP-04-S05-T03 | Componente `ConfirmModal` — diálogo con descripción de la acción a ejecutar, botón "Confirmar" y botón "Cancelar" | Done — `widget/src/components/ConfirmModal.jsx` |
 | EP-04-S05-T04 | Flujo completo de confirmación: el widget pausa la acción, muestra el modal, y solo ejecuta/descarta según la respuesta del usuario | To Do |
 
 ---
@@ -119,7 +119,7 @@ widget-bundle (Vanilla JS / Preact)
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-04-S06-T01 | Servidor WebSocket mock (`mock_server.py` o `mock_server.js`) con respuestas predefinidas para UC-01 y UC-02 | To Do |
+| EP-04-S06-T01 | Servidor WebSocket mock (`mock_server.py` o `mock_server.js`) con respuestas predefinidas para UC-01 y UC-02 | Done — `widget/mock/mock_server.js` |
 | EP-04-S06-T02 | Flujo UC-01 Modalidad Consulta: pregunta sobre credenciales → respuesta del agente con pasos | To Do |
 | EP-04-S06-T03 | Flujo UC-02 Modalidad Copiloto: carga de factura → resaltado de campos → ConfirmModal → confirmación | To Do |
 | EP-04-S06-T04 | Reporte de pruebas: captura de pantalla o video de los dos flujos completados sin errores | To Do |

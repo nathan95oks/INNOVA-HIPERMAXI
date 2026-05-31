@@ -178,7 +178,7 @@ transcripcion_desafio_hipermaxi.md
 | ID | Épica | Directorio de entregables | Estado |
 |---|---|---|---|
 | EP-01 | Análisis y Definición del Problema | `docs/EP-01/` | ✅ Completado |
-| EP-02 | Base de Conocimiento (RAG) | `docs/EP-02/` ← por crear | 🔄 In Progress |
+| EP-02 | Base de Conocimiento (RAG) | `docs/EP-02/` | ✅ Completado |
 | EP-03 | Agente IA — Motor Conversacional | `docs/EP-03/` ← por crear | 🔄 In Progress |
 | EP-04 | UI/UX — Widget Embebido | `docs/EP-04/` ← por crear | 🔄 In Progress |
 | EP-05 | Integración con el Portal Web | `docs/EP-05/` ← por crear | 🔒 Bloqueado |

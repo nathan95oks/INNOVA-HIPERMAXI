@@ -4,6 +4,20 @@ import { ChatWindow } from './components/ChatWindow.jsx'
 import { ConfirmModal } from './components/ConfirmModal.jsx'
 import { WebSocketClient } from './lib/WebSocketClient.js'
 
+// SOP → página del portal. Usado por el handler de "navigate".
+// Las rutas son relativas al origen actual — funcionan tanto en dev como en el portal real.
+const SOP_PAGE_MAP = {
+  'SOP-SR-01': './landing.html',
+  'SOP-SR-02': './productos.html',
+  'SOP-SR-03': './index.html',
+  'SOP-04':    './productos.html',
+  'SOP-05':    './factura.html',
+  'SOP-06':    './factura.html',
+}
+
+// Selectores que requieren ConfirmModal antes de ejecutar (acciones irreversibles, Nivel 3)
+const IRREVERSIBLE_SELECTORS = ['#btn-confirmar-factura', '#btn-confirmar-avd', '#btn-confirmar']
+
 const WELCOME_TEXTS = {
   portal: '¡Hola! Soy el asistente virtual de Hipermaxi. ¿En qué puedo ayudarte hoy?\n\nPuedo asistirte con credenciales de acceso, carga de facturas, registro de productos y Avisos de Despacho.',
   onboarding: '¡Hola! Soy el asistente de Hipermaxi para nuevos proveedores.\n\n¿Te gustaría trabajar con nosotros? Puedo orientarte sobre:\n\n• Cómo solicitar tu código de proveedor\n• Requisitos y documentación necesaria\n• Cómo acceder al portal una vez registrado\n\n¿Por dónde quieres empezar?',
@@ -46,6 +60,33 @@ export function App({ level, wsUrl, context = 'portal' }) {
   }, [wsUrl])
 
   function handleServerMessage(msg) {
+    // ── Formato real del backend FastAPI ──────────────────────────────────────
+    // { mensaje, accion_ui: {tipo, selector, datos}, sop_referencia,
+    //   requiere_escalamiento, confianza }
+    if (msg.mensaje !== undefined) {
+      setIsTyping(false)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          type: 'agent',
+          text: msg.mensaje,
+          timestamp: new Date(),
+        },
+      ])
+      if (!isOpenRef.current) setUnreadCount((n) => n + 1)
+
+      // Disparar acción UI si el backend la incluyó
+      const ui = msg.accion_ui
+      if (ui && ui.tipo && ui.tipo !== 'none') {
+        // Pequeño delay para que el mensaje aparezca antes que el highlight
+        setTimeout(() => _dispatchUiAction(ui, msg), 420)
+      }
+      return
+    }
+
+    // ── Formato del mock server (compatibilidad hacia atrás) ──────────────────
+    // { type: "agent_response" | "copilot_action", payload: {...} }
     if (msg.type === 'agent_response') {
       setIsTyping(false)
       setMessages((prev) => [
@@ -57,36 +98,82 @@ export function App({ level, wsUrl, context = 'portal' }) {
           timestamp: new Date(),
         },
       ])
-      if (!isOpenRef.current) {
-        setUnreadCount((n) => n + 1)
-      }
+      if (!isOpenRef.current) setUnreadCount((n) => n + 1)
     } else if (msg.type === 'copilot_action') {
-      handleCopilotAction(msg.payload)
+      _handleLegacyCopilotAction(msg.payload)
     }
   }
 
-  function handleCopilotAction(payload) {
+  // ── Dispatcher de accion_ui (formato backend) ─────────────────────────────
+
+  function _dispatchUiAction(ui, fullMsg) {
+    switch (ui.tipo) {
+
+      case 'highlight': {
+        highlightElement(ui.selector, fullMsg.mensaje.split('\n')[0])
+        const isIrreversible = IRREVERSIBLE_SELECTORS.some((s) => ui.selector?.includes(s.replace('#', '')))
+        if (isIrreversible) {
+          setConfirmModal({
+            description: fullMsg.mensaje,
+            alertOnly: false,
+            onConfirm: () => {
+              setConfirmModal(null)
+              wsRef.current?.sendMessage({ type: 'copilot_confirm', payload: { target: ui.selector } })
+            },
+            onCancel: () => {
+              setConfirmModal(null)
+              clearHighlights()
+              wsRef.current?.sendMessage({ type: 'copilot_cancel', payload: { target: ui.selector } })
+            },
+          })
+        }
+        break
+      }
+
+      case 'show_alert': {
+        // Aviso de irreversibilidad (ej. AVD confirmado no se puede revertir).
+        // Solo requiere acuse — sin Confirmar/Cancelar.
+        setConfirmModal({
+          description: fullMsg.mensaje,
+          alertOnly: true,
+          onConfirm: () => setConfirmModal(null),
+          onCancel: () => setConfirmModal(null),
+        })
+        break
+      }
+
+      case 'navigate': {
+        // Prioridad: datos.url → datos.page → mapa SOP → no hacer nada
+        const dest = ui.datos?.url ?? ui.datos?.page ?? SOP_PAGE_MAP[fullMsg.sop_referencia]
+        if (dest) {
+          // Delay de 1.2s para que el proveedor lea el mensaje antes de la redirección
+          setTimeout(() => { window.location.href = dest }, 1200)
+        }
+        break
+      }
+
+      default:
+        break
+    }
+  }
+
+  // ── Handler legacy para mock server ──────────────────────────────────────
+
+  function _handleLegacyCopilotAction(payload) {
     if (payload.action === 'highlight') {
       highlightElement(payload.target, payload.message)
-
-      // Human-in-the-loop: mandatory confirmation before any destructive action
       if (payload.requiresConfirmation) {
         setConfirmModal({
           description: payload.message,
+          alertOnly: false,
           onConfirm: () => {
             setConfirmModal(null)
-            wsRef.current?.sendMessage({
-              type: 'copilot_confirm',
-              payload: { target: payload.target },
-            })
+            wsRef.current?.sendMessage({ type: 'copilot_confirm', payload: { target: payload.target } })
           },
           onCancel: () => {
             setConfirmModal(null)
             clearHighlights()
-            wsRef.current?.sendMessage({
-              type: 'copilot_cancel',
-              payload: { target: payload.target },
-            })
+            wsRef.current?.sendMessage({ type: 'copilot_cancel', payload: { target: payload.target } })
           },
         })
       }
@@ -102,10 +189,14 @@ export function App({ level, wsUrl, context = 'portal' }) {
 
     el.classList.add('hx-highlight')
 
+    // Tooltip con el primer párrafo del mensaje (no más de 80 chars)
     const tooltip = document.createElement('div')
     tooltip.className = 'hx-tooltip'
-    tooltip.textContent = message
+    tooltip.textContent = message.length > 80 ? message.slice(0, 77) + '…' : message
     el.appendChild(tooltip)
+
+    // Desplazar la vista al elemento resaltado si está fuera del viewport
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   function clearHighlights() {

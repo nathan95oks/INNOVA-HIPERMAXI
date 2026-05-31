@@ -59,6 +59,8 @@ Un asistente virtual embebido en el Portal Web de Hipermaxi que opera en dos mod
 
 Cuando un caso supera las capacidades del agente, deriva al área de soporte humano correspondiente (Compras/Facturación/TI via GLPI) con trazabilidad completa.
 
+> **ADR-03-01 (31/05/2026):** La Modalidad Copiloto se implementa como **demo estático** para el pitch. El widget lee pasos pre-mapeados por SOP y resalta selectores CSS conocidos del portal; no hay inspección DOM dinámica en tiempo real. La documentación de pruebas de escalabilidad (EP-03-S04) es el argumento ante el jurado para la evolución al copiloto real.
+
 ---
 
 ## Tablero Trello — Estructura
@@ -80,9 +82,9 @@ Cuando un caso supera las capacidades del agente, deriva al área de soporte hum
 |---|---|---|
 | Bloque 1 | Sáb 10:15–13:00 | Problem framing — EP-01 |
 | ALMUERZO** | Sáb 13:00–14:00 | Revisión de equipo |
-| **Bloque 2** | Sáb 14:00–17:30 | Desarrollo técnico + prototipo ← estamos aquí |
+| **Bloque 2** | Sáb 14:00–17:30 | Desarrollo técnico + prototipo |
 | Bloque 3 | Sáb 18:00–20:30 | Mock-up avanzado + integración |
-| Bloque 4 | Sáb 21:00–Dom 12:00 | Desarrollo nocturno + demo funcional |
+| **Bloque 4** | Sáb 21:00–Dom 12:00 | Desarrollo nocturno + demo funcional ← estamos aquí |
 | Bloque Final | Dom 09:00–12:00 | Pulido + validación del pitch |
 | Submission | Dom 12:00 | Entrega al comité organizador |
 | Pitch | Dom 14:00–17:30 | 5 min presentación + 3 min preguntas |
@@ -95,7 +97,7 @@ Cuando un caso supera las capacidades del agente, deriva al área de soporte hum
 |---|---|---|---|---|---|
 | 🟣 EP-01 | Análisis y definición del problema | **Bloque 1** (Sáb 10:15–13:00) | — | Diego, Melina, Carla, Adrián, Luis, Nathanael | ✅ Closed |
 | 🟡 EP-02 | Base de Conocimiento | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Luis / Nathanael (+ Adrián en validación) | ✅ Closed |
-| 🔵 EP-03 | Agente IA — Motor conversacional | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3, Bloque 4 | Adrián / Luis / Nathanael | 🔓 DESBLOQUEADO — iniciar ahora |
+| 🔵 EP-03 | Agente IA — Motor conversacional | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3, Bloque 4 | Adrián / Luis / Nathanael | 🔄 In Progress |
 | 🟢 EP-04 | UI/UX — Widget embebido | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Diego (widget funcional) / Melina (diseño pendiente) | 🔄 In Progress |
 | 🟠 EP-05 | Integración con el Portal Web | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián / Luis / Nathanael | 🔒 Bloqueado por EP-03 (EP-04 widget ✅) |
 | 🔴 EP-06 | Derivación a Soporte Humano | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián | 🔒 Bloqueado por EP-03 |
