@@ -15,10 +15,11 @@ function mount() {
   document.body.appendChild(root)
 
   // Read config injected by the portal's <script> block
-  const level = parseInt(window.__HX_WIDGET_LEVEL__ ?? '2', 10)
-  const wsUrl = window.__HX_WIDGET_WS_URL__ ?? 'ws://localhost:8765'
+  const level   = parseInt(window.__HX_WIDGET_LEVEL__   ?? '2',       10)
+  const wsUrl   = window.__HX_WIDGET_WS_URL__   ?? 'ws://localhost:8765'
+  const context = window.__HX_WIDGET_CONTEXT__  ?? 'portal'
 
-  render(<App level={level} wsUrl={wsUrl} />, root)
+  render(<App level={level} wsUrl={wsUrl} context={context} />, root)
 }
 
 if (document.readyState === 'loading') {
