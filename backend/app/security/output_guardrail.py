@@ -102,7 +102,9 @@ class OutputGuardrail:
             response["confianza"] = 0.0
 
         # 6. Sanitizar el mensaje (prevenir XSS si se renderiza en HTML)
-        response["mensaje"] = self._sanitize_html(mensaje)
+        sanitized = self._sanitize_html(mensaje)
+        # 6b. Eliminar códigos SOP internos que no debe ver el proveedor
+        response["mensaje"] = self._remove_sop_codes(sanitized)
 
         # 7. Asegurar que requiere_escalamiento es bool
         response["requiere_escalamiento"] = bool(
@@ -127,3 +129,21 @@ class OutputGuardrail:
     def _sanitize_html(self, text: str) -> str:
         """Elimina tags HTML potencialmente peligrosos (permite b, i, strong, em)."""
         return _ALLOWED_HTML_TAGS_RE.sub("", text)
+
+    def _remove_sop_codes(self, text: str) -> str:
+        """Elimina códigos SOP internos del texto visible al proveedor."""
+        # Elimina "el SOP-SR-03", "según el SOP-04", "(SOP-SR-01)", etc.
+        cleaned = re.sub(
+            r'\b(?:el|los|la|las|un|según|de|del|en|al)\s+\(?\bSOP-(?:SR-)?\d+\b\)?',
+            '',
+            text,
+            flags=re.I,
+        )
+        # Elimina cualquier código SOP restante sin artículo
+        cleaned = re.sub(r'\(?\bSOP-(?:SR-)?\d+\b\)?[,.]?', '', cleaned, flags=re.I)
+        # Limpia puntuación y espacios sueltos
+        cleaned = re.sub(r'\s*,\s*,', ',', cleaned)
+        cleaned = re.sub(r',\s*\.', '.', cleaned)
+        cleaned = re.sub(r'\(\s*\)', '', cleaned)
+        cleaned = re.sub(r'\s{2,}', ' ', cleaned)
+        return cleaned.strip()
