@@ -312,6 +312,20 @@ export function App({ level, wsUrl, context = 'portal' }) {
           timestamp: new Date(),
         },
       ])
+      historyRef.current = [...historyRef.current, { role: 'agent', text: msg.payload.text }].slice(-HISTORY_LIMIT)
+      if (!isOpenRef.current) setUnreadCount((n) => n + 1)
+    } else if (msg.type === 'escalation') {
+      setIsTyping(false)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          type: 'escalation',
+          text: msg.payload.text,
+          contacts: msg.payload.contacts ?? [],
+          timestamp: new Date(),
+        },
+      ])
       if (!isOpenRef.current) setUnreadCount((n) => n + 1)
     } else if (msg.type === 'copilot_action') {
       _handleLegacyCopilotAction(msg.payload)

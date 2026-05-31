@@ -124,6 +124,31 @@ function isDoubtIntent(text) {
   return !!t.match(/no\s+s[eé]|no\s+entiendo|no\s+puedo|qu[eé]\s+hago|donde\s+est[aá]\s+el\s+error|por\s+qu[eé]\s+falla/)
 }
 
+function isEscalationIntent(text) {
+  const t = (text || '').toLowerCase()
+  return !!t.match(
+    /deriv[aá](me)?|soporte\s+(humano|t[eé]cnico|real)|quiero\s+hablar|hablar\s+con\s+(alguien|una\s+persona)|llamar|tel[eé]fono|no\s+(me\s+)?(ayuda|sirve|resuelve)|no\s+puedo\s+(m[aá]s|seguir|resolver)|escalar|contacto\s+directo/
+  )
+}
+
+const ESCALATION_CONTACTS = [
+  { area: 'Soporte TI / Portal', phone: '+591 3-354-1000', email: 'soporte.portal@hipermaxi.com', hours: 'Lun–Vie 8:00–18:00' },
+  { area: 'Compras y Facturas',  phone: '+591 3-354-1001', email: 'cuentasporpagar@hipermaxi.com', hours: 'Lun–Vie 8:00–17:00' },
+  { area: 'Catálogo Electrónico', phone: '+591 3-354-1002', email: 'catalogo@hipermaxi.com', hours: 'Lun–Vie 9:00–17:00' },
+]
+
+function buildEscalationFlow() {
+  return [
+    {
+      type: 'escalation',
+      payload: {
+        text: 'Entiendo que no pude resolver tu consulta. Te conecto con el equipo de soporte de Hipermaxi para que un especialista te asista directamente.',
+        contacts: ESCALATION_CONTACTS,
+      },
+    },
+  ]
+}
+
 // Preguntas informativas / FAQ — respuesta de texto plano sin contexto DOM
 const FAQ_RESPONSES = {
   producto_datos:
@@ -368,6 +393,10 @@ wss.on('connection', (ws) => {
 
       if (isInvoiceCopilotIntent(text)) {
         sendDynamicFlow(ws, buildInvoiceCopilotFlow(context))
+        return
+      }
+      if (isEscalationIntent(text)) {
+        sendDynamicFlow(ws, buildEscalationFlow())
         return
       }
       if (isDoubtIntent(text)) {
