@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 
 GEMINI_API_KEY: str = os.environ.get("GEMINI_API_KEY", "")
 VECTOR_STORE_DIR: str = os.environ.get("VECTOR_STORE_DIR", "knowledge/vector_store")
-SCORE_THRESHOLD: float = float(os.environ.get("RAG_SCORE_THRESHOLD", "0.65"))
+SCORE_THRESHOLD: float = float(os.environ.get("RAG_SCORE_THRESHOLD", "0.75"))
 TOP_K: int = int(os.environ.get("RAG_TOP_K", "5"))
 MAX_HISTORY_TURNS: int = 6  # Últimos 6 mensajes (3 pares user/assistant)
 
@@ -185,6 +185,30 @@ async def trigger_ingest(req: IngestRequest) -> dict[str, Any]:
         })
 
     return {"total_chunks": total_chunks, "documents": results}
+
+
+class SearchQuery(BaseModel):
+    query: str
+    top_k: int = 5
+    filter_sop: str | None = None
+
+
+@app.post("/knowledge/search")
+async def search_knowledge(req: SearchQuery) -> list[dict[str, Any]]:
+    """
+    Busca contexto en la base de conocimiento usando RAG.
+    (Endpoint REST puro de búsqueda para pruebas rápidas)
+    """
+    if not _vector_store:
+        raise HTTPException(status_code=503, detail="Vector store no inicializado")
+
+    results = _vector_store.search(
+        query=req.query,
+        top_k=req.top_k,
+        score_threshold=SCORE_THRESHOLD,
+        filter_sop=req.filter_sop,
+    )
+    return results
 
 
 # ──────────────────────────────────────────────

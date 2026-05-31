@@ -45,6 +45,11 @@ TEST_CASES: list[tuple[str, str, str]] = [
     (
         "UC-01",
         "No puedo ingresar al portal, olvidé mis credenciales de acceso",
+        "SOP-SR-03",
+    ),
+    (
+        "UC-01b",
+        "Soy un proveedor nuevo y necesito solicitar mis credenciales de primer acceso por primera vez",
         "SOP-SR-01",
     ),
     (
@@ -54,7 +59,7 @@ TEST_CASES: list[tuple[str, str, str]] = [
     ),
     (
         "UC-03",
-        "Necesito reenviar un documento que fue rechazado",
+        "Mi encargado HUB no recibió el usuario y contraseña, necesito que nos reenvíen las credenciales",
         "SOP-SR-03",
     ),
     (
