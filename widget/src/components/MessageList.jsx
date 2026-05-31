@@ -11,7 +11,7 @@ function ContactCard({ contacts }) {
       {contacts.map((c) => (
         <div class="hx-contact-card__row" key={c.area}>
           <div class="hx-contact-card__area">{c.area}</div>
-          <a class="hx-contact-card__phone" href={`tel:${c.phone.replace(/\s/g,'')}`}>{c.phone}</a>
+          {c.phone && <a class="hx-contact-card__phone" href={`tel:${c.phone.replace(/\s/g,'')}`}>{c.phone}</a>}
           <a class="hx-contact-card__email" href={`mailto:${c.email}`}>{c.email}</a>
           <div class="hx-contact-card__hours">{c.hours}</div>
         </div>

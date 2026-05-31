@@ -132,9 +132,18 @@ function isEscalationIntent(text) {
 }
 
 const ESCALATION_CONTACTS = [
-  { area: 'Soporte TI / Portal', phone: '+591 3-354-1000', email: 'soporte.portal@hipermaxi.com', hours: 'Lun–Vie 8:00–18:00' },
-  { area: 'Compras y Facturas',  phone: '+591 3-354-1001', email: 'cuentasporpagar@hipermaxi.com', hours: 'Lun–Vie 8:00–17:00' },
-  { area: 'Catálogo Electrónico', phone: '+591 3-354-1002', email: 'catalogo@hipermaxi.com', hours: 'Lun–Vie 9:00–17:00' },
+  {
+    area: 'Soporte a Proveedores',
+    phone: '+591 78401543',
+    email: 'soportehub@hipermaxi.com',
+    hours: 'WhatsApp y correo — consultas e incidencias',
+  },
+  {
+    area: 'Soporte TI — Habilitación técnica',
+    phone: '+591 78401543',
+    email: 'soporteti@hipermaxi.com',
+    hours: 'Credenciales, accesos y habilitaciones del portal',
+  },
 ]
 
 function buildEscalationFlow() {
@@ -142,7 +151,7 @@ function buildEscalationFlow() {
     {
       type: 'escalation',
       payload: {
-        text: 'Entiendo que no pude resolver tu consulta. Te conecto con el equipo de soporte de Hipermaxi para que un especialista te asista directamente.',
+        text: 'Este caso requiere atención del equipo de Soporte de Hipermaxi. Podés contactarlos por WhatsApp o escribir al correo oficial con el detalle de tu consulta.',
         contacts: ESCALATION_CONTACTS,
       },
     },
