@@ -21,6 +21,10 @@ env/
 backend/knowledge/vector_store/
 backend/knowledge/sop_images/
 
+# Node
+node_modules/
+dist/
+
 # Logs
 *.log
 logs/
@@ -37,3 +41,7 @@ Thumbs.db
 
 # Docker
 *.override.yml
+
+# Claude Code
+.claude/
+widget/.claude/

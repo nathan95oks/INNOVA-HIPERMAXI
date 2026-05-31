@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Hipermaxi — Soporte y Ayudas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:        #213A6E;
+      --navy-dark:   #172C54;
+      --orange:      #B85C2C;
+      --orange-light:#D4834A;
+      --beige:       #F5EAD8;
+      --beige-dark:  #ECD9C0;
+      --slate:       #3D4B60;
+      --slate-dark:  #2E3A4D;
+      --text:        #1A1A1A;
+      --text-sec:    #4A4A4A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--beige);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top navbar (navy) ──────────────────────── */
+    .top-bar {
+      background: var(--navy);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .top-bar__logo {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+    }
+
+    .top-bar__name {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.3px;
+    }
+
+    /* ── Secondary nav bar ──────────────────────── */
+    .sec-bar {
+      background: white;
+      border-bottom: 2px solid var(--beige-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+    }
+
+    .sec-bar__link {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sec-bar__link:hover { color: var(--orange); }
+
+    /* ── Login CTA bar ──────────────────────────── */
+    .login-bar {
+      background: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: background .15s;
+      text-decoration: none;
+    }
+
+    .login-bar:hover { background: var(--orange-light); }
+
+    .login-bar__text {
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.1px;
+    }
+
+    /* ── Hero section ───────────────────────────── */
+    .hero {
+      background: var(--beige);
+      padding: 48px 28px 36px;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero__title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Proveedor onboarding card ──────────────── */
+    .onboard-card {
+      background: white;
+      border-radius: 16px;
+      border: 2px solid var(--orange);
+      box-shadow: 0 4px 24px rgba(184, 92, 44, 0.12);
+      padding: 28px 30px;
+      display: flex;
+      align-items: flex-start;
+      gap: 22px;
+      margin-bottom: 36px;
+    }
+
+    .onboard-card__icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .onboard-card__content { flex: 1; }
+
+    .onboard-card__title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+
+    .onboard-card__desc {
+      font-size: 14px;
+      color: var(--text-sec);
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+
+    .onboard-card__steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      color: var(--text-sec);
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .btn-chat {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 22px;
+      background: linear-gradient(135deg, var(--navy) 0%, #2E4E8E 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 16px rgba(33, 58, 110, 0.3);
+      text-decoration: none;
+    }
+
+    .btn-chat:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(33, 58, 110, 0.4);
+    }
+
+    .btn-chat__pulse {
+      width: 8px;
+      height: 8px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    /* ── Section nav (dark slate) ───────────────── */
+    .section-nav {
+      background: var(--slate);
+      padding: 0;
+    }
+
+    .section-nav__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .section-nav__item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 22px 16px;
+      color: white;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 700;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+      cursor: pointer;
+    }
+
+    .section-nav__item:hover {
+      background: var(--slate-dark);
+    }
+
+    .section-nav__item--active {
+      border-bottom-color: var(--orange);
+    }
+
+    .section-nav__arrow {
+      color: var(--orange);
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 4px;
+    }
+
+    /* ── Contact info section ───────────────────── */
+    .contact-section {
+      background: var(--beige);
+      flex: 1;
+      padding: 36px 28px 60px;
+    }
+
+    .contact-section__inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .contact-card {
+      background: white;
+      border: 1.5px solid var(--orange);
+      border-radius: 10px;
+      padding: 22px 26px;
+      font-size: 14px;
+      line-height: 2;
+      color: var(--text-sec);
+    }
+
+    .contact-card strong { color: var(--text); font-weight: 700; }
+
+    .contact-card a {
+      color: var(--orange);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-card a:hover { text-decoration: underline; }
+
+    .email-line {
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .email-line span {
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    /* ── Highlight box ──────────────────────────── */
+    .chat-hint {
+      background: linear-gradient(135deg, #EFF3FF 0%, #E8F0FF 100%);
+      border: 1.5px solid #C5D4F5;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      color: var(--navy);
+    }
+
+    .chat-hint strong { font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Top bar ──────────────────────────────────── -->
+  <header class="top-bar">
+    <!-- Hipermaxi X logo (SVG aproximado) -->
+    <svg class="top-bar__logo" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="42" height="42" rx="8" fill="#C97B3A"/>
+      <text x="21" y="29" text-anchor="middle" font-size="26" font-weight="900" fill="white" font-family="Arial, sans-serif">H</text>
+    </svg>
+    <span class="top-bar__name">Portal Hipermaxi</span>
+  </header>
+
+  <!-- ── Secondary nav ────────────────────────────── -->
+  <div class="sec-bar">
+    <a href="#soporte" class="sec-bar__link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.8 19.79 19.79 0 0 1 1.62 3.22 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.17 6.17l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      Soporte y Ayudas
+    </a>
+  </div>
+
+  <!-- ── Login CTA ─────────────────────────────────── -->
+  <a href="index.html" class="login-bar">
+    <span class="login-bar__text">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+      </svg>
+      Iniciar sesión como proveedor
+    </span>
+  </a>
+
+  <!-- ── Hero ──────────────────────────────────────── -->
+  <div class="hero">
+    <h1 class="hero__title">Soporte Técnico y Videos de Ayuda.</h1>
+
+    <!-- Onboarding card — NEW for our solution -->
+    <div class="onboard-card">
+      <div class="onboard-card__icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="onboard-card__content">
+        <div class="onboard-card__title">¿Quieres ser proveedor de Hipermaxi?</div>
+        <p class="onboard-card__desc">
+          Si aún no tienes acceso al portal, nuestro asistente virtual puede guiarte paso a paso para obtener tus credenciales y empezar a operar como proveedor.
+        </p>
+        <div class="onboard-card__steps">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            Solicita tu código de proveedor al Departamento BI
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            Completa el formulario de activación con tus datos
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            Recibe tus credenciales en 24–48 horas hábiles
+          </div>
+        </div>
+        <button class="btn-chat" onclick="openWidget()">
+          <span class="btn-chat__pulse"></span>
+          Consultar con el Asistente Virtual
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section nav (dark) ────────────────────────── -->
+  <div class="section-nav">
+    <div class="section-nav__inner">
+      <a href="#contacto" class="section-nav__item section-nav__item--active">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        Contáctenos
+        <span class="section-nav__arrow">▼</span>
+      </a>
+      <a href="#videos" class="section-nav__item">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>
+        </svg>
+        Videos de Ayuda
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Contact section ───────────────────────────── -->
+  <div class="contact-section" id="contacto">
+    <div class="contact-section__inner">
+
+      <div class="contact-card">
+        <strong>Hipermaxi - Departamento BI</strong> Av. Roca y Coronado, 3er y 4to anillo<br>
+        Teléfono Fijo: 3115575 / 3117045 , Interno 266<br>
+        Teléfono Soportes BI: <a href="tel:78401543">78401543</a> (<strong>Equipo Soporte</strong>)<br>
+        Teléfono Soportes Portal: <a href="tel:77818899">77818899</a> (<strong>Harold Garcia</strong>),
+        <a href="tel:75012790">75012790</a> (<strong>Roxana Cuellar</strong>),
+        <a href="tel:77818884">77818884</a> (<strong>Rolando Macias</strong>),
+        <a href="tel:78000506">78000506</a> (<strong>Marco Gúzman</strong>),
+        <a href="tel:78519963">78519963</a> (<strong>Danny Romero</strong>),
+        <a href="tel:78466057">78466057</a> (<strong>Gabriel Salvatierra</strong>)
+      </div>
+
+      <p class="email-line">
+        <strong>Email soporte:</strong>
+        <span><a href="mailto:SoporteHub@hipermaxi.com" style="color:var(--orange);font-weight:600">SoporteHub@hipermaxi.com</a></span>
+      </p>
+
+      <div class="chat-hint">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#213A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>
+          <strong>¿No sabes por dónde empezar?</strong> Usa el botón de chat en la esquina inferior derecha — nuestro asistente responde al instante y te guía con el proceso de registro.
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Widget config — contexto onboarding para nuevos proveedores -->
+  <script>
+    window.__HX_WIDGET_LEVEL__   = 1;
+    window.__HX_WIDGET_WS_URL__  = 'ws://localhost:8765';
+    window.__HX_WIDGET_CONTEXT__ = 'onboarding';
+
+    // Abre el widget programáticamente al hacer clic en el botón de la card
+    function openWidget() {
+      // Espera a que el widget esté montado y simula clic en el launcher
+      const tryClick = () => {
+        const launcher = document.querySelector('#hx-widget .hx-launcher');
+        if (launcher && !launcher.classList.contains('hx-launcher--open')) {
+          launcher.click();
+        } else if (!launcher) {
+          setTimeout(tryClick, 200);
+        }
+      };
+      tryClick();
+    }
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+
+</body>
+</html>
