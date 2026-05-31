@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Hipermaxi</title>
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fdf3ee; color: #222; }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: #1a2744;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 52px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .navbar-brand svg { width: 28px; height: 28px; }
+    .navbar-actions { display: flex; gap: 10px; }
+    .btn-nav {
+      padding: 6px 16px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.4);
+      background: transparent;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .btn-nav:hover { background: rgba(255,255,255,0.15); }
+    .btn-nav.primary { background: #e8431a; border-color: #e8431a; }
+    .btn-nav.primary:hover { background: #c8390f; }
+
+    /* ── Hero / Logo ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 20px;
+    }
+    .hero-logo {
+      background: #e8431a;
+      border: 6px solid #1a2744;
+      border-radius: 12px;
+      padding: 18px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 220px;
+    }
+    .logo-arch {
+      background: #f5a623;
+      border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+      width: 90px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #1a2744;
+      letter-spacing: -2px;
+    }
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+
+    /* ── Cards Section ── */
+    .cards-section {
+      background: #e8431a;
+      margin: 20px auto;
+      max-width: 860px;
+      border-radius: 10px;
+      padding: 36px 24px 28px;
+      text-align: center;
+      color: #fff;
+    }
+    .cards-section h2 {
+      font-size: 1.6rem;
+      margin-bottom: 28px;
+    }
+    .cards-grid {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.15s;
+      max-width: 200px;
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card-icon {
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      text-align: center;
+    }
+    .portal-desc {
+      margin-top: 24px;
+      font-size: 0.82rem;
+      opacity: 0.85;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+    .portal-desc strong { font-weight: 700; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #777;
+      padding: 16px;
+    }
+    footer span.version {
+      background: #e8431a;
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       CHATBOT
+    ═══════════════════════════════════════════ */
+    #chat-bubble {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      width: 58px;
+      height: 58px;
+      background: #e8431a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      z-index: 1000;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: none;
+    }
+    #chat-bubble:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.3);
+    }
+    #chat-bubble svg { width: 28px; height: 28px; fill: #fff; }
+
+    #chat-bubble .notif-dot {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 13px;
+      height: 13px;
+      background: #1ed760;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+
+    /* ── Chat Panel ── */
+    #chat-panel {
+      position: fixed;
+      bottom: 96px;
+      left: 24px;
+      width: 360px;
+      max-height: 560px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      z-index: 999;
+      overflow: hidden;
+      transform: scale(0.85) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transform-origin: bottom left;
+      transition: transform 0.22s ease, opacity 0.22s ease;
+    }
+    #chat-panel.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Chat Header ── */
+    .chat-header {
+      background: #1a2744;
+      color: #fff;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      background: #e8431a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-header-name { font-weight: 700; font-size: 0.92rem; }
+    .chat-header-status { font-size: 0.72rem; opacity: 0.75; }
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.2rem;
+      opacity: 0.7;
+      padding: 4px;
+      line-height: 1;
+    }
+    .chat-close:hover { opacity: 1; }
+
+    /* ── Messages ── */
+    #chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #f7f8fa;
+    }
+    #chat-messages::-webkit-scrollbar { width: 4px; }
+    #chat-messages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+    .msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 85%;
+    }
+    .msg.bot { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+
+    .msg-bubble {
+      padding: 9px 13px;
+      border-radius: 14px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .msg.bot .msg-bubble {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-bottom-left-radius: 4px;
+      color: #222;
+    }
+    .msg.user .msg-bubble {
+      background: #e8431a;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-meta {
+      font-size: 0.68rem;
+      color: #aaa;
+      margin-top: 3px;
+      padding: 0 4px;
+    }
+    .msg.user .msg-meta { text-align: right; }
+
+    .sop-badge {
+      display: inline-block;
+      background: #f0f4ff;
+      border: 1px solid #c5d0f0;
+      color: #3a5bc7;
+      font-size: 0.66rem;
+      border-radius: 8px;
+      padding: 1px 7px;
+      margin-top: 4px;
+    }
+    .alert-box {
+      background: #fff8e1;
+      border-left: 3px solid #f5a623;
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      color: #7a5c00;
+      margin-top: 4px;
+    }
+    .escalate-box {
+      background: #fff0f0;
+      border-left: 3px solid #e8431a;
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      color: #a32000;
+      margin-top: 4px;
+    }
+
+    /* Typing indicator */
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 10px 14px;
+    }
+    .typing-dots span {
+      width: 7px;
+      height: 7px;
+      background: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    /* ── Input ── */
+    .chat-input-area {
+      padding: 10px 12px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 8px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    #chat-input {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    #chat-input:focus { border-color: #e8431a; }
+    #chat-send {
+      width: 36px;
+      height: 36px;
+      background: #e8431a;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      align-self: flex-end;
+      transition: background 0.2s;
+    }
+    #chat-send:hover { background: #c8390f; }
+    #chat-send:disabled { background: #ddd; cursor: not-allowed; }
+    #chat-send svg { width: 16px; height: 16px; fill: #fff; }
+
+    .conn-status {
+      font-size: 0.7rem;
+      padding: 4px 12px;
+      text-align: center;
+      color: #888;
+      background: #f7f8fa;
+      border-top: 1px solid #eee;
+    }
+    .conn-status.connected { color: #1a9a4a; }
+    .conn-status.error { color: #c0392b; }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="6" fill="#e8431a"/>
+        <text x="7" y="23" font-size="18" font-weight="900" fill="white">H</text>
+      </svg>
+      Portal Hipermaxi
+    </div>
+    <div class="navbar-actions">
+      <button class="btn-nav">📞 Soporte y Ayudas</button>
+      <button class="btn-nav primary">→ Iniciar</button>
+    </div>
+  </nav>
+
+  <!-- ── HERO / LOGO ── -->
+  <div class="hero">
+    <div class="hero-logo">
+      <div class="logo-arch">H</div>
+      <div class="logo-text">HIPERMAXI</div>
+    </div>
+  </div>
+
+  <!-- ── CARDS SECTION ── -->
+  <div class="cards-section">
+    <h2>Portal Hipermaxi</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <div class="card-title">Proveedores</div>
+        <div class="card-desc">Administración de Proveedores.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <div class="card-title">Productos &amp; Catálogos de Precios</div>
+        <div class="card-desc">Esta plataforma permite a nuestros proveedores mantenernos actualizados.</div>
+      </div>
+    </div>
+    <p class="portal-desc">
+      <strong>Portal Hipermaxi</strong> es una plataforma web dirigida a los proveedores de Hipermaxi S.A y sus filiales.
+      Permite acceder a información y servicios especializados de una manera ágil, oportuna y segura que garantiza
+      la comunicación constante con nosotros a través del grupo de negocios (Comercial / Compras).
+    </p>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    © 2026 – HIPERMAXI - BI – Versión <span class="version">V3.15.106</span>
+  </footer>
+
+  <!-- ═══════════════════════════════════════
+       CHAT BUBBLE
+  ═══════════════════════════════════════ -->
+  <button id="chat-bubble" title="Copiloto Virtual" aria-label="Abrir asistente virtual">
+    <svg viewBox="0 0 24 24"><path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+    <span class="notif-dot"></span>
+  </button>
+
+  <!-- ═══════════════════════════════════════
+       CHAT PANEL
+  ═══════════════════════════════════════ -->
+  <div id="chat-panel" role="dialog" aria-label="Copiloto Virtual Hipermaxi">
+    <div class="chat-header">
+      <div class="chat-avatar">🤖</div>
+      <div class="chat-header-info">
+        <div class="chat-header-name">Copiloto Virtual</div>
+        <div class="chat-header-status">Portal de Proveedores Hipermaxi</div>
+      </div>
+      <button class="chat-close" id="chat-close-btn" title="Cerrar">✕</button>
+    </div>
+
+    <div id="chat-messages"></div>
+
+    <div class="conn-status" id="conn-status">Conectando...</div>
+
+    <div class="chat-input-area">
+      <textarea
+        id="chat-input"
+        rows="1"
+        placeholder="Escribe tu consulta..."
+        autocomplete="off"
+      ></textarea>
+      <button id="chat-send" disabled title="Enviar">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ── Config ──────────────────────────────────────────
+    const WS_URL = 'ws://localhost:8000/ws/chat/';
+    const SESSION_ID = 'session-' + Math.random().toString(36).slice(2, 10);
+
+    // ── State ────────────────────────────────────────────
+    let ws = null;
+    let isOpen = false;
+    let isConnected = false;
+    let reconnectTimer = null;
+
+    // ── DOM refs ─────────────────────────────────────────
+    const bubble     = document.getElementById('chat-bubble');
+    const panel      = document.getElementById('chat-panel');
+    const closeBtn   = document.getElementById('chat-close-btn');
+    const messages   = document.getElementById('chat-messages');
+    const input      = document.getElementById('chat-input');
+    const sendBtn    = document.getElementById('chat-send');
+    const connStatus = document.getElementById('conn-status');
+
+    // ── Toggle panel ─────────────────────────────────────
+    bubble.addEventListener('click', () => {
+      isOpen = !isOpen;
+      panel.classList.toggle('open', isOpen);
+      if (isOpen) {
+        // Remove notification dot once opened
+        bubble.querySelector('.notif-dot')?.remove();
+        if (!ws || ws.readyState > 1) connectWS();
+        input.focus();
+        scrollBottom();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      isOpen = false;
+      panel.classList.remove('open');
+    });
+
+    // ── WebSocket ─────────────────────────────────────────
+    function connectWS() {
+      setStatus('Conectando...', '');
+      ws = new WebSocket(WS_URL + SESSION_ID);
+
+      ws.onopen = () => {
+        isConnected = true;
+        setStatus('Conectado ✓', 'connected');
+        sendBtn.disabled = false;
+        if (messages.children.length === 0) {
+          addBotMessage(
+            '¡Hola! Soy el Copiloto Virtual del Portal de Proveedores de Hipermaxi. ' +
+            '¿En qué puedo ayudarte hoy?'
+          );
+        }
+      };
+
+      ws.onmessage = (evt) => {
+        removeTyping();
+        try {
+          const data = JSON.parse(evt.data);
+          if (data.error) {
+            addBotMessage('⚠️ ' + data.error);
+          } else {
+            renderBotResponse(data);
+          }
+        } catch {
+          addBotMessage(evt.data);
+        }
+        scrollBottom();
+      };
+
+      ws.onclose = () => {
+        isConnected = false;
+        sendBtn.disabled = true;
+        setStatus('Desconectado — reintentando...', 'error');
+        reconnectTimer = setTimeout(connectWS, 3000);
+      };
+
+      ws.onerror = () => {
+        setStatus('Error de conexión', 'error');
+      };
+    }
+
+    // ── Send ──────────────────────────────────────────────
+    function sendMessage() {
+      const text = input.value.trim();
+      if (!text || !isConnected) return;
+
+      addUserMessage(text);
+      ws.send(JSON.stringify({ message: text }));
+      input.value = '';
+      input.style.height = 'auto';
+      sendBtn.disabled = true;
+      addTyping();
+      scrollBottom();
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    input.addEventListener('input', () => {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 80) + 'px';
+      sendBtn.disabled = !input.value.trim() || !isConnected;
+    });
+
+    // ── Render helpers ────────────────────────────────────
+    function addUserMessage(text) {
+      const div = document.createElement('div');
+      div.className = 'msg user';
+      div.innerHTML = `
+        <div class="msg-bubble">${escapeHtml(text)}</div>
+        <div class="msg-meta">${timeNow()}</div>
+      `;
+      messages.appendChild(div);
+    }
+
+    function addBotMessage(text, sop = null, isAlert = false, isEscalate = false) {
+      const div = document.createElement('div');
+      div.className = 'msg bot';
+      let extra = '';
+      // SOP badge oculto: el proveedor no necesita ver los códigos internos
+      if (isAlert) {
+        extra += `<div class="alert-box"><strong>Atención:</strong> Confirme esta acción solo si está seguro. Esta operación puede ser irreversible.</div>`;
+      }
+      if (isEscalate) {
+        extra += `<div class="escalate-box">Este caso requiere atención de un agente humano. Comuníquese con <strong>soportehub@hipermaxi.com</strong></div>`;
+      }
+      div.innerHTML = `
+        <div class="msg-bubble">${formatMessage(text)}${extra}</div>
+        <div class="msg-meta">${timeNow()}</div>
+      `;
+      messages.appendChild(div);
+    }
+
+    function renderBotResponse(data) {
+      const isAlert    = data.accion_ui?.tipo === 'show_alert';
+      const isEscalate = data.requiere_escalamiento === true;
+      const sop        = data.sop_referencia;
+      addBotMessage(data.mensaje, sop, isAlert, isEscalate);
+      // Re-enable send
+      sendBtn.disabled = !input.value.trim() || !isConnected;
+    }
+
+    function addTyping() {
+      removeTyping();
+      const div = document.createElement('div');
+      div.className = 'msg bot';
+      div.id = 'typing-indicator';
+      div.innerHTML = `<div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+      messages.appendChild(div);
+    }
+
+    function removeTyping() {
+      document.getElementById('typing-indicator')?.remove();
+    }
+
+    // ── Utils ─────────────────────────────────────────────
+    function scrollBottom() {
+      requestAnimationFrame(() => {
+        messages.scrollTop = messages.scrollHeight;
+      });
+    }
+
+    function setStatus(text, cls) {
+      connStatus.textContent = text;
+      connStatus.className = 'conn-status ' + cls;
+    }
+
+    function timeNow() {
+      return new Date().toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function formatMessage(rawText) {
+      // 1. Eliminar emojis
+      const text = rawText.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{2300}-\u{23FF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}✅⚠️📧📸📝🔁]/gu, '').trim();
+
+      // 2. Escapar HTML
+      let html = escapeHtml(text);
+
+      // 3. Negritas: **texto** → <strong>texto</strong>
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+      // 4. Cursiva: *texto* → <em>texto</em>
+      html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+
+      // 5. Listas: líneas que empiezan con •, -, * → <li>
+      const lines = html.split('\n');
+      const result = [];
+      let inList = false;
+      for (const line of lines) {
+        const listMatch = line.match(/^\s*[•\-\*]\s+(.+)/);
+        if (listMatch) {
+          if (!inList) { result.push('<ul>'); inList = true; }
+          result.push(`<li>${listMatch[1]}</li>`);
+        } else {
+          if (inList) { result.push('</ul>'); inList = false; }
+          result.push(line ? `<p>${line}</p>` : '');
+        }
+      }
+      if (inList) result.push('</ul>');
+
+      return result.filter(l => l !== '').join('');
+    }
+  </script>
+</body>
+</html>
