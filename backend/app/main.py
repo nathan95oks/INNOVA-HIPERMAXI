@@ -40,6 +40,7 @@ from pydantic import BaseModel
 from .gemini_client import CopilotGeminiClient
 from .rag.context_assembler import assemble_context
 from .rag.embedding_service import GeminiEmbeddingModel
+from .rag.query_rewriter import QueryRewriter
 from .rag.vector_store import VectorStoreRepository
 from .security.input_sanitizer import InputSanitizer
 from .security.output_guardrail import OutputGuardrail
@@ -64,6 +65,7 @@ MAX_HISTORY_TURNS: int = 6  # Últimos 6 mensajes (3 pares user/assistant)
 _embedding_model: GeminiEmbeddingModel | None = None
 _vector_store: VectorStoreRepository | None = None
 _gemini_client: CopilotGeminiClient | None = None
+_query_rewriter: QueryRewriter | None = None
 _sanitizer = InputSanitizer()
 _guardrail = OutputGuardrail()
 
@@ -74,7 +76,7 @@ _sessions: dict[str, list[dict]] = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Inicializa y cierra los servicios compartidos."""
-    global _embedding_model, _vector_store, _gemini_client
+    global _embedding_model, _vector_store, _gemini_client, _query_rewriter
 
     if not GEMINI_API_KEY:
         logger.warning("GEMINI_API_KEY no configurada — el copiloto no funcionará")
@@ -88,6 +90,7 @@ async def lifespan(app: FastAPI):
             api_key=GEMINI_API_KEY,
             system_instruction=SYSTEM_INSTRUCTION,
         )
+        _query_rewriter = QueryRewriter(api_key=GEMINI_API_KEY)
         chunks_count = _vector_store.count()
         logger.info(
             "Servicios inicializados. Vector store: %d chunks en '%s'",
@@ -239,7 +242,7 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                     alerts,
                 )
 
-            # ── Capa 2: RAG Retrieval ──
+            # ── Capa 2: RAG Retrieval (multi-query) ──
             if _vector_store is None or _gemini_client is None:
                 await websocket.send_text(
                     json.dumps({
@@ -248,11 +251,24 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 )
                 continue
 
-            retrieved = _vector_store.search(
-                query=clean_message,
-                top_k=TOP_K,
-                score_threshold=SCORE_THRESHOLD,
-            )
+            # Reformular la consulta en variantes con vocabulario de SOPs
+            queries = _query_rewriter.rewrite(clean_message) if _query_rewriter else [clean_message]
+
+            # Buscar con cada variante y fusionar por score más alto
+            best_by_id: dict[str, dict] = {}
+            for q in queries:
+                for r in _vector_store.search(q, top_k=TOP_K, score_threshold=SCORE_THRESHOLD):
+                    if r["id"] not in best_by_id or r["score"] > best_by_id[r["id"]]["score"]:
+                        best_by_id[r["id"]] = r
+
+            retrieved = sorted(best_by_id.values(), key=lambda x: x["score"], reverse=True)[:TOP_K * 2]
+
+            # Fallback: si el retrieval no encontró nada, usar top-3 sin umbral
+            # y dejar que Gemini evalúe si son relevantes
+            if not retrieved:
+                logger.info("Sesión %s — sin resultados sobre umbral, usando fallback sin threshold", session_id)
+                fallback = _vector_store.search(clean_message, top_k=3, score_threshold=0.0)
+                retrieved = fallback
 
             context = assemble_context(
                 retrieved_chunks=retrieved,
