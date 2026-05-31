@@ -152,6 +152,35 @@
     </div>
   </main>
 
+  <!-- ── Modal: Carga completada ──────────────────────────── -->
+  <div class="hx-overlay" id="modal-exito">
+    <div class="hx-modal" style="max-width:460px;">
+      <div class="hx-modal__head" style="display:flex; align-items:center; gap:10px; color:var(--hx-success-text); border-bottom-color:#D1FAE5;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--hx-success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Carga completada
+      </div>
+      <div class="hx-modal__body" style="max-height:none; padding:22px 24px 8px;">
+        <p style="font-size:14.5px; color:var(--hx-text); line-height:1.6; margin:0 0 8px;">
+          La factura fue enviada correctamente al sistema de Hipermaxi.
+        </p>
+        <p style="font-size:13px; color:var(--hx-text-sec); margin:0;">
+          Nro. Recepción: <strong>REC-2026-004821</strong> · Nro. Orden: <strong>OC-2026-009482</strong>
+        </p>
+      </div>
+      <div class="hx-modal__foot" style="justify-content:flex-end; gap:10px;">
+        <button class="hx-btn hx-btn--ghost" onclick="document.getElementById('modal-exito').classList.remove('is-open')">
+          Cerrar
+        </button>
+        <a class="hx-btn hx-btn--navy" href="productos.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Volver a Productos
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Footer ───────────────────────────────────────────── -->
   <footer class="hx-footer">
     <span><a href="productos.html">← Volver al Catálogo</a></span>
@@ -194,7 +223,7 @@
         errFac.style.display = 'block';
         return;
       }
-      alert('✅ Carga de facturas completada. La factura fue enviada al sistema de Hipermaxi.');
+      document.getElementById('modal-exito').classList.add('is-open');
     });
   </script>
 

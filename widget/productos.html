@@ -357,9 +357,41 @@
         </div>
 
       </div>
+      <!-- Banner de error global (visible al intentar guardar con campos vacíos) -->
+      <div id="banner-error-guardar" style="display:none; background:var(--hx-danger-bg); border:1px solid #FECACA; border-radius:5px; padding:10px 14px; margin:0 22px 14px; font-size:13px; color:var(--hx-danger-text); display:none; align-items:center; gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="banner-error-texto">Completá los campos obligatorios marcados con (*) antes de guardar.</span>
+      </div>
+
       <div class="hx-modal__foot">
         <button class="hx-btn hx-btn--navy" onclick="closeModal()">Cancelar</button>
         <button class="hx-btn hx-btn--orange" id="btn-guardar-producto">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Producto guardado con éxito ───────────────── -->
+  <div class="hx-overlay" id="modal-producto-exito">
+    <div class="hx-modal" style="max-width:460px;">
+      <div class="hx-modal__head" style="display:flex; align-items:center; gap:10px; color:var(--hx-success-text); border-bottom-color:#D1FAE5;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--hx-success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Producto registrado
+      </div>
+      <div class="hx-modal__body" style="max-height:none; padding:22px 24px 8px;">
+        <p style="font-size:14.5px; color:var(--hx-text); line-height:1.6; margin:0 0 8px;">
+          El producto fue registrado correctamente en el Catálogo Electrónico de Hipermaxi.
+        </p>
+        <p style="font-size:13px; color:var(--hx-text-sec); margin:0;" id="exito-nombre-producto"></p>
+      </div>
+      <div class="hx-modal__foot" style="justify-content:flex-end; gap:10px;">
+        <button class="hx-btn hx-btn--ghost" onclick="document.getElementById('modal-producto-exito').classList.remove('is-open')">
+          Cerrar
+        </button>
+        <button class="hx-btn hx-btn--orange" onclick="document.getElementById('modal-producto-exito').classList.remove('is-open'); document.getElementById('btn-nuevo').click()">
+          Registrar otro
+        </button>
       </div>
     </div>
   </div>
@@ -443,28 +475,54 @@
     });
 
     // ── Guardar: valida obligatorios (comportamiento del portal) ──
+    const bannerErr  = document.getElementById('banner-error-guardar');
+    const bannerTxt  = document.getElementById('banner-error-texto');
+
     document.getElementById('btn-guardar-producto').addEventListener('click', function () {
       const required = ['descripcion', 'barra', 'etiqueta'];
-      let firstMissing = null;
+      let firstErrorEl = null;
+
       required.forEach(name => {
         const field = document.getElementById('field-' + name);
         const input = document.getElementById('campo-' + name);
         if (!input.value.trim()) {
           field.classList.add('is-error');
           input.classList.add('is-error');
-          if (!firstMissing) firstMissing = name;
+          if (!firstErrorEl) firstErrorEl = field;
         } else {
           field.classList.remove('is-error');
           input.classList.remove('is-error');
         }
       });
-      const imgMissing = document.getElementById('img-thumb').style.display === 'none';
-      if (firstMissing || imgMissing) {
-        // No se registra: el copiloto puede asistir desde el chat
+
+      const imgMissing = thumb.style.display !== 'flex';
+      if (imgMissing) {
+        dropzone.classList.add('is-error');
+        errImg.style.display = 'block';
+        if (!firstErrorEl) firstErrorEl = dropzone;
+      } else {
+        dropzone.classList.remove('is-error');
+        errImg.style.display = 'none';
+      }
+
+      if (firstErrorEl) {
+        // Muestra banner y hace scroll al primer campo con error
+        bannerErr.style.display = 'flex';
+        if (imgMissing && !firstErrorEl.closest('.hx-accordion')) {
+          bannerTxt.textContent = 'Debés completar los campos obligatorios (*) y adjuntar una imagen del producto.';
+        } else {
+          bannerTxt.textContent = 'Completá los campos obligatorios marcados con (*) antes de guardar.';
+        }
+        firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
-      alert('✅ Producto registrado correctamente en el Catálogo Electrónico.');
+
+      // Todo válido → cerrar form y mostrar modal de éxito
+      bannerErr.style.display = 'none';
+      const nombre = document.getElementById('campo-descripcion').value.trim();
+      document.getElementById('exito-nombre-producto').textContent = 'Producto: ' + nombre;
       closeModal();
+      document.getElementById('modal-producto-exito').classList.add('is-open');
     });
   </script>
 
