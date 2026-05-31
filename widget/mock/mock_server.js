@@ -124,6 +124,40 @@ function isDoubtIntent(text) {
   return !!t.match(/no\s+s[eé]|no\s+entiendo|no\s+puedo|qu[eé]\s+hago|donde\s+est[aá]\s+el\s+error|por\s+qu[eé]\s+falla/)
 }
 
+function isEscalationIntent(text) {
+  const t = (text || '').toLowerCase()
+  return !!t.match(
+    /deriv[aá](me)?|soporte\s+(humano|t[eé]cnico|real)|quiero\s+hablar|hablar\s+con\s+(alguien|una\s+persona)|llamar|tel[eé]fono|no\s+(me\s+)?(ayuda|sirve|resuelve)|no\s+puedo\s+(m[aá]s|seguir|resolver)|escalar|contacto\s+directo/
+  )
+}
+
+const ESCALATION_CONTACTS = [
+  {
+    area: 'Soporte a Proveedores',
+    phone: '+591 78401543',
+    email: 'soportehub@hipermaxi.com',
+    hours: 'WhatsApp y correo — consultas e incidencias',
+  },
+  {
+    area: 'Soporte TI — Habilitación técnica',
+    phone: '+591 78401543',
+    email: 'soporteti@hipermaxi.com',
+    hours: 'Credenciales, accesos y habilitaciones del portal',
+  },
+]
+
+function buildEscalationFlow() {
+  return [
+    {
+      type: 'escalation',
+      payload: {
+        text: 'Este caso requiere atención del equipo de Soporte de Hipermaxi. Podés contactarlos por WhatsApp o escribir al correo oficial con el detalle de tu consulta.',
+        contacts: ESCALATION_CONTACTS,
+      },
+    },
+  ]
+}
+
 // Preguntas informativas / FAQ — respuesta de texto plano sin contexto DOM
 const FAQ_RESPONSES = {
   producto_datos:
@@ -377,6 +411,10 @@ wss.on('connection', (ws) => {
 
       if (isInvoiceCopilotIntent(text)) {
         sendDynamicFlow(ws, buildInvoiceCopilotFlow(context))
+        return
+      }
+      if (isEscalationIntent(text)) {
+        sendDynamicFlow(ws, buildEscalationFlow())
         return
       }
       if (isDoubtIntent(text)) {
