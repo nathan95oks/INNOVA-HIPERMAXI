@@ -1,62 +1,149 @@
-# EP-09 — Modelo de Negocio Sostenible (HimaxIA)
+# EP-09 — Modelo de Negocio
 
-Este documento define la viabilidad financiera y la estrategia de comercialización de **HimaxIA**, el copiloto de inteligencia artificial desarrollado para optimizar la red de proveedores de Hipermaxi y escalar hacia el mercado B2B de retail en la región.
+**Objetivo asociado:** Definir cómo la solución genera valor sostenible para Hipermaxi y construir el argumento de negocio para el pitch del jurado.
+**Estado:** In Progress
+**Bloque:** Bloque 3 (Sáb 19:00–20:30) · Bloque 4 (Sáb 21:00–Dom 12:00) — Diego
+**Bloquea:** Bloque Final (pulido del pitch), slides 8–10 del deck (EP-01-S05-T04)
+**Depende de:** EP-01 completado (propuesta confirmada, métricas de problema documentadas en EP-01-S05)
 
-## 1. Propuesta de Valor Diferencial
+---
 
-HimaxIA es un *Copiloto de IA Conversacional* que transforma la gestión de proveedores en el sector retail.
+## Stories & Sub-tasks
 
-**Frase de Posicionamiento:**
-> *"HimaxIA es el copiloto B2B que automatiza el soporte operativo de proveedores en el portal de Hipermaxi, transformando la sobrecarga de la atención manual en autoservicio 24/7 y reduciendo las fricciones del portal a cero."*[cite: 1]
+### EP-09-S01 — Propuesta de Valor Diferencial
 
-### Beneficios B2B Duales
+**Story Points:** 2
+**Assignee:** Diego
+**Priority:** High
 
-| Impacto para el Retailer (Cliente) | Impacto para el Proveedor (Usuario) |
-| :--- | :--- |
-| **Reducción del 70% en la carga operativa** del soporte técnico (Soporte HUB, Compras, TI).[cite: 1] | **Disponibilidad 24/7 con resolución en < 5 segundos**, eliminando esperas de días.[cite: 1] |
-| **Recuperación de 58 horas mensuales** del personal técnico/administrativo.[cite: 1] | **Mitigación de errores** en operaciones críticas mediante asistencia guiada.[cite: 1] |
-| **100% de trazabilidad** al migrar de WhatsApp a un log auditable.[cite: 1] | **Proceso seguro de recuperación** de credenciales sin fricción.[cite: 1] |
+**Criterio de aceptación:** Existe un documento que articula el valor de HimaxIA desde dos perspectivas diferenciadas (Hipermaxi como cliente y el proveedor como usuario final), con al menos 3 beneficios concretos y cuantificables por perspectiva. El documento es directamente usable como argumento para el pitch sin reescritura adicional.
 
-## 2. Viabilidad Financiera (Perspectiva del Cliente)
+| Sub-tarea | Entregable | Estado |
+|---|---|---|
+| EP-09-S01-T01 | Tabla de valor para Hipermaxi: reducción de carga operativa, trazabilidad, formalización de canales — con indicadores derivados de EP-01-S05 | To Do |
+| EP-09-S01-T02 | Tabla de valor para el proveedor: autoservicio 24/7, resolución inmediata, eliminación de fricción — con ejemplos de los 6 SOPs | To Do |
+| EP-09-S01-T03 | Frase de posicionamiento de una línea ("HimaxIA es...") apta para la portada del pitch | To Do |
 
-El modelo de precios (SaaS) está diseñado para garantizar un Retorno de Inversión (ROI) positivo inmediato para el retailer. El cálculo se fundamenta en los siguientes parámetros del mercado boliviano:
+---
 
-*   **Costo Promedio Soporte:** $4.00 USD/hora.[cite: 7]
-*   **Tiempo Promedio por Incidencia:** 25 minutos (0.417 horas).[cite: 7]
-*   **Volumen Base Mensual:** 200 consultas.[cite: 8]
+### EP-09-S02 — Modelo de Entrega: Selección y Justificación
 
-**Cálculo de Ahorro Mensual (Fórmula Aplicada):**
-$\text{Ahorro Mensual} = \text{Consultas} \times \% \text{Automatización} \times 0.417\text{h} \times \$4.00$[cite: 6, 7, 8]
+**Story Points:** 2
+**Assignee:** Diego
+**Priority:** High
 
-| Proyección Financiera | Escenario Conservador (60% Adopción) | Escenario Moderado (70% Adopción) | Escenario Optimista (80% Adopción) |
-| :--- | :--- | :--- | :--- |
-| **Ahorro Operativo Mensual** | **$200.00 USD**[cite: 8] | **$233.33 USD**[cite: 8] | **$266.67 USD**[cite: 8] |
-| **Costo Suscripción HimaxIA** | $149.00 USD (Plan Starter)[cite: 5, 8] | $149.00 USD (Plan Starter)[cite: 5, 8] | $149.00 USD (Plan Starter)[cite: 5, 8] |
-| **Ahorro Neto (Ganancia Cliente)** | **+$51.00 USD**[cite: 8] | **+$84.33 USD**[cite: 8] | **+$117.67 USD**[cite: 8] |
-| **Multiplicador de ROI** | **1.34x**[cite: 8] | **1.57x**[cite: 8] | **1.79x**[cite: 8] |
+**Criterio de aceptación:** Se elige y justifica una opción de modelo de entrega principal para presentar al jurado. La justificación incluye: por qué esta opción es viable para Hipermaxi hoy, cómo evoluciona a largo plazo, y qué riesgos mitiga respecto a las otras opciones. La decisión queda documentada en una tabla comparativa de máximo 1 página.
 
-**Conclusión Comercial:** El precio del Plan Starter ($149 USD) se ubica intencionalmente por debajo del ahorro generado en el peor escenario, asegurando que **el cliente financia el software con el ahorro operativo.**[cite: 5]
+| Sub-tarea | Entregable | Estado |
+|---|---|---|
+| EP-09-S02-T01 | Tabla comparativa de las 3 opciones: Opción A (solución interna), Opción B (SaaS vertical), Opción C (licencia + implementación) — con criterios: viabilidad inmediata, escalabilidad, riesgo, revenue potencial | To Do |
+| EP-09-S02-T02 | Recomendación justificada: Opción A como propuesta inmediata + Opción B como narrativa de crecimiento para el jurado | To Do |
+| EP-09-S02-T03 | Párrafo de 3–4 líneas que explique la estrategia dual (vender a Hipermaxi primero, luego escalar como SaaS al sector retail boliviano) | To Do |
 
-## 3. Modelo Operativo y Sostenibilidad (Perspectiva de la Startup)
+---
 
-Para garantizar la continuidad de HimaxIA, se ha diseñado una estructura de costos ajustada a la fase de Producto Mínimo Viable (MVP).
+### EP-09-S03 — Métricas de Impacto y ROI para el Pitch
 
-**Costo Fijo Operativo (Mensual):**
+**Story Points:** 3
+**Assignee:** Diego
+**Priority:** Highest
 
-*   **Infraestructura (Hosting & DB):** $25.00 USD[cite: 10]
-*   **APIs LLMs (Groq / Gemini):** $50.00 USD[cite: 10]
-*   **Herramientas Cloud/Dev:** $25.00 USD[cite: 10]
-*   **Administración & Legal:** $120.00 USD[cite: 10]
-*   **Ventas y Marketing B2B:** $100.00 USD[cite: 10]
-*   **Total de Costos (OPEX): $320.00 USD**[cite: 10]
+**Criterio de aceptación:** Existe una tabla de impacto con métricas comparativas (situación actual vs con HimaxIA) y un cálculo de ROI estimado para Hipermaxi con metodología explícita. Los números son defendibles ante el jurado (fuente: SOPs + estimaciones documentadas). El slide de impacto se puede construir directamente desde esta tabla.
 
-**Punto de Equilibrio (Breakeven):**
-La startup alcanza rentabilidad cubriendo su OPEX de $320 USD al asegurar **3 clientes Starter ($447 USD) o 1 cliente Professional ($399 USD)**[cite: 10].
+| Sub-tarea | Entregable | Estado |
+|---|---|---|
+| EP-09-S03-T01 | Tabla comparativa antes/después con 5 métricas operativas: % consultas resueltas sin intervención humana, tiempo de respuesta promedio, tasa de errores irreversibles, visibilidad del proveedor, carga sobre el equipo de Soporte — usando datos base de EP-01-S05 | To Do |
+| EP-09-S03-T02 | Cálculo de ROI estimado para Hipermaxi: (consultas mensuales estimadas × % automatizable × tiempo ahorrado por consulta × costo/hora de Soporte) — tres escenarios: conservador, moderado, optimista | To Do |
+| EP-09-S03-T03 | Supuestos documentados del cálculo: fuente de cada estimación, rango de incertidumbre, qué dato real de Hipermaxi mejoraría la precisión | To Do |
 
-## 4. Estrategia de Escalabilidad (Roadmap a 9 Meses)
+---
 
-El modelo de negocio evoluciona de una solución ad-hoc a una plataforma SaaS B2B regional.
+### EP-09-S04 — Escalabilidad y Roadmap de Expansión
 
-*   **Meses 1-3 (Validación en Hipermaxi):** Piloto interno. Objetivo: Resolver el 70% de las consultas sin interacción humana[cite: 11].
-*   **Meses 4-6 (Expansión Nacional):** Comercialización directa a retailers nacionales (ej. Ketal, Fidalga) basados en el éxito auditado de Hipermaxi[cite: 2, 11]. Objetivo: 1 a 2 clientes pagados en Bolivia[cite: 11].
-*   **Meses 7-9 (Diversificación y Regionalización):** Implementación del Módulo Logístico avanzado y primeras prospecciones en mercados como Perú o Ecuador[cite: 1, 11]. Objetivo: MRR > $2,000 USD[cite: 11].
+**Story Points:** 1
+**Assignee:** Diego
+**Priority:** Medium
+
+**Criterio de aceptación:** Existe una sección de escalabilidad con dos dimensiones: (1) expansión a nuevos módulos del portal de Hipermaxi y (2) expansión a otros clientes del sector retail boliviano. Cada dimensión tiene al menos 2 puntos concretos. Puede presentarse como lista o diagrama simple.
+
+| Sub-tarea | Entregable | Estado |
+|---|---|---|
+| EP-09-S04-T01 | Lista de módulos del portal de Hipermaxi a los que HimaxIA puede expandirse después del MVP (ej. órdenes de compra, reportes, logística) — con estimación cualitativa de complejidad | To Do |
+| EP-09-S04-T02 | Argumento de replicabilidad sectorial: cómo el mismo stack (RAG + widget embebido + SOPs) se aplica a otros portales de proveedores en Bolivia (ej. otras cadenas de supermercados, distribuidoras) | To Do |
+
+---
+
+### EP-09-S05 — Contenido de Slides del Modelo de Negocio
+
+**Story Points:** 3
+**Assignee:** Diego
+**Priority:** Highest
+
+**Criterio de aceptación:** Existen 2 slides listos para entregar a Melina (diseño), con todo el contenido textual, datos y estructura definidos. Slide 1: impacto y ROI. Slide 2: sostenibilidad y escalabilidad. Ambos son self-contained — Melina no necesita consultar a Diego para diseñarlos. El contenido es consistente con la estructura de pitch definida en EP-01-S05-T03.
+
+| Sub-tarea | Entregable | Estado |
+|---|---|---|
+| EP-09-S05-T01 | Contenido completo del Slide de Impacto (slide 8 del deck): título, tabla comparativa antes/después con 5 métricas, número de ROI destacado, fuente de los datos | To Do |
+| EP-09-S05-T02 | Contenido completo del Slide de Sostenibilidad/Escalabilidad (slide 9 del deck): modelo de entrega recomendado, 3 puntos de escalabilidad, 1 frase de visión a largo plazo | To Do |
+| EP-09-S05-T03 | Briefing escrito para Melina: instrucciones de diseño para cada slide (jerarquía visual, qué dato destacar, paleta sugerida, referencia a slide equivalente en EP-01-S05-T04) | To Do |
+
+---
+
+## Implementation Notes
+
+**Decisión: Modelo de Entrega para el Pitch**
+
+La propuesta tiene tres opciones documentadas. La recomendación para el pitch es presentar una **estrategia dual**:
+
+- **Corto plazo (Opción A — Solución Interna):** Hipermaxi contrata el desarrollo e integra HimaxIA como producto propio. Es la propuesta más concreta, de menor fricción comercial y directamente demostrable con la demo del hackathon. El jurado puede imaginar el contrato real.
+
+- **Largo plazo (Opción B — SaaS Vertical):** El mismo producto se comercializa como plataforma para otras cadenas de retail en Bolivia que usan portales de proveedores similares. No requiere rediseñar la arquitectura — el widget embebido vía script tag es inherentemente multi-tenant.
+
+La Opción C (licencia) no se recomienda como argumento principal porque diluye el mensaje. Puede mencionarse como variante si el jurado pregunta por flexibilidad comercial.
+
+---
+
+**Metodología del cálculo de ROI**
+
+Usar esta fórmula base para EP-09-S03-T02:
+
+```
+Ahorro mensual = (N° consultas/mes) × (% automatizable) × (tiempo promedio por consulta en horas) × (costo/hora del equipo de Soporte)
+ROI anual estimado = Ahorro mensual × 12
+```
+
+Supuestos base (conservador):
+- Consultas mensuales estimadas: 200 (red activa de proveedores)
+- % automatizable con los 6 SOPs: 65–70% (EP-01-S05 estima +70%)
+- Tiempo promedio por consulta manual: 20–30 minutos (incluye intercambio de correo/WhatsApp)
+- Costo/hora Soporte: usar referencia salarial promedio Bolivia para roles técnicos de atención (~$3–5 USD/hora)
+
+El jurado no espera precisión contable — espera una metodología razonable y números que escalen lógicamente. Documentar los supuestos es más valioso que afinar el número final.
+
+---
+
+**Relación con la estructura del pitch (EP-01-S05-T03)**
+
+EP-09 alimenta directamente los últimos 60 segundos del pitch:
+
+| Segmento del pitch | Fuente |
+|---|---|
+| ④ IMPACTO (30s) | EP-09-S03 — tabla de métricas e impacto |
+| ⑤ ESCALABILIDAD (30s) | EP-09-S02 + EP-09-S04 — modelo dual + roadmap |
+| Slide 8 — Impacto | EP-09-S05-T01 |
+| Slide 9 — Escalabilidad | EP-09-S05-T02 |
+
+El contenido de EP-09-S05 se entrega a Melina como briefing textual completo para que ella diseñe los slides sin bloqueo. No esperar a tener diseño para construir el argumento.
+
+---
+
+## References
+
+- EP-01-S05 — Presentación del Problema: `docs/EP-01-S05_presentacion-del-problema/EP-01-S05 — Presentación del Problema.md`
+  - T01: Declaración del Problema y métricas base (datos para EP-09-S03)
+  - T02: Propuesta de Valor — tabla antes/después (base para EP-09-S01)
+  - T03: Estructura del Pitch — segmentos ④ y ⑤ (slots de EP-09 en el deck)
+  - T04: Estructura de slides — slides 8 y 9 (destinatarios de EP-09-S05)
+- Propuesta de equipo: `docs/planning/propuesta-equipo-almuerzo.md` — sección EP-09 (componentes originales a definir)
+- EP-04 (widget funcional): `docs/planning/EP-04_widget-embebido.md` — referencia para argumentar la viabilidad técnica del SaaS
+- EP-01-S04 (stack tecnológico): `docs/EP-01-S04_stack-tecnologico-del-portal-existente/EP-01-S04 — Stack Tecnológico del Portal Existente.md` — base para el argumento de escalabilidad (script tag = multi-tenant por diseño)
