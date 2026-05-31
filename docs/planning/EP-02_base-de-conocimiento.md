@@ -1,7 +1,7 @@
 # EP-02 — Base de Conocimiento
 
 **Objetivo asociado:** Estructurar, procesar e indexar los SOPs de Hipermaxi como fuente de recuperación semántica del agente IA.
-**Estado:** In Progress
+**Estado:** Closed
 **Bloque:** Bloque 2 (Sáb 14:00 – 17:30)
 **Responsables principales:** Luis / Nathanael (+ Adrián en S04–S05)
 **Bloquea:** EP-03 (Agente IA — Motor conversacional)
@@ -84,10 +84,10 @@ erDiagram
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-02-S01-T01 | Extracción de texto de los 6 SOPs desde `.docx` a `.txt` o `.md` limpio | To Do |
-| EP-02-S01-T02 | Normalización: eliminación de ruido (headers de Word, numeraciones inconsistentes, caracteres especiales) | To Do |
-| EP-02-S01-T03 | Etiquetado de secciones por SOP: código, título, pasos, actores, errores frecuentes | To Do |
-| EP-02-S01-T04 | Registro en tabla `DOCUMENT` con `sop_code`, `title` y `source_file` para los 6 documentos | To Do |
+| EP-02-S01-T01 | Extracción de texto de los 6 SOPs desde `.docx` a `.txt` o `.md` limpio | Done — `docs/EP-02/EP-02-S01-T01_extraccion-texto-sops.md` |
+| EP-02-S01-T02 | Normalización: eliminación de ruido (headers de Word, numeraciones inconsistentes, caracteres especiales) | Done — `docs/EP-02/EP-02-S01-T02_normalizacion-fuentes.md` |
+| EP-02-S01-T03 | Etiquetado de secciones por SOP: código, título, pasos, actores, errores frecuentes | Done — `docs/EP-02/EP-02-S01-T03_etiquetado-secciones.md` |
+| EP-02-S01-T04 | Registro en tabla `DOCUMENT` con `sop_code`, `title` y `source_file` para los 6 documentos | Done — `docs/EP-02/EP-02-S01-T04_registro-tabla-documento.md` |
 
 ---
 
@@ -99,10 +99,10 @@ erDiagram
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-02-S02-T01 | `ChunkingService.chunk(document: str, chunk_size: int, overlap: int) -> List[Chunk]` | To Do |
-| EP-02-S02-T02 | Lógica de respeto de límites de sección: un chunk no cruza el boundary entre dos pasos numerados | To Do |
-| EP-02-S02-T03 | Persistencia de chunks en tabla `CHUNK` con `document_id`, `chunk_index` y `token_count` | To Do |
-| EP-02-S02-T04 | Script de validación: conteo de chunks por SOP y verificación de que ningún chunk supera 400 tokens | To Do |
+| EP-02-S02-T01 | `ChunkingService.chunk(document: str, chunk_size: int, overlap: int) -> List[Chunk]` | Done — `docs/EP-02/EP-02-S02-T01_chunking-service.md` |
+| EP-02-S02-T02 | Lógica de respeto de límites de sección: un chunk no cruza el boundary entre dos pasos numerados | Done — `docs/EP-02/EP-02-S02-T02_respeto-limites-seccion.md` |
+| EP-02-S02-T03 | Persistencia de chunks en tabla `CHUNK` con `document_id`, `chunk_index` y `token_count` | Done — `docs/EP-02/EP-02-S02-T03_persistencia-chunks.md` |
+| EP-02-S02-T04 | Script de validación: conteo de chunks por SOP y verificación de que ningún chunk supera 400 tokens | Done — `docs/EP-02/EP-02-S02-T04_validacion-chunks.md` |
 
 ---
 
@@ -114,10 +114,10 @@ erDiagram
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-02-S03-T01 | `EmbeddingService.embed(chunks: List[Chunk]) -> List[Embedding]` con modelo configurable | To Do |
-| EP-02-S03-T02 | Integración con el modelo de embeddings seleccionado (nomic-embed-text local o text-embedding-3-small vía API) | To Do |
-| EP-02-S03-T03 | Persistencia en tabla `EMBEDDING` con `chunk_id`, `vector_data` y `model_name` | To Do |
-| EP-02-S03-T04 | Script de ingesta completa: ejecuta S01 + S02 + S03 en un solo comando (`python ingest.py`) | To Do |
+| EP-02-S03-T01 | `EmbeddingService.embed(chunks: List[Chunk]) -> List[Embedding]` con modelo configurable | Done — `docs/EP-02/EP-02-S03-T01_embedding-service.md` |
+| EP-02-S03-T02 | Integración con el modelo de embeddings seleccionado (nomic-embed-text local o text-embedding-3-small vía API) | Done — `docs/EP-02/EP-02-S03-T02_integracion-modelo-embeddings.md` |
+| EP-02-S03-T03 | Persistencia en tabla `EMBEDDING` con `chunk_id`, `vector_data` y `model_name` | Done — `docs/EP-02/EP-02-S03-T03_persistencia-embeddings.md` |
+| EP-02-S03-T04 | Script de ingesta completa: ejecuta S01 + S02 + S03 en un solo comando (`python ingest.py`) | Done — `docs/EP-02/EP-02-S03-T04_script-ingesta-completa.md` |
 
 ---
 
@@ -129,10 +129,10 @@ erDiagram
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-02-S04-T01 | Configuración e inicialización del vector store (Supabase pgvector o ChromaDB según disponibilidad) | To Do |
-| EP-02-S04-T02 | `VectorStoreRepository.search(query_embedding: vector, top_k: int) -> List[ChunkResult]` | To Do |
-| EP-02-S04-T03 | Endpoint `POST /knowledge/search` — recibe `{ query: string, top_k: int }`, retorna chunks con scores | To Do |
-| EP-02-S04-T04 | Test de retrieval: 5 queries de los casos de uso UC-01 a UC-06 con validación de relevancia manual | To Do |
+| EP-02-S04-T01 | Configuración e inicialización del vector store (Supabase pgvector o ChromaDB según disponibilidad) | Done — `docs/EP-02/EP-02-S04-T01_configuracion-vectorstore.md` |
+| EP-02-S04-T02 | `VectorStoreRepository.search(query_embedding: vector, top_k: int) -> List[ChunkResult]` | Done — `docs/EP-02/EP-02-S04-T02_vectorstore-search.md` |
+| EP-02-S04-T03 | Endpoint `POST /knowledge/search` — recibe `{ query: string, top_k: int }`, retorna chunks con scores | Done — `docs/EP-02/EP-02-S04-T03_endpoint-knowledge-search.md` |
+| EP-02-S04-T04 | Test de retrieval: 5 queries de los casos de uso UC-01 a UC-06 con validación de relevancia manual | Done — `docs/EP-02/EP-02-S04-T04_test-retrieval.md` |
 
 ---
 
@@ -144,9 +144,9 @@ erDiagram
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-02-S05-T01 | Tabla de cobertura: UC-01 a UC-06 vs chunks recuperados + scores | To Do |
-| EP-02-S05-T02 | Tabla de cobertura: F1 a F6 (fricciones AS-IS) vs chunks que las abordan | To Do |
-| EP-02-S05-T03 | Identificación de gaps: preguntas frecuentes sin cobertura adecuada → propuesta de enriquecimiento manual | To Do |
+| EP-02-S05-T01 | Tabla de cobertura: UC-01 a UC-06 vs chunks recuperados + scores | Done — `docs/EP-02/EP-02-S05-T01_tabla-cobertura-uc-chunks.md` |
+| EP-02-S05-T02 | Tabla de cobertura: F1 a F6 (fricciones AS-IS) vs chunks que las abordan | Done — `docs/EP-02/EP-02-S05-T02_tabla-cobertura-fricciones.md` |
+| EP-02-S05-T03 | Identificación de gaps: preguntas frecuentes sin cobertura adecuada → propuesta de enriquecimiento manual | Done — `docs/EP-02/EP-02-S05-T03_gaps-enrichment.md` |
 
 ---
 

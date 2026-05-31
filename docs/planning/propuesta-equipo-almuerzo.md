@@ -93,15 +93,15 @@ Cuando un caso supera las capacidades del agente, deriva al área de soporte hum
 
 | Épica | Nombre | Bloque Principal | Bloques Secundarios | Responsable(s) | Estado |
 |---|---|---|---|---|---|
-| 🟣 EP-01 | Análisis y definición del problema | **Bloque 1** (Sáb 10:15–13:00) | — | Diego, Melina, Carla, Adrián, Luis, Nathanael | ✅ In Progress |
-| 🟡 EP-02 | Base de Conocimiento | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Luis / Nathanael (+ Adrián en validación) | 🔓 Se desbloquea con EP-01 |
-| 🔵 EP-03 | Agente IA — Motor conversacional | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3, Bloque 4 | Adrián / Luis / Nathanael | 🔓 Se desbloquea con EP-02 |
-| 🟢 EP-04 | UI/UX — Widget embebido | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Melina / Carla | 🔓 Se desbloquea con EP-01 |
-| 🟠 EP-05 | Integración con el Portal Web | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián / Luis / Nathanael | 🔒 Bloqueado por EP-03, EP-04 |
+| 🟣 EP-01 | Análisis y definición del problema | **Bloque 1** (Sáb 10:15–13:00) | — | Diego, Melina, Carla, Adrián, Luis, Nathanael | ✅ Closed |
+| 🟡 EP-02 | Base de Conocimiento | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Luis / Nathanael (+ Adrián en validación) | ✅ Closed |
+| 🔵 EP-03 | Agente IA — Motor conversacional | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3, Bloque 4 | Adrián / Luis / Nathanael | 🔓 DESBLOQUEADO — iniciar ahora |
+| 🟢 EP-04 | UI/UX — Widget embebido | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Diego (widget funcional) / Melina (diseño pendiente) | 🔄 In Progress |
+| 🟠 EP-05 | Integración con el Portal Web | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián / Luis / Nathanael | 🔒 Bloqueado por EP-03 (EP-04 widget ✅) |
 | 🔴 EP-06 | Derivación a Soporte Humano | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián | 🔒 Bloqueado por EP-03 |
 | ⚫ EP-07 | Trazabilidad e historial | **Bloque 4** (Sáb 21:00–Dom 12:00) | — | TBD | 🔒 Baja prioridad / concepto pitch |
 | 🟤 EP-08 | Costos de Implementación | **Bloque 4** (Sáb 21:00–Dom 12:00) | Bloque Final | Luis / Nathanael + Diego | 🔒 Bloqueado por EP-03, EP-05 |
-| 🔶 EP-09 | Modelo de Negocio | **Bloque 2** (paralelo, Sáb 14:00+) | Bloque Final | Diego | 🔓 Se desbloquea con EP-01 |
+| 🔶 EP-09 | Modelo de Negocio | **Bloque 2** (paralelo, Sáb 14:00+) | Bloque Final | Diego | 🔄 In Progress |
 
 > **Nota:** EP-09 puede avanzar en paralelo desde el Bloque 2 — no depende del desarrollo técnico. El Bloque Final (Dom 09:00–12:00) es exclusivamente para pulido del pitch; no debe quedar trabajo técnico nuevo pendiente para ese momento.
 
