@@ -17,7 +17,14 @@ export function App({ level, wsUrl }) {
   const [isTyping, setIsTyping] = useState(false)
   const [wsStatus, setWsStatus] = useState('disconnected')
   const [confirmModal, setConfirmModal] = useState(null)
+  const [unreadCount, setUnreadCount] = useState(0)
+  const isOpenRef = useRef(false)
   const wsRef = useRef(null)
+
+  useEffect(() => {
+    isOpenRef.current = isOpen
+    if (isOpen) setUnreadCount(0)
+  }, [isOpen])
 
   useEffect(() => {
     const ws = new WebSocketClient(wsUrl, {
@@ -43,6 +50,9 @@ export function App({ level, wsUrl }) {
           timestamp: new Date(),
         },
       ])
+      if (!isOpenRef.current) {
+        setUnreadCount((n) => n + 1)
+      }
     } else if (msg.type === 'copilot_action') {
       handleCopilotAction(msg.payload)
     }
@@ -113,12 +123,17 @@ export function App({ level, wsUrl }) {
     [level]
   )
 
+  function handleOpen() {
+    setIsOpen((o) => !o)
+  }
+
   return (
     <>
       <ChatLauncher
         isOpen={isOpen}
-        onClick={() => setIsOpen((o) => !o)}
+        onClick={handleOpen}
         wsStatus={wsStatus}
+        unreadCount={unreadCount}
       />
 
       {isOpen && (

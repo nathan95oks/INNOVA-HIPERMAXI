@@ -2,30 +2,58 @@ import { MessageList } from './MessageList.jsx'
 import { InputBar } from './InputBar.jsx'
 import { TypingIndicator } from './TypingIndicator.jsx'
 
+const SUGGESTIONS = [
+  'Credenciales de acceso',
+  'Carga de facturas',
+  'Registro de productos',
+  'Avisos de Despacho',
+]
+
 export function ChatWindow({ messages, isTyping, onSend, onClose, wsStatus }) {
   const isConnected = wsStatus === 'connected'
+  const showSuggestions = messages.length === 1 && !isTyping
 
   return (
     <div class="hx-window" role="dialog" aria-label="Asistente virtual Hipermaxi">
       <div class="hx-window__header">
-        <div class="hx-window__title">
-          <span class="hx-window__dot" />
-          Asistente Hipermaxi
+        <span class={`hx-window__dot${isConnected ? '' : ' hx-window__dot--off'}`} />
+        <div class="hx-window__title-group">
+          <span class="hx-window__title">Asistente Hipermaxi</span>
+          <span class="hx-window__subtitle">
+            {isConnected ? 'Portal de Proveedores · En línea' : 'Reconectando...'}
+          </span>
         </div>
-        <span class="hx-window__status">
-          {isConnected ? 'En línea' : 'Reconectando...'}
-        </span>
         <button class="hx-window__close" onClick={onClose} aria-label="Cerrar asistente">
           ✕
         </button>
       </div>
 
+      {!isConnected && (
+        <div class="hx-banner" role="alert">
+          ⚠ Conexión interrumpida — intentando reconectar...
+        </div>
+      )}
+
       <div class="hx-window__body">
         <MessageList messages={messages} />
-        {isTyping && <TypingIndicator />}
+        {isTyping && (
+          <div class="hx-typing-row">
+            <div class="hx-message__avatar" aria-hidden="true">HX</div>
+            <TypingIndicator />
+          </div>
+        )}
       </div>
 
       <div class="hx-window__footer">
+        {showSuggestions && (
+          <div class="hx-chips" role="group" aria-label="Consultas frecuentes">
+            {SUGGESTIONS.map((s) => (
+              <button key={s} class="hx-chip" onClick={() => onSend(s)}>
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
         <InputBar onSend={onSend} disabled={isTyping || !isConnected} />
       </div>
     </div>

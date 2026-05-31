@@ -1,7 +1,13 @@
-export function ChatLauncher({ isOpen, onClick, wsStatus }) {
+export function ChatLauncher({ isOpen, onClick, wsStatus, unreadCount }) {
+  const hasUnread = unreadCount > 0 && !isOpen
+
   return (
     <button
-      class={`hx-launcher${isOpen ? ' hx-launcher--open' : ''}`}
+      class={[
+        'hx-launcher',
+        isOpen ? 'hx-launcher--open' : '',
+        hasUnread ? 'hx-launcher--unread' : '',
+      ].filter(Boolean).join(' ')}
       onClick={onClick}
       aria-label={isOpen ? 'Cerrar asistente' : 'Abrir asistente Hipermaxi'}
       title={isOpen ? 'Cerrar' : 'Asistente Hipermaxi'}
@@ -16,8 +22,14 @@ export function ChatLauncher({ isOpen, onClick, wsStatus }) {
         </svg>
       )}
 
-      {wsStatus === 'disconnected' && !isOpen && (
-        <span class="hx-launcher__badge" aria-hidden="true" />
+      {hasUnread && (
+        <span class="hx-launcher__badge" aria-label={`${unreadCount} mensaje${unreadCount > 1 ? 's' : ''} nuevo${unreadCount > 1 ? 's' : ''}`}>
+          {unreadCount > 9 ? '9+' : unreadCount}
+        </span>
+      )}
+
+      {wsStatus === 'disconnected' && !isOpen && !hasUnread && (
+        <span class="hx-launcher__badge" style="min-width:10px;height:10px;padding:0" aria-hidden="true" />
       )}
     </button>
   )
