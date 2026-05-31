@@ -32,6 +32,162 @@ function makeWelcome(context) {
   }
 }
 
+function currentPageId() {
+  const path = window.location.pathname || ''
+  const file = path.split('/').pop()
+  return file || 'index.html'
+}
+
+function fieldValue(el) {
+  if (!el) return ''
+  if (typeof el.value === 'string') return el.value.trim()
+  return ''
+}
+
+function buildPageContext() {
+  const pageId = currentPageId()
+  const issues = []
+
+  if (pageId === 'productos.html') {
+    const modal = document.getElementById('modal-producto')
+    const modalOpen = modal?.classList.contains('is-open')
+
+    if (!modalOpen) {
+      issues.push({
+        code: 'PRODUCT_MODAL_CLOSED',
+        selector: '#btn-nuevo',
+        short: 'Primero abrí el formulario con el botón Nuevo.',
+        human: 'el formulario de producto todavía no está abierto',
+        explanation: 'Hacé clic en "Nuevo" y luego te voy guiando campo por campo.',
+      })
+    } else {
+      const descripcion = document.querySelector('#campo-descripcion')
+      const barra = document.querySelector('#campo-barra')
+      const etiqueta = document.querySelector('#campo-etiqueta')
+      const imgInput = document.querySelector('#input-imagen')
+
+      if (!fieldValue(descripcion)) {
+        issues.push({
+          code: 'PRODUCT_DESC_REQUIRED',
+          selector: '#field-descripcion',
+          short: 'La descripción es obligatoria.',
+          human: 'falta completar la descripción del producto',
+          explanation: 'Completá la descripción comercial del producto antes de guardar.',
+        })
+      }
+
+      if (!fieldValue(barra)) {
+        issues.push({
+          code: 'PRODUCT_BARCODE_REQUIRED',
+          selector: '#field-barra',
+          short: 'Falta el código de barra.',
+          human: 'el código de barra está vacío',
+          explanation: 'Ingresá el código de barra completo para que el portal valide el registro.',
+        })
+      }
+
+      if (!fieldValue(etiqueta)) {
+        issues.push({
+          code: 'PRODUCT_LABEL_REQUIRED',
+          selector: '#field-etiqueta',
+          short: 'Falta la etiqueta del producto.',
+          human: 'la etiqueta del producto no está cargada',
+          explanation: 'Completá la etiqueta para continuar con el guardado.',
+        })
+      }
+
+      const hasImage = !!imgInput?.files?.length
+      if (!hasImage) {
+        issues.push({
+          code: 'PRODUCT_IMAGE_REQUIRED',
+          selector: '#campo-imagen',
+          short: 'Cargá una imagen JPG o PNG.',
+          human: 'no hay imagen cargada del producto',
+          explanation: 'Subí una imagen en formato JPG o PNG (no PDF ni otros formatos).',
+        })
+      }
+    }
+  }
+
+  if (pageId === 'factura.html') {
+    const facInput = document.querySelector('#input-factura')
+    const file = facInput?.files?.[0]
+
+    if (!file) {
+      issues.push({
+        code: 'INVOICE_FILE_MISSING',
+        selector: '#zona-cargar-factura',
+        short: 'Adjuntá la factura en PDF.',
+        human: 'no hay factura adjuntada',
+        explanation: 'Adjuntá primero el archivo PDF para habilitar la carga completa.',
+      })
+    } else if (file.type !== 'application/pdf') {
+      issues.push({
+        code: 'INVOICE_INVALID_FORMAT',
+        selector: '#zona-cargar-factura',
+        short: 'Formato inválido: solo PDF.',
+        human: 'el archivo adjunto no está en formato PDF',
+        explanation: 'Volvé a cargar la factura en PDF para que el portal la acepte.',
+      })
+    }
+  }
+
+  if (pageId === 'index.html') {
+    const user = document.querySelector('#usuario')
+    const pass = document.querySelector('#clave')
+
+    if (!fieldValue(user)) {
+      issues.push({
+        code: 'LOGIN_USER_MISSING',
+        selector: '#usuario',
+        short: 'Ingresá tu usuario.',
+        human: 'el usuario está vacío',
+        explanation: 'Completá tu usuario de proveedor para iniciar sesión.',
+      })
+    }
+
+    if (!fieldValue(pass)) {
+      issues.push({
+        code: 'LOGIN_PASSWORD_MISSING',
+        selector: '#clave',
+        short: 'Ingresá tu contraseña.',
+        human: 'la contraseña está vacía',
+        explanation: 'Completá la contraseña antes de enviar el formulario.',
+      })
+    }
+  }
+
+  return {
+    pageId,
+    path: window.location.pathname,
+    issues,
+  }
+}
+
+function isInvoiceHelpIntent(text) {
+  const t = (text || '').toLowerCase()
+  return /(c[oó]mo|como).*(carg|llen|sub).*(factura)|(carg|llen|sub).*(factura)|factura/.test(t)
+}
+
+function maybeMoveLauncherAwayFromTarget(el) {
+  const launcher = document.querySelector('#hx-widget .hx-launcher')
+  if (!launcher || !el) return
+
+  const rect = el.getBoundingClientRect()
+  const nearBottomRight = rect.right > window.innerWidth - 240 && rect.bottom > window.innerHeight - 160
+
+  if (nearBottomRight) {
+    launcher.classList.add('hx-launcher--avoid-target')
+  } else {
+    launcher.classList.remove('hx-launcher--avoid-target')
+  }
+}
+
+function resetLauncherPosition() {
+  const launcher = document.querySelector('#hx-widget .hx-launcher')
+  launcher?.classList.remove('hx-launcher--avoid-target')
+}
+
 export function App({ level, wsUrl, context = 'portal' }) {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([makeWelcome(context)])
@@ -41,6 +197,21 @@ export function App({ level, wsUrl, context = 'portal' }) {
   const [unreadCount, setUnreadCount] = useState(0)
   const isOpenRef = useRef(false)
   const wsRef = useRef(null)
+
+  const pushAgentMessage = useCallback((text) => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        type: 'agent',
+        text,
+        timestamp: new Date(),
+      },
+    ])
+    if (!isOpenRef.current) {
+      setUnreadCount((n) => n + 1)
+    }
+  }, [])
 
   useEffect(() => {
     isOpenRef.current = isOpen
@@ -162,7 +333,12 @@ export function App({ level, wsUrl, context = 'portal' }) {
   function _handleLegacyCopilotAction(payload) {
     if (payload.action === 'highlight') {
       highlightElement(payload.target, payload.message)
-      if (payload.requiresConfirmation) {
+      // Demo safety: nunca abrir confirm modal cuando solo se está señalando
+      // el botón de carga de factura para guiar visualmente al usuario.
+      const skipConfirmation = payload.target === '#btn-carga-completada'
+
+      // Human-in-the-loop: mandatory confirmation before any destructive action
+      if (payload.requiresConfirmation && !skipConfirmation) {
         setConfirmModal({
           description: payload.message,
           alertOnly: false,
@@ -179,6 +355,34 @@ export function App({ level, wsUrl, context = 'portal' }) {
       }
     } else if (payload.action === 'clear_highlights') {
       clearHighlights()
+    } else if (payload.action === 'navigate') {
+      if (payload.url) {
+        window.location.href = payload.url
+      }
+    } else if (payload.action === 'click') {
+      const el = document.querySelector(payload.target)
+      if (el) {
+        el.click()
+      }
+    } else if (payload.action === 'focus') {
+      const el = document.querySelector(payload.target)
+      if (el && typeof el.focus === 'function') {
+        el.focus()
+      }
+    } else if (payload.action === 'diagnose_page_context') {
+      const pageContext = buildPageContext()
+      const issue = pageContext.issues[0]
+      if (!issue) {
+        pushAgentMessage(
+          'Revisé la pantalla y no encontré un error visible en este momento. Si querés, hacemos la validación paso a paso.'
+        )
+        return
+      }
+
+      highlightElement(issue.selector, issue.short)
+      pushAgentMessage(
+        `Detecté un bloqueo frecuente: ${issue.human}. ${issue.explanation}`
+      )
     }
   }
 
@@ -187,7 +391,13 @@ export function App({ level, wsUrl, context = 'portal' }) {
     const el = document.querySelector(selector)
     if (!el) return
 
-    el.classList.add('hx-highlight')
+    el.classList.add('hx-highlight', 'hx-highlight--error')
+    maybeMoveLauncherAwayFromTarget(el)
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+    const beacon = document.createElement('div')
+    beacon.className = 'hx-beacon'
+    el.appendChild(beacon)
 
     // Tooltip con el primer párrafo del mensaje (no más de 80 chars)
     const tooltip = document.createElement('div')
@@ -201,9 +411,27 @@ export function App({ level, wsUrl, context = 'portal' }) {
 
   function clearHighlights() {
     document.querySelectorAll('.hx-highlight').forEach((el) => {
-      el.classList.remove('hx-highlight')
+      el.classList.remove('hx-highlight', 'hx-highlight--error')
+      el.querySelectorAll('.hx-beacon').forEach((b) => b.remove())
       el.querySelectorAll('.hx-tooltip').forEach((t) => t.remove())
     })
+    resetLauncherPosition()
+  }
+
+  function tryLocalCopilotShortcut(text) {
+    if (!isInvoiceHelpIntent(text)) return false
+
+    const invoiceLink = document.querySelector('a[href="factura.html"]')
+    if (invoiceLink) {
+      setIsTyping(false)
+      highlightElement('a[href="factura.html"]', 'Este es el botón: Ir a Carga de Factura.')
+      pushAgentMessage(
+        'Para continuar con la carga, usá este acceso en la esquina inferior derecha: "Ir a Carga de Factura". Hacé clic ahí y te sigo guiando.'
+      )
+      return true
+    }
+
+    return false
   }
 
   const sendMessage = useCallback(
@@ -213,9 +441,15 @@ export function App({ level, wsUrl, context = 'portal' }) {
         { id: crypto.randomUUID(), type: 'user', text, timestamp: new Date() },
       ])
       setIsTyping(true)
+
+      if (tryLocalCopilotShortcut(text)) {
+        return
+      }
+
+      const pageContext = buildPageContext()
       wsRef.current?.sendMessage({
         type: 'user_message',
-        payload: { text, level },
+        payload: { text, level, context: pageContext },
       })
     },
     [level]

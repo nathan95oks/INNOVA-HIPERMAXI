@@ -103,8 +103,8 @@ const FLOWS = {
       payload: {
         action: 'highlight',
         target: '#btn-carga-completada',
-        message: '⚠️ Al completar la carga, la factura se envía al sistema de Hipermaxi. Esta acción es irreversible.',
-        requiresConfirmation: true,
+        message: 'Este es el botón para completar la carga de factura.',
+        requiresConfirmation: false,
       },
     },
   ],
@@ -117,6 +117,162 @@ const FLOWS = {
       },
     },
   ],
+}
+
+function isDoubtIntent(text) {
+  const t = (text || '').toLowerCase()
+  return !!t.match(/no\s+s[eé]|no\s+entiendo|no\s+puedo|qu[eé]\s+hago|ayuda|donde\s+est[aá]\s+el\s+error|por\s+qu[eé]\s+falla/)
+}
+
+function isInvoiceCopilotIntent(text) {
+  const t = (text || '').toLowerCase()
+  return !!t.match(/(c[oó]mo|como).*(llen|carg|sub).*(factura)|(llen|carg|sub).*(factura)|(ayuda|gui).*(factura)/)
+}
+
+function buildInvoiceCopilotFlow(context) {
+  const pageId = context?.pageId || ''
+
+  if (pageId === 'productos.html') {
+    return [
+      {
+        type: 'agent_response',
+        payload: {
+          text: 'Perfecto. Para cargar una factura, usá el acceso del portal en la esquina inferior derecha. Te lo señalo en pantalla.',
+        },
+      },
+      {
+        type: 'copilot_action',
+        payload: {
+          action: 'highlight',
+          target: 'a[href="factura.html"]',
+          message: 'Este es el acceso a Carga de Factura.',
+          requiresConfirmation: false,
+        },
+      },
+      {
+        type: 'agent_response',
+        payload: {
+          text: 'Hacé clic vos en ese botón para ingresar. No voy a enviarte ni confirmar ninguna factura automáticamente.',
+        },
+      },
+    ]
+  }
+
+  if (pageId === 'factura.html') {
+    return [
+      {
+        type: 'agent_response',
+        payload: {
+          text: 'Ya estás en la pantalla correcta. Vamos a cargar la factura paso a paso.',
+        },
+      },
+      {
+        type: 'copilot_action',
+        payload: {
+          action: 'highlight',
+          target: '#zona-cargar-factura',
+          message: 'Subí aquí tu factura en formato PDF.',
+          requiresConfirmation: false,
+        },
+      },
+      {
+        type: 'agent_response',
+        payload: {
+          text: 'Después de adjuntar el PDF, completá con este botón final.',
+        },
+      },
+      {
+        type: 'copilot_action',
+        payload: {
+          action: 'highlight',
+          target: '#btn-carga-completada',
+          message: 'Presioná aquí para finalizar la carga de factura.',
+          requiresConfirmation: false,
+        },
+      },
+    ]
+  }
+
+  if (pageId === 'index.html') {
+    return [
+      {
+        type: 'agent_response',
+        payload: {
+          text: 'Para cargar facturas primero tenés que iniciar sesión en el portal con tus credenciales de proveedor.',
+        },
+      },
+      {
+        type: 'copilot_action',
+        payload: {
+          action: 'highlight',
+          target: '#usuario',
+          message: 'Ingresá tu usuario para continuar.',
+          requiresConfirmation: false,
+        },
+      },
+      {
+        type: 'copilot_action',
+        payload: {
+          action: 'focus',
+          target: '#usuario',
+        },
+      },
+    ]
+  }
+
+  return [
+    {
+      type: 'agent_response',
+      payload: {
+        text: 'Te guío con la carga de factura. Abrí el módulo de Órdenes de Compra para que pueda señalarte los campos exactos.',
+      },
+    },
+  ]
+}
+
+function buildDoubtFlow(context) {
+  const issues = context?.issues || []
+  if (!issues.length) {
+    return [
+      {
+        type: 'agent_response',
+        payload: {
+          text: 'Revisé la pantalla y no detecté un error evidente en este momento. Si querés, ejecutamos una verificación guiada paso a paso.',
+        },
+      },
+      {
+        type: 'copilot_action',
+        payload: {
+          action: 'diagnose_page_context',
+        },
+      },
+    ]
+  }
+
+  const issue = issues[0]
+  return [
+    {
+      type: 'agent_response',
+      payload: {
+        text: `Entiendo la duda. Detecté un bloqueo frecuente: ${issue.human}. Te lo marco en pantalla para corregirlo ahora.`,
+      },
+    },
+    {
+      type: 'copilot_action',
+      payload: {
+        action: 'highlight',
+        target: issue.selector,
+        message: issue.short,
+        requiresConfirmation: false,
+      },
+    },
+    {
+      type: 'agent_response',
+      payload: {
+        text: issue.explanation,
+      },
+    },
+  ]
 }
 
 function detectFlow(text) {
@@ -136,6 +292,14 @@ function sendFlow(ws, flowKey) {
   })
 }
 
+function sendDynamicFlow(ws, messages) {
+  messages.forEach((msg, i) => {
+    setTimeout(() => {
+      if (ws.readyState === ws.OPEN) ws.send(JSON.stringify(msg))
+    }, 700 + i * 650)
+  })
+}
+
 const wss = new WebSocketServer({ port: PORT })
 console.log(`[mock] WebSocket server listening on ws://localhost:${PORT}`)
 
@@ -148,7 +312,16 @@ wss.on('connection', (ws) => {
     console.log('[mock] ←', msg.type, msg.payload?.text?.slice(0, 60) ?? '')
 
     if (msg.type === 'user_message') {
-      sendFlow(ws, detectFlow(msg.payload?.text ?? ''))
+      const text = msg.payload?.text ?? ''
+      if (isInvoiceCopilotIntent(text)) {
+        sendDynamicFlow(ws, buildInvoiceCopilotFlow(msg.payload?.context))
+        return
+      }
+      if (isDoubtIntent(text)) {
+        sendDynamicFlow(ws, buildDoubtFlow(msg.payload?.context))
+        return
+      }
+      sendFlow(ws, detectFlow(text))
     } else if (msg.type === 'copilot_confirm') {
       setTimeout(() => {
         ws.send(JSON.stringify({
