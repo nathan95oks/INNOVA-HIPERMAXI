@@ -4,16 +4,23 @@ import { ChatWindow } from './components/ChatWindow.jsx'
 import { ConfirmModal } from './components/ConfirmModal.jsx'
 import { WebSocketClient } from './lib/WebSocketClient.js'
 
-const WELCOME = {
-  id: 'welcome',
-  type: 'agent',
-  text: '¡Hola! Soy el asistente virtual de Hipermaxi. ¿En qué puedo ayudarte hoy?\n\nPuedo asistirte con credenciales de acceso, carga de facturas, registro de productos y Avisos de Despacho.',
-  timestamp: new Date(),
+const WELCOME_TEXTS = {
+  portal: '¡Hola! Soy el asistente virtual de Hipermaxi. ¿En qué puedo ayudarte hoy?\n\nPuedo asistirte con credenciales de acceso, carga de facturas, registro de productos y Avisos de Despacho.',
+  onboarding: '¡Hola! Soy el asistente de Hipermaxi para nuevos proveedores.\n\n¿Te gustaría trabajar con nosotros? Puedo orientarte sobre:\n\n• Cómo solicitar tu código de proveedor\n• Requisitos y documentación necesaria\n• Cómo acceder al portal una vez registrado\n\n¿Por dónde quieres empezar?',
 }
 
-export function App({ level, wsUrl }) {
+function makeWelcome(context) {
+  return {
+    id: 'welcome',
+    type: 'agent',
+    text: WELCOME_TEXTS[context] ?? WELCOME_TEXTS.portal,
+    timestamp: new Date(),
+  }
+}
+
+export function App({ level, wsUrl, context = 'portal' }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState([WELCOME])
+  const [messages, setMessages] = useState([makeWelcome(context)])
   const [isTyping, setIsTyping] = useState(false)
   const [wsStatus, setWsStatus] = useState('disconnected')
   const [confirmModal, setConfirmModal] = useState(null)

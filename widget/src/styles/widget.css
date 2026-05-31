@@ -1,4 +1,5 @@
 /* All styles scoped under #hx-widget — prevents collisions with Bootstrap 3.3.7 */
+/* Paleta de marca Hipermaxi: naranja #E8741E (primario) sobre navy del portal. */
 
 #hx-widget {
   position: fixed;
@@ -28,20 +29,20 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #C8102E 0%, #9B0D22 100%);
+  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(200, 16, 46, 0.38);
+  box-shadow: 0 4px 20px rgba(232, 116, 30, 0.38);
   z-index: 999999;
   transition: transform 0.15s, box-shadow 0.2s;
 }
 
 #hx-widget .hx-launcher:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 26px rgba(200, 16, 46, 0.5);
+  box-shadow: 0 6px 26px rgba(232, 116, 30, 0.5);
 }
 
 #hx-widget .hx-launcher--open {
@@ -74,9 +75,9 @@
 }
 
 @keyframes hx-pulse {
-  0%   { box-shadow: 0 4px 20px rgba(200,16,46,0.38), 0 0 0 0 rgba(200,16,46,0.45); }
-  70%  { box-shadow: 0 4px 20px rgba(200,16,46,0.38), 0 0 0 14px rgba(200,16,46,0); }
-  100% { box-shadow: 0 4px 20px rgba(200,16,46,0.38), 0 0 0 0 rgba(200,16,46,0); }
+  0%   { box-shadow: 0 4px 20px rgba(232,116,30,0.38), 0 0 0 0 rgba(232,116,30,0.45); }
+  70%  { box-shadow: 0 4px 20px rgba(232,116,30,0.38), 0 0 0 14px rgba(232,116,30,0); }
+  100% { box-shadow: 0 4px 20px rgba(232,116,30,0.38), 0 0 0 0 rgba(232,116,30,0); }
 }
 
 #hx-widget .hx-launcher--unread {
@@ -107,7 +108,7 @@
 }
 
 #hx-widget .hx-window__header {
-  background: linear-gradient(135deg, #C8102E 0%, #8B0A1E 100%);
+  background: linear-gradient(135deg, #E8741E 0%, #A14E14 100%);
   color: white;
   padding: 14px 16px;
   display: flex;
@@ -253,7 +254,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #C8102E 0%, #8B0A1E 100%);
+  background: linear-gradient(135deg, #E8741E 0%, #A14E14 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,10 +285,10 @@
 }
 
 #hx-widget .hx-message--user .hx-message__bubble {
-  background: linear-gradient(135deg, #C8102E 0%, #9B0D22 100%);
+  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
   color: white;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 2px 8px rgba(200, 16, 46, 0.22);
+  box-shadow: 0 2px 8px rgba(232, 116, 30, 0.22);
 }
 
 #hx-widget .hx-message--agent .hx-message__bubble {
@@ -372,9 +373,9 @@
 }
 
 #hx-widget .hx-chip:hover {
-  border-color: #C8102E;
-  color: #C8102E;
-  background: rgba(200, 16, 46, 0.04);
+  border-color: #E8741E;
+  color: #E8741E;
+  background: rgba(232, 116, 30, 0.04);
   transform: translateY(-1px);
 }
 
@@ -409,9 +410,9 @@
 }
 
 #hx-widget .hx-input__field:focus {
-  border-color: #C8102E;
+  border-color: #E8741E;
   background: white;
-  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+  box-shadow: 0 0 0 3px rgba(232, 116, 30, 0.1);
 }
 
 #hx-widget .hx-input__field:disabled {
@@ -424,7 +425,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #C8102E 0%, #9B0D22 100%);
+  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
   border: none;
   color: white;
   cursor: pointer;
@@ -433,12 +434,12 @@
   justify-content: center;
   flex-shrink: 0;
   transition: transform 0.1s, box-shadow 0.15s;
-  box-shadow: 0 2px 8px rgba(200, 16, 46, 0.28);
+  box-shadow: 0 2px 8px rgba(232, 116, 30, 0.28);
 }
 
 #hx-widget .hx-input__btn:hover:not(:disabled) {
   transform: scale(1.06);
-  box-shadow: 0 4px 14px rgba(200, 16, 46, 0.38);
+  box-shadow: 0 4px 14px rgba(232, 116, 30, 0.38);
 }
 
 #hx-widget .hx-input__btn:active:not(:disabled) {
@@ -530,22 +531,22 @@
 #hx-widget .hx-modal__btn--cancel:hover { background: #E4E4E4; }
 
 #hx-widget .hx-modal__btn--confirm {
-  background: linear-gradient(135deg, #C8102E 0%, #9B0D22 100%);
+  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(200, 16, 46, 0.25);
+  box-shadow: 0 2px 8px rgba(232, 116, 30, 0.25);
 }
 
 #hx-widget .hx-modal__btn--confirm:hover {
-  box-shadow: 0 4px 14px rgba(200, 16, 46, 0.35);
+  box-shadow: 0 4px 14px rgba(232, 116, 30, 0.35);
 }
 
 /* ── Copilot highlights (applied to portal DOM) ──── */
 /* NOT scoped to #hx-widget — targets portal elements intentionally */
 
 .hx-highlight {
-  outline: 2px solid #C8102E !important;
+  outline: 2px solid #E8741E !important;
   outline-offset: 3px !important;
-  box-shadow: 0 0 0 5px rgba(200, 16, 46, 0.12) !important;
+  box-shadow: 0 0 0 5px rgba(232, 116, 30, 0.12) !important;
   border-radius: 3px;
   position: relative !important;
 }
@@ -554,7 +555,7 @@
   position: absolute !important;
   bottom: calc(100% + 8px) !important;
   left: 0 !important;
-  background: #C8102E !important;
+  background: #E8741E !important;
   color: white !important;
   padding: 5px 10px !important;
   border-radius: 5px !important;
@@ -572,7 +573,7 @@
   top: 100% !important;
   left: 14px !important;
   border: 5px solid transparent !important;
-  border-top-color: #C8102E !important;
+  border-top-color: #E8741E !important;
 }
 
 /* ── Responsive ──────────────────────────────────── */

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Hipermaxi — Órdenes de Compra · Factura de Recepción</title>
+  <link rel="stylesheet" href="/portal.css" />
+</head>
+<body class="hx-portal">
+
+  <!-- ── Navbar ───────────────────────────────────────────── -->
+  <nav class="hx-navbar">
+    <a class="hx-navbar__brand" href="productos.html">
+      <span class="hx-logo">H</span>
+      <span class="hx-navbar__name">Portal Hipermaxi</span>
+    </a>
+    <span class="hx-navbar__spacer"></span>
+    <span class="hx-navbar__user">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      DISTRIBUIDORA SOPOCACHI S.R.L.
+    </span>
+    <a class="hx-navbar__btn" href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+      Salir
+    </a>
+    <a class="hx-navbar__btn" href="landing.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.8 19.79 19.79 0 0 1 1.62 3.22 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.17 6.17l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Soporte y Ayudas
+    </a>
+    <button class="hx-navbar__burger">☰</button>
+  </nav>
+
+  <!-- ── Página ───────────────────────────────────────────── -->
+  <main class="hx-page" style="max-width:980px;">
+    <h2 class="hx-section-title">Factura de Recepción</h2>
+
+    <!-- Datos de recepción -->
+    <div class="hx-databox">
+      <div class="hx-databox__head">DATOS RECEPCIÓN</div>
+      <div class="hx-datagrid">
+        <div class="hx-data"><b>Nro. Recepción:</b> <span>REC-2026-004821</span></div>
+        <div class="hx-data"><b>Nro. Orden:</b> <span>OC-2026-009482</span></div>
+        <div class="hx-data" style="text-align:right;"><span class="hx-badge hx-badge--observado">Observado</span></div>
+        <div class="hx-data"><b>Impo. Total Recep.:</b> <span>Bs 316.80</span></div>
+        <div class="hx-data"><b>Impo. Total Fact.:</b> <span>0.00</span></div>
+        <div class="hx-data" style="text-align:right;">
+          <b>NOTA RECEPCIÓN</b>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--hx-danger)" stroke-width="2" style="vertical-align:middle; margin-left:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="hx-data"><b>Und. Negocio:</b> <span>U.N. SOPOCACHI</span></div>
+        <div class="hx-data"><b>Fecha Factura Validado:</b> <span>—</span></div>
+        <div class="hx-data"></div>
+      </div>
+    </div>
+
+    <div class="hx-note">
+      Adjunte su factura pese a existir diferencias de saldo, si no es el caso ignore este mensaje.
+    </div>
+
+    <!-- Observación Hipermaxi -->
+    <div class="hx-obs" id="obs-hipermaxi">
+      <div class="hx-obs__title">Observación Hipermaxi:</div>
+      <ul>
+        <li>Diferencia de cantidades entre los productos recepcionados y facturado</li>
+        <li>Mal ingreso de cantidad por producto</li>
+        <li>Diferencia de precio</li>
+        <li>La factura está vencida</li>
+        <li>Factura duplicada</li>
+      </ul>
+    </div>
+
+    <!-- Factura digital -->
+    <div class="hx-card" style="margin-top:18px;">
+      <div class="hx-card__body">
+        <label class="hx-label" style="font-size:14px;">Factura Digital:</label>
+        <p style="font-size:12px; color:var(--hx-text-sec); margin:0 0 12px;">*Puede cargar más de una factura al mismo tiempo.</p>
+
+        <div class="hx-dropzone" id="zona-cargar-factura">
+          <input type="file" id="input-factura" accept="application/pdf" />
+          <div id="fac-placeholder">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--hx-orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div class="hx-dropzone__title">Cargar Factura(s)</div>
+            <div class="hx-dropzone__hint">El portal solo acepta archivos en formato PDF.</div>
+          </div>
+          <div id="fac-ok" style="display:none;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--hx-green)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="hx-dropzone__title" style="color:var(--hx-green)">Factura adjuntada</div>
+            <div class="hx-dropzone__hint" id="fac-name"></div>
+          </div>
+        </div>
+        <div class="hx-field__err" id="err-factura" style="margin-top:8px;">Formato no permitido. El portal únicamente acepta facturas en PDF.</div>
+
+        <!-- Tabla de facturas -->
+        <div class="hx-table-wrap" style="margin-top:18px; border:1px solid #DDD;">
+          <table class="hx-table">
+            <thead>
+              <tr><th>Archivo</th><th>Estado</th><th>Imp. Fact.</th><th>Fecha Fact.</th><th>Fecha</th><th style="width:90px;">Opciones</th></tr>
+            </thead>
+            <tbody id="tbody-facturas">
+              <tr>
+                <td>HIPERMAXI++MULTICENTER.pdf</td>
+                <td><span class="hx-badge hx-badge--pendiente">Pendiente</span></td>
+                <td>—</td>
+                <td>—</td>
+                <td>25/04/2026 07:50 pm</td>
+                <td style="white-space:nowrap;">
+                  <button class="hx-table__trash" title="Eliminar">🗑</button>
+                  <button class="hx-table__pencil" title="Ver">👁</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+      <a class="hx-btn hx-btn--navy" href="productos.html">Salir</a>
+      <button class="hx-btn hx-btn--orange hx-btn--lg" id="btn-carga-completada">Carga Facturas Completada</button>
+    </div>
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────── -->
+  <footer class="hx-footer">
+    <span>© 2026 HIPERMAXI S.A. — Departamento BI · Módulo Compras / Órdenes de Compra</span>
+    <span><a href="productos.html">← Volver al Catálogo</a></span>
+  </footer>
+
+  <script>
+    // ── Validación de formato PDF (lógica del portal) ────────
+    const inputFac = document.getElementById('input-factura');
+    const errFac   = document.getElementById('err-factura');
+    const zonaFac  = document.getElementById('zona-cargar-factura');
+    const facPh    = document.getElementById('fac-placeholder');
+    const facOk    = document.getElementById('fac-ok');
+    const facName  = document.getElementById('fac-name');
+
+    inputFac.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      if (file.type !== 'application/pdf') {
+        zonaFac.classList.add('is-error');
+        errFac.style.display = 'block';
+        this.value = '';
+        return;
+      }
+      zonaFac.classList.remove('is-error');
+      errFac.style.display = 'none';
+      facPh.style.display = 'none';
+      facOk.style.display = 'block';
+      facName.textContent = file.name;
+      zonaFac.classList.add('is-ok');
+    });
+
+    // La confirmación final (irreversible) la gestiona el copiloto vía ConfirmModal.
+    document.getElementById('btn-carga-completada').addEventListener('click', function () {
+      const adjuntada = facOk.style.display === 'block';
+      if (!adjuntada) {
+        zonaFac.classList.add('is-error');
+        errFac.textContent = 'Debe adjuntar la factura en PDF antes de completar la carga.';
+        errFac.style.display = 'block';
+        return;
+      }
+      alert('✅ Carga de facturas completada. La factura fue enviada al sistema de Hipermaxi.');
+    });
+  </script>
+
+  <!-- ── Widget: Nivel 3 (operativo / transaccional) ────────── -->
+  <script>
+    window.__HX_WIDGET_LEVEL__   = 3;
+    window.__HX_WIDGET_WS_URL__  = 'ws://localhost:8765';
+    window.__HX_WIDGET_CONTEXT__ = 'portal';
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+
+</body>
+</html>
