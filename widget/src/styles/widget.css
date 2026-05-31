@@ -55,11 +55,11 @@
 }
 
 #hx-widget .hx-launcher--avoid-target {
-  transform: translate(-190px, -100px) !important;
+  transform: translateX(calc(106px - 100vw)) !important;
 }
 
 #hx-widget .hx-launcher--avoid-target:hover {
-  transform: translate(-190px, -100px) scale(1.06) !important;
+  transform: translateX(calc(106px - 100vw)) scale(1.06) !important;
 }
 
 #hx-widget .hx-launcher__badge {
@@ -108,11 +108,94 @@
   z-index: 999998;
   overflow: hidden;
   animation: hx-slide-up 0.24s cubic-bezier(0.34, 1.4, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 @keyframes hx-slide-up {
   from { opacity: 0; transform: translateY(20px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Copilot collapsed bubble ────────────────────── */
+/* Estado encogido del chat mientras hay un elemento resaltado en el portal.
+   Libera la vista para que el spotlight no quede tapado por la ventana. */
+
+#hx-widget .hx-copilot-bubble {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 16px;
+  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
+  border: none;
+  border-radius: 26px;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 8px 28px rgba(232, 116, 30, 0.42);
+  z-index: 999998;
+  animation: hx-bubble-shrink 0.32s cubic-bezier(0.34, 1.4, 0.64, 1);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+#hx-widget .hx-copilot-bubble:hover {
+  transform: scale(1.04);
+  box-shadow: 0 10px 32px rgba(232, 116, 30, 0.55);
+}
+
+/* Encoge desde el tamaño/posición de la ventana hacia la burbuja */
+@keyframes hx-bubble-shrink {
+  from { opacity: 0; transform: translateY(-180px) scale(1.6); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#hx-widget .hx-copilot-bubble__avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+#hx-widget .hx-copilot-bubble__label {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#hx-widget .hx-copilot-bubble__dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#hx-widget .hx-copilot-bubble__dot {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: hx-bounce 1.2s infinite ease-in-out;
+}
+
+#hx-widget .hx-copilot-bubble__dot:nth-child(2) { animation-delay: 0.2s; }
+#hx-widget .hx-copilot-bubble__dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Se desplaza a la izquierda cuando el target está en la esquina inferior
+   derecha, para no taparlo. */
+#hx-widget .hx-copilot-bubble--avoid-target {
+  transform: translateX(calc(220px - 100vw)) !important;
+}
+
+#hx-widget .hx-copilot-bubble--avoid-target:hover {
+  transform: translateX(calc(220px - 100vw)) scale(1.04) !important;
 }
 
 #hx-widget .hx-window__header {
@@ -584,53 +667,11 @@
     hx-spotlight-pulse 1.6s ease-in-out 0.38s infinite;
 }
 
-/* ── Beacon (sonar rings) ───────────────────────── */
-
-@keyframes hx-beacon-ring {
-  0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(2.8); opacity: 0; }
-}
-
-@keyframes hx-beacon-dot {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%       { transform: translate(-50%, -50%) scale(1.3); }
-}
-
-.hx-beacon {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  width: 18px !important;
-  height: 18px !important;
-  border-radius: 50% !important;
-  background: #E8741E !important;
-  z-index: 999999 !important;
-  pointer-events: none !important;
-  animation: hx-beacon-dot 0.8s ease-in-out infinite;
-}
-
-.hx-beacon::before,
-.hx-beacon::after {
-  content: '' !important;
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  width: 18px !important;
-  height: 18px !important;
-  border: 3px solid rgba(232, 116, 30, 0.9) !important;
-  border-radius: 50% !important;
-  animation: hx-beacon-ring 1.3s linear infinite;
-}
-
-.hx-beacon::after {
-  animation-delay: 0.43s;
-}
-
 /* ── Tooltip ────────────────────────────────────── */
 
 @keyframes hx-tooltip-pop {
-  from { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.88); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0)   scale(1); }
+  0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 }
 
 .hx-tooltip {
@@ -638,22 +679,24 @@
   bottom: calc(100% + 14px) !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  background: #E8741E !important;
-  color: white !important;
-  padding: 9px 16px !important;
-  border-radius: 8px !important;
+  background: linear-gradient(135deg, #FF7B00 0%, #FF5100 100%) !important;
+  color: #fff !important;
+  padding: 12px 20px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
   font-size: 13.5px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
   white-space: normal !important;
-  max-width: 300px !important;
-  min-width: 140px !important;
+  max-width: 320px !important;
+  min-width: 160px !important;
   text-align: center !important;
   z-index: 1000000 !important;
   pointer-events: none !important;
-  line-height: 1.45 !important;
-  box-shadow: 0 6px 24px rgba(232, 116, 30, 0.55) !important;
-  animation: hx-tooltip-pop 0.35s cubic-bezier(0.34, 1.4, 0.64, 1) forwards !important;
+  line-height: 1.5 !important;
+  box-shadow: 0 10px 30px rgba(255, 81, 0, 0.35) !important;
+  opacity: 0;
+  animation: hx-tooltip-pop 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) 0.6s forwards !important;
 }
 
 .hx-tooltip::after {
@@ -663,7 +706,7 @@
   left: 50% !important;
   transform: translateX(-50%) !important;
   border: 7px solid transparent !important;
-  border-top-color: #E8741E !important;
+  border-top-color: #FF5100 !important;
 }
 
 /* ── Responsive ──────────────────────────────────── */

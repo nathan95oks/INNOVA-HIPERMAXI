@@ -329,21 +329,30 @@ function detectFlow(text) {
   return 'default'
 }
 
-function sendFlow(ws, flowKey) {
+async function sendFlow(ws, flowKey) {
   const flow = FLOWS[flowKey]
-  flow.forEach((msg, i) => {
-    setTimeout(() => {
-      if (ws.readyState === ws.OPEN) ws.send(JSON.stringify(msg))
-    }, 900 + i * 700)
-  })
+  await sendDynamicFlow(ws, flow)
 }
 
-function sendDynamicFlow(ws, messages) {
-  messages.forEach((msg, i) => {
-    setTimeout(() => {
-      if (ws.readyState === ws.OPEN) ws.send(JSON.stringify(msg))
-    }, 700 + i * 650)
-  })
+async function sendDynamicFlow(ws, messages) {
+  for (let i = 0; i < messages.length; i++) {
+    const msg = messages[i]
+    if (ws.readyState === ws.OPEN) {
+      ws.send(JSON.stringify(msg))
+    }
+    
+    // Calculate wait time before sending next message
+    let delay = 1000
+    if (msg.type === 'copilot_action' && msg.payload?.action === 'highlight') {
+      delay = 3000 // Give user 3 seconds to see the highlight
+    } else if (msg.type === 'agent_response' && msg.payload?.text) {
+      delay = Math.min(3000, Math.max(1200, msg.payload.text.length * 25))
+    }
+    
+    if (i < messages.length - 1) {
+      await new Promise(r => setTimeout(r, delay))
+    }
+  }
 }
 
 const wss = new WebSocketServer({ port: PORT })

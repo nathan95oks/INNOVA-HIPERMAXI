@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'preact/hooks'
 import { ChatLauncher } from './components/ChatLauncher.jsx'
 import { ChatWindow } from './components/ChatWindow.jsx'
+import { CopilotBubble } from './components/CopilotBubble.jsx'
 import { ConfirmModal } from './components/ConfirmModal.jsx'
 import { WebSocketClient } from './lib/WebSocketClient.js'
 
@@ -10,9 +11,9 @@ const SOP_PAGE_MAP = {
   'SOP-SR-01': './landing.html',
   'SOP-SR-02': './productos.html',
   'SOP-SR-03': './index.html',
-  'SOP-04':    './productos.html',
-  'SOP-05':    './factura.html',
-  'SOP-06':    './factura.html',
+  'SOP-04': './productos.html',
+  'SOP-05': './factura.html',
+  'SOP-06': './factura.html',
 }
 
 // Selectores que requieren ConfirmModal antes de ejecutar (acciones irreversibles, Nivel 3)
@@ -208,23 +209,12 @@ function needsPageContext(text) {
   return true
 }
 
-function maybeMoveLauncherAwayFromTarget(el) {
-  const launcher = document.querySelector('#hx-widget .hx-launcher')
-  if (!launcher || !el) return
-
+// El elemento resaltado está en la esquina inferior derecha, donde vive el
+// launcher / la burbuja del copiloto. Si es así, hay que desplazarlos a la izquierda.
+function isTargetNearBottomRight(el) {
+  if (!el) return false
   const rect = el.getBoundingClientRect()
-  const nearBottomRight = rect.right > window.innerWidth - 240 && rect.bottom > window.innerHeight - 160
-
-  if (nearBottomRight) {
-    launcher.classList.add('hx-launcher--avoid-target')
-  } else {
-    launcher.classList.remove('hx-launcher--avoid-target')
-  }
-}
-
-function resetLauncherPosition() {
-  const launcher = document.querySelector('#hx-widget .hx-launcher')
-  launcher?.classList.remove('hx-launcher--avoid-target')
+  return rect.right > window.innerWidth - 400 && rect.bottom > window.innerHeight - 600
 }
 
 export function App({ level, wsUrl, context = 'portal' }) {
@@ -234,8 +224,14 @@ export function App({ level, wsUrl, context = 'portal' }) {
   const [wsStatus, setWsStatus] = useState('disconnected')
   const [confirmModal, setConfirmModal] = useState(null)
   const [unreadCount, setUnreadCount] = useState(0)
+  // Copiloto activo = hay un elemento resaltado en el portal. Mientras dure,
+  // la ventana del chat se encoge a una burbuja para no tapar lo señalado.
+  const [copilotActive, setCopilotActive] = useState(false)
+  // Desplazar launcher/burbuja a la izquierda cuando el target está bottom-right.
+  const [avoidTarget, setAvoidTarget] = useState(false)
   const isOpenRef = useRef(false)
   const wsRef = useRef(null)
+  const clickOutsideRef = useRef(null)
   // Últimos N mensajes (rol + texto) para contexto de conversación
   const HISTORY_LIMIT = 5
   const historyRef = useRef([])
@@ -435,21 +431,41 @@ export function App({ level, wsUrl, context = 'portal' }) {
     if (!el) return
 
     el.classList.add('hx-highlight', 'hx-highlight--error')
-    maybeMoveLauncherAwayFromTarget(el)
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    // Encoger el chat a una burbuja para liberar la vista del elemento resaltado.
+    setCopilotActive(true)
+    setAvoidTarget(isTargetNearBottomRight(el))
 
-    const beacon = document.createElement('div')
-    beacon.className = 'hx-beacon'
-    el.appendChild(beacon)
-
-    // Tooltip con el primer párrafo del mensaje (no más de 80 chars)
+    // Tooltip — always a box
     const tooltip = document.createElement('div')
     tooltip.className = 'hx-tooltip'
-    tooltip.textContent = message.length > 80 ? message.slice(0, 77) + '…' : message
+    const textNode = document.createElement('span')
+    textNode.textContent = message.length > 80 ? message.slice(0, 77) + '…' : message
+    tooltip.appendChild(textNode)
     el.appendChild(tooltip)
 
-    // Desplazar la vista al elemento resaltado si está fuera del viewport
     el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+    // Click on element clears highlights
+    const onClickElement = () => {
+      clearHighlights()
+      el.removeEventListener('click', onClickElement)
+    }
+    el.addEventListener('click', onClickElement)
+
+    // Click anywhere outside widget/highlight clears highlights
+    const onDocumentClick = (e) => {
+      if (
+        !e.target.closest('#hx-widget') &&
+        !e.target.closest('.hx-highlight') &&
+        !e.target.closest('.hx-tooltip')
+      ) {
+        clearHighlights()
+      }
+    }
+    setTimeout(() => {
+      document.addEventListener('click', onDocumentClick)
+      clickOutsideRef.current = onDocumentClick
+    }, 10)
   }
 
   function clearHighlights() {
@@ -458,7 +474,14 @@ export function App({ level, wsUrl, context = 'portal' }) {
       el.querySelectorAll('.hx-beacon').forEach((b) => b.remove())
       el.querySelectorAll('.hx-tooltip').forEach((t) => t.remove())
     })
-    resetLauncherPosition()
+    // El resaltado terminó: la burbuja vuelve a su estado original de chat.
+    setCopilotActive(false)
+    setAvoidTarget(false)
+
+    if (clickOutsideRef.current) {
+      document.removeEventListener('click', clickOutsideRef.current)
+      clickOutsideRef.current = null
+    }
   }
 
   function tryLocalCopilotShortcut(text) {
@@ -466,11 +489,13 @@ export function App({ level, wsUrl, context = 'portal' }) {
 
     const invoiceLink = document.querySelector('a[href="factura.html"]')
     if (invoiceLink) {
-      setIsTyping(false)
-      highlightElement('a[href="factura.html"]', 'Este es el botón: Ir a Carga de Factura.')
-      pushAgentMessage(
-        'Para continuar con la carga, usá este acceso en la esquina inferior derecha: "Ir a Carga de Factura". Hacé clic ahí y te sigo guiando.'
-      )
+      setTimeout(() => {
+        setIsTyping(false)
+        highlightElement('a[href="factura.html"]', 'Este es el botón: Ir a Carga de Factura.')
+        pushAgentMessage(
+          'Para continuar con la carga, usá este acceso en la esquina inferior derecha: "Ir a Carga de Factura". Hacé clic ahí y te sigo guiando.'
+        )
+      }, 1500)
       return true
     }
 
@@ -518,9 +543,10 @@ export function App({ level, wsUrl, context = 'portal' }) {
         onClick={handleOpen}
         wsStatus={wsStatus}
         unreadCount={unreadCount}
+        avoidTarget={avoidTarget}
       />
 
-      {isOpen && (
+      {isOpen && !copilotActive && (
         <ChatWindow
           messages={messages}
           isTyping={isTyping}
@@ -528,6 +554,10 @@ export function App({ level, wsUrl, context = 'portal' }) {
           onClose={() => setIsOpen(false)}
           wsStatus={wsStatus}
         />
+      )}
+
+      {isOpen && copilotActive && (
+        <CopilotBubble onExpand={clearHighlights} avoidTarget={avoidTarget} />
       )}
 
       {confirmModal && (
