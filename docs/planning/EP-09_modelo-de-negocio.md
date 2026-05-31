@@ -54,7 +54,7 @@
 |---|---|---|
 | EP-09-S03-T01 | Tabla comparativa antes/después con 5 métricas operativas: % consultas resueltas sin intervención humana, tiempo de respuesta promedio, tasa de errores irreversibles, visibilidad del proveedor, carga sobre el equipo de Soporte — usando datos base de EP-01-S05 | To Do |
 | EP-09-S03-T02 | Cálculo de ROI estimado para Hipermaxi: (consultas mensuales estimadas × % automatizable × tiempo ahorrado por consulta × costo/hora de Soporte) — tres escenarios: conservador, moderado, optimista | To Do |
-| EP-09-S03-T03 | Supuestos documentados del cálculo: fuente de cada estimación, rango de incertidumbre, qué dato real de Hipermaxi mejoraría la precisión | To Do |
+| EP-09-S03-T03 | Supuestos documentados del cálculo: fuente de cada estimación, rango de incertidumbre, qué dato real de Hipermaxi mejoraría la precisión | ✅ Done — `docs/EP-09/EP-09-S03-T03_datos-cuantificables-pitch.md` |
 
 ---
 
