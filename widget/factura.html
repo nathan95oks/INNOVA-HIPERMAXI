@@ -40,7 +40,7 @@
       <div class="hx-datagrid">
         <div class="hx-data"><b>Nro. Recepción:</b> <span>REC-2026-004821</span></div>
         <div class="hx-data"><b>Nro. Orden:</b> <span>OC-2026-009482</span></div>
-        <div class="hx-data" style="text-align:right;"><span class="hx-badge hx-badge--observado">Observado</span></div>
+        <div class="hx-data"></div>
         <div class="hx-data"><b>Impo. Total Recep.:</b> <span>Bs 316.80</span></div>
         <div class="hx-data"><b>Impo. Total Fact.:</b> <span>0.00</span></div>
         <div class="hx-data" style="text-align:right;">
@@ -55,18 +55,6 @@
 
     <div class="hx-note">
       Adjunte su factura pese a existir diferencias de saldo, si no es el caso ignore este mensaje.
-    </div>
-
-    <!-- Observación Hipermaxi -->
-    <div class="hx-obs" id="obs-hipermaxi">
-      <div class="hx-obs__title">Observación Hipermaxi:</div>
-      <ul>
-        <li>Diferencia de cantidades entre los productos recepcionados y facturado</li>
-        <li>Mal ingreso de cantidad por producto</li>
-        <li>Diferencia de precio</li>
-        <li>La factura está vencida</li>
-        <li>Factura duplicada</li>
-      </ul>
     </div>
 
     <!-- Factura digital -->
@@ -91,22 +79,36 @@
         <div class="hx-field__err" id="err-factura" style="margin-top:8px;">Formato no permitido. El portal únicamente acepta facturas en PDF.</div>
 
         <!-- Tabla de facturas -->
-        <div class="hx-table-wrap" style="margin-top:18px; border:1px solid #DDD;">
-          <table class="hx-table">
+        <div class="hx-table-wrap hx-table-wrap--compact" style="margin-top:18px; border:1px solid #DDD;">
+          <table class="hx-table hx-table--compact">
             <thead>
-              <tr><th>Archivo</th><th>Estado</th><th>Imp. Fact.</th><th>Fecha Fact.</th><th>Fecha</th><th style="width:90px;">Opciones</th></tr>
+              <tr>
+                <th>Archivo</th>
+                <th>Estado</th>
+                <th>Imp. Fact.</th>
+                <th>Fecha Fact.</th>
+                <th>Fecha carga</th>
+                <th style="width:72px;"></th>
+              </tr>
             </thead>
             <tbody id="tbody-facturas">
               <tr>
-                <td>HIPERMAXI++MULTICENTER.pdf</td>
-                <td><span class="hx-badge hx-badge--pendiente">Pendiente</span></td>
-                <td>—</td>
-                <td>—</td>
-                <td>25/04/2026 07:50 pm</td>
-                <td style="white-space:nowrap;">
-                  <button class="hx-table__trash" title="Eliminar">🗑</button>
-                  <button class="hx-table__pencil" title="Ver">👁</button>
+                <td class="hx-td--desc" title="HIPERMAXI++MULTICENTER.pdf">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#9aa3ad;vertical-align:middle;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  HIPERMAXI++MULTICENTER.pdf
                 </td>
+                <td><span class="hx-status hx-status--pendiente">Pendiente</span></td>
+                <td class="hx-td--mono" style="color:#9aa3ad;">—</td>
+                <td class="hx-td--mono" style="color:#9aa3ad;">—</td>
+                <td style="font-size:12.5px; color:#555;">25/04/2026 07:50 pm</td>
+                <td><div class="hx-td--actions">
+                  <button class="hx-action-btn hx-action-btn--danger" title="Eliminar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                  <button class="hx-action-btn" title="Ver factura">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div></td>
               </tr>
             </tbody>
           </table>

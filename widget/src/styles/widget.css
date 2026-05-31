@@ -1,15 +1,17 @@
 /* All styles scoped under #hx-widget — prevents collisions with Bootstrap 3.3.7 */
-/* Paleta de marca Hipermaxi: naranja #E8741E (primario) sobre navy del portal. */
+/* Marca Hipermaxi · naranja #f66014 (acción) + navy #00367b (estructura) */
+/* Tipografía oficial: Source Sans 3 (primaria) */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
 #hx-widget {
   position: fixed;
   bottom: 0;
   right: 0;
   z-index: 999999;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-family: 'Source Sans 3', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   font-size: 14px;
-  line-height: 1.4;
-  color: #333;
+  line-height: 1.45;
+  color: #333333;
 }
 
 #hx-widget *,
@@ -29,20 +31,20 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
+  background: linear-gradient(135deg, #f66014 0%, #c44403 100%);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(232, 116, 30, 0.38);
+  box-shadow: 0 4px 20px rgba(246, 96, 20, 0.38);
   z-index: 999999;
   transition: transform 0.15s, box-shadow 0.2s;
 }
 
 #hx-widget .hx-launcher:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 26px rgba(232, 116, 30, 0.5);
+  box-shadow: 0 6px 26px rgba(246, 96, 20, 0.5);
 }
 
 #hx-widget .hx-launcher--open {
@@ -75,9 +77,9 @@
 }
 
 @keyframes hx-pulse {
-  0%   { box-shadow: 0 4px 20px rgba(232,116,30,0.38), 0 0 0 0 rgba(232,116,30,0.45); }
-  70%  { box-shadow: 0 4px 20px rgba(232,116,30,0.38), 0 0 0 14px rgba(232,116,30,0); }
-  100% { box-shadow: 0 4px 20px rgba(232,116,30,0.38), 0 0 0 0 rgba(232,116,30,0); }
+  0%   { box-shadow: 0 4px 20px rgba(246,96,20,0.38), 0 0 0 0 rgba(246,96,20,0.45); }
+  70%  { box-shadow: 0 4px 20px rgba(246,96,20,0.38), 0 0 0 14px rgba(246,96,20,0); }
+  100% { box-shadow: 0 4px 20px rgba(246,96,20,0.38), 0 0 0 0 rgba(246,96,20,0); }
 }
 
 #hx-widget .hx-launcher--unread {
@@ -120,13 +122,13 @@
   align-items: center;
   gap: 9px;
   padding: 11px 16px;
-  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
+  background: linear-gradient(135deg, #f66014 0%, #c44403 100%);
   border: none;
   border-radius: 26px;
   color: white;
   cursor: pointer;
   font-family: inherit;
-  box-shadow: 0 8px 28px rgba(232, 116, 30, 0.42);
+  box-shadow: 0 8px 28px rgba(246, 96, 20, 0.42);
   z-index: 999998;
   animation: hx-bubble-shrink 0.32s cubic-bezier(0.34, 1.4, 0.64, 1);
   transition: transform 0.15s, box-shadow 0.2s;
@@ -134,7 +136,7 @@
 
 #hx-widget .hx-copilot-bubble:hover {
   transform: scale(1.04);
-  box-shadow: 0 10px 32px rgba(232, 116, 30, 0.55);
+  box-shadow: 0 10px 32px rgba(246, 96, 20, 0.55);
 }
 
 /* Encoge desde el tamaño/posición de la ventana hacia la burbuja */
@@ -181,7 +183,7 @@
 #hx-widget .hx-copilot-bubble__dot:nth-child(3) { animation-delay: 0.4s; }
 
 #hx-widget .hx-window__header {
-  background: linear-gradient(135deg, #E8741E 0%, #A14E14 100%);
+  background: linear-gradient(135deg, #00367b 0%, #002452 100%);
   color: white;
   padding: 14px 16px;
   display: flex;
@@ -214,7 +216,7 @@
 
 #hx-widget .hx-window__title {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0.1px;
   line-height: 1.2;
 }
@@ -270,7 +272,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 16px 14px;
-  background: #F2F3F5;
+  background: #ffeee6;
   display: flex;
   flex-direction: column;
   scroll-behavior: smooth;
@@ -327,7 +329,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #E8741E 0%, #A14E14 100%);
+  background: linear-gradient(135deg, #00367b 0%, #002452 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -358,10 +360,10 @@
 }
 
 #hx-widget .hx-message--user .hx-message__bubble {
-  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
+  background: linear-gradient(135deg, #f66014 0%, #c44403 100%);
   color: white;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 2px 8px rgba(232, 116, 30, 0.22);
+  box-shadow: 0 2px 8px rgba(246, 96, 20, 0.22);
 }
 
 #hx-widget .hx-message--agent .hx-message__bubble {
@@ -383,13 +385,13 @@
 
 #hx-widget .hx-message--escalation .hx-message__bubble {
   background: #fff8f4 !important;
-  border: 1.5px solid #E8741E !important;
+  border: 1.5px solid #f66014 !important;
   padding: 12px 14px !important;
 }
 
 #hx-widget .hx-contact-card {
   margin-top: 10px;
-  border-top: 1px solid rgba(232, 116, 30, 0.25);
+  border-top: 1px solid rgba(246, 96, 20, 0.25);
   padding-top: 10px;
   display: flex;
   flex-direction: column;
@@ -399,7 +401,7 @@
 #hx-widget .hx-contact-card__title {
   font-weight: 700;
   font-size: 12.5px;
-  color: #E8741E;
+  color: #f66014;
   margin-bottom: 2px;
 }
 
@@ -422,7 +424,7 @@
 #hx-widget .hx-contact-card__phone {
   font-size: 13px;
   font-weight: 700;
-  color: #E8741E;
+  color: #f66014;
   text-decoration: none;
 }
 
@@ -509,9 +511,9 @@
 }
 
 #hx-widget .hx-chip:hover {
-  border-color: #E8741E;
-  color: #E8741E;
-  background: rgba(232, 116, 30, 0.04);
+  border-color: #f66014;
+  color: #f66014;
+  background: rgba(246, 96, 20, 0.04);
   transform: translateY(-1px);
 }
 
@@ -546,9 +548,9 @@
 }
 
 #hx-widget .hx-input__field:focus {
-  border-color: #E8741E;
+  border-color: #f66014;
   background: white;
-  box-shadow: 0 0 0 3px rgba(232, 116, 30, 0.1);
+  box-shadow: 0 0 0 3px rgba(246, 96, 20, 0.1);
 }
 
 #hx-widget .hx-input__field:disabled {
@@ -561,7 +563,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
+  background: linear-gradient(135deg, #f66014 0%, #c44403 100%);
   border: none;
   color: white;
   cursor: pointer;
@@ -570,12 +572,12 @@
   justify-content: center;
   flex-shrink: 0;
   transition: transform 0.1s, box-shadow 0.15s;
-  box-shadow: 0 2px 8px rgba(232, 116, 30, 0.28);
+  box-shadow: 0 2px 8px rgba(246, 96, 20, 0.28);
 }
 
 #hx-widget .hx-input__btn:hover:not(:disabled) {
   transform: scale(1.06);
-  box-shadow: 0 4px 14px rgba(232, 116, 30, 0.38);
+  box-shadow: 0 4px 14px rgba(246, 96, 20, 0.38);
 }
 
 #hx-widget .hx-input__btn:active:not(:disabled) {
@@ -667,13 +669,13 @@
 #hx-widget .hx-modal__btn--cancel:hover { background: #E4E4E4; }
 
 #hx-widget .hx-modal__btn--confirm {
-  background: linear-gradient(135deg, #E8741E 0%, #C25A12 100%);
+  background: linear-gradient(135deg, #f66014 0%, #c44403 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(232, 116, 30, 0.25);
+  box-shadow: 0 2px 8px rgba(246, 96, 20, 0.25);
 }
 
 #hx-widget .hx-modal__btn--confirm:hover {
-  box-shadow: 0 4px 14px rgba(232, 116, 30, 0.35);
+  box-shadow: 0 4px 14px rgba(246, 96, 20, 0.35);
 }
 
 /* ── Copilot highlights (applied to portal DOM) ──── */
@@ -681,7 +683,7 @@
 /* Spotlight trick: huge box-shadow darkens everything except this element */
 
 .hx-highlight {
-  outline: 3px solid #E8741E !important;
+  outline: 3px solid #f66014 !important;
   outline-offset: 6px !important;
   border-radius: 5px !important;
   position: relative !important;
@@ -689,20 +691,20 @@
 }
 
 @keyframes hx-spotlight-in {
-  0%   { box-shadow: 0 0 0 9999px rgba(0,0,0,0),    0 0  0px rgba(232,116,30,0); }
-  100% { box-shadow: 0 0 0 9999px rgba(0,0,0,0.58), 0 0 40px rgba(232,116,30,0.6); }
+  0%   { box-shadow: 0 0 0 9999px rgba(0,0,0,0),    0 0  0px rgba(246,96,20,0); }
+  100% { box-shadow: 0 0 0 9999px rgba(0,0,0,0.58), 0 0 40px rgba(246,96,20,0.6); }
 }
 
 @keyframes hx-spotlight-pulse {
   0%, 100% {
     box-shadow: 0 0 0 9999px rgba(0,0,0,0.58),
-                0 0 40px rgba(232,116,30,0.6),
-                0 0  0  5px rgba(232,116,30,1);
+                0 0 40px rgba(246,96,20,0.6),
+                0 0  0  5px rgba(246,96,20,1);
   }
   50% {
     box-shadow: 0 0 0 9999px rgba(0,0,0,0.58),
-                0 0 70px rgba(232,116,30,0.95),
-                0 0  0  9px rgba(232,116,30,0.55);
+                0 0 70px rgba(246,96,20,0.95),
+                0 0  0  9px rgba(246,96,20,0.55);
   }
 }
 
@@ -731,7 +733,7 @@
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
   font-size: 13.5px !important;
   font-weight: 600 !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+  font-family: 'Source Sans 3', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
   white-space: normal !important;
   max-width: 320px !important;
   min-width: 160px !important;
