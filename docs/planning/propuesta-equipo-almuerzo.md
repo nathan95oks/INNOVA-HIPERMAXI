@@ -41,13 +41,13 @@ Un asistente virtual embebido en el Portal Web de Hipermaxi que opera en dos mod
   * **Ubicación:** Disponible dentro del portal una vez iniciada la sesión.
   * **Alcance:** Soporte funcional sobre el uso general de la plataforma y el catálogo.
   * **Casos de Uso:** Asistencia al Cargar Productos al Catálogo (`SOP-04`) y Activación de Código de Proveedor (`SOP-SR-02`).
-  * **Copiloto:** Puede guiar y validar campos obligatorios o formatos de imagen en tiempo real en la pantalla del catálogo.
+  * **Copiloto:** Guía campo a campo y valida en tiempo real formatos obligatorios (JPG/PNG para imágenes) en la pantalla del catálogo. Para SOP-SR-02, el copiloto guía al proveedor a iniciar la solicitud formal vía correo (soportehub@hipermaxi.com); la activación del código la ejecuta Soporte/Compras de forma asíncrona.
 
 * **Nivel 3 — Privado Operativo / Transaccional (Acceso avanzado):**
   * **Ubicación:** Se activa al interactuar con módulos que manejan transacciones financieras u operativas críticas.
   * **Alcance:** Soporte en procesos con impacto financiero directo o flujos irreversibles.
   * **Casos de Uso:** Carga de Facturas en Órdenes de Compra (`SOP-05`) y Avisos de Despacho (`SOP-06`).
-  * **Copiloto & Seguridad:** Mayor nivel de resguardo. El copiloto valida montos, formatos (PDF para facturas) y pausa obligatoriamente antes de confirmar un AVD o enviar una factura, alertando sobre la irreversibilidad y validando la consistencia de los datos con el backend.
+  * **Copiloto & Seguridad:** Mayor nivel de resguardo. El copiloto valida formatos (PDF obligatorio para facturas), pausa obligatoriamente antes de confirmar un AVD o enviar una factura alertando sobre la irreversibilidad, y compara datos con la Orden de Compra para detectar inconsistencias de monto o producto. ⚠️ La validación en tiempo real contra el backend requiere EP-05 (Integración con el Portal Web).
 
 ---
 
@@ -55,7 +55,7 @@ Un asistente virtual embebido en el Portal Web de Hipermaxi que opera en dos mod
 
 **Modalidad Consulta** — El proveedor hace una pregunta en lenguaje natural y el agente responde usando la base de conocimiento de Hipermaxi (SOPs, manuales, procedimientos).
 
-**Modalidad Copiloto** — El agente guía al proveedor paso a paso dentro de los módulos del portal en tiempo real (resaltando elementos, rellenando formularios validados y previniendo errores).
+**Modalidad Copiloto** — El agente guía al proveedor paso a paso dentro de los módulos del portal en tiempo real (resaltando elementos, guiando campo a campo, validando datos en tiempo real y previniendo errores antes de confirmar).
 
 Cuando un caso supera las capacidades del agente, deriva al área de soporte humano correspondiente (Compras/Facturación/TI via GLPI) con trazabilidad completa.
 
