@@ -28,7 +28,9 @@ INNOVA-HIPERMAXI/
 │   ├── README.md          ← Guía completa de la documentación (leer antes de tocar docs/)
 │   ├── base_problem_files/ ← SOPs reales de Hipermaxi — NO modificar
 │   ├── planning/          ← Backlog Scrum por épica — actualizar al cerrar cada épica
-│   └── EP-01/             ← Entregables completados de EP-01 (referencia de estructura)
+│   ├── EP-01/             ← Entregables completados de EP-01 (referencia de estructura)
+│   ├── EP-02/             ← Entregables del pipeline RAG
+│   └── EP-SALVAVIDAS/     ← Copiloto contextual mock — Bloque 4 (completado)
 └── widget/                ← Código fuente del widget (EP-04)
     ├── src/
     │   ├── components/    ← ChatLauncher, ChatWindow, ConfirmModal, InputBar, MessageList, TypingIndicator

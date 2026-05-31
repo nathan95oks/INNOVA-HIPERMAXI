@@ -24,20 +24,28 @@ docs/
 │   ├── propuesta-equipo-almuerzo.md
 │   ├── EP-01_analisis-definicion-problema.md
 │   ├── EP-02_base-de-conocimiento.md
+│   ├── EP-03_agente-ia.md
 │   ├── EP-04_widget-embebido.md
+│   ├── EP-SALVAVIDAS.md
 │   └── EP-09_modelo-de-negocio.md
 │
-└── EP-01/                             ← ENTREGABLES REALES — un directorio por épica
-    ├── EP-01-S01-T01_consultas-frecuentes.md
-    ├── EP-01-S01-T02_casos-de-uso.md
-    ├── EP-01-S02-T01_diagrama-flujo-as-is.md
-    ├── EP-01-S03-T01_user-persona.html
-    ├── EP-01-S03-T03_user-persona-mapa-necesidades.html
-    ├── EP-01-S04-T01_stack-tecnologico-portal.md
-    └── EP-01-S05-T01_presentacion-del-problema.md
+├── EP-01/                             ← ENTREGABLES REALES — un directorio por épica
+│   ├── EP-01-S01-T01_consultas-frecuentes.md
+│   ├── EP-01-S01-T02_casos-de-uso.md
+│   ├── EP-01-S02-T01_diagrama-flujo-as-is.md
+│   ├── EP-01-S03-T01_user-persona.html
+│   ├── EP-01-S03-T03_user-persona-mapa-necesidades.html
+│   ├── EP-01-S04-T01_stack-tecnologico-portal.md
+│   └── EP-01-S05-T01_presentacion-del-problema.md
+│
+├── EP-02/                             ← Base de Conocimiento RAG (completado)
+│   └── [entregables del pipeline RAG]
+│
+└── EP-SALVAVIDAS/                     ← Copiloto contextual mock — Bloque 4 (completado)
+    └── EP-SALVAVIDAS-S01-T01_copiloto-contextual-mock.md
 ```
 
-> Los directorios `EP-02/`, `EP-03/`, `EP-04/`, etc. se crean cuando se completa la épica correspondiente, siguiendo el mismo patrón que `EP-01/`.
+> Los directorios `EP-03/`, `EP-05/`, etc. se crean cuando se completa la épica correspondiente, siguiendo el mismo patrón que `EP-01/`.
 
 ---
 
@@ -179,10 +187,11 @@ transcripcion_desafio_hipermaxi.md
 |---|---|---|---|
 | EP-01 | Análisis y Definición del Problema | `docs/EP-01/` | ✅ Completado |
 | EP-02 | Base de Conocimiento (RAG) | `docs/EP-02/` | ✅ Completado |
-| EP-03 | Agente IA — Motor Conversacional | `docs/EP-03/` ← por crear | 🔄 In Progress |
-| EP-04 | UI/UX — Widget Embebido | `docs/EP-04/` ← por crear | 🔄 In Progress |
-| EP-05 | Integración con el Portal Web | `docs/EP-05/` ← por crear | 🔒 Bloqueado |
-| EP-06 | Derivación a Soporte Humano | `docs/EP-06/` ← por crear | 🔒 Bloqueado |
+| EP-03 | Agente IA — Motor Conversacional | `docs/EP-03/` ← por crear | 🔄 In Progress (backend real pendiente; mock funcional vía EP-SALVAVIDAS) |
+| EP-04 | UI/UX — Widget Embebido | `docs/EP-04/` ← entregables en CLAUDE.md + widget/ | ✅ Completado |
+| EP-SALVAVIDAS | Copiloto Contextual Mock — Bloque 4 | `docs/EP-SALVAVIDAS/` | 🔄 In Progress (correcciones UI en curso) |
+| EP-05 | Integración con el Portal Web | `docs/EP-05/` ← por crear | 🔒 Bloqueado por EP-03 real |
+| EP-06 | Derivación a Soporte Humano | `docs/EP-06/` ← por crear | 🔄 In Progress (mock hecho en EP-SALVAVIDAS; GLPI real pendiente) |
 | EP-07 | Trazabilidad e Historial | `docs/EP-07/` ← por crear | 🔒 Baja prioridad |
 | EP-08 | Costos de Implementación | `docs/EP-08/` ← por crear | 🔒 Bloqueado |
 | EP-09 | Modelo de Negocio | `docs/EP-09/` ← por crear | 🔄 In Progress |
@@ -199,5 +208,5 @@ transcripcion_desafio_hipermaxi.md
 
 ---
 
-*Última actualización: Bloque 3 — Innova Hack Santa Cruz 2026 · 30 de mayo*
+*Última actualización: Bloque Final — Innova Hack Santa Cruz 2026 · 31 de mayo*
 *Mantenido por: Diego (Product Owner)*

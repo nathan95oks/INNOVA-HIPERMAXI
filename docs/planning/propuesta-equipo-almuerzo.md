@@ -84,8 +84,8 @@ Cuando un caso supera las capacidades del agente, deriva al área de soporte hum
 | ALMUERZO** | Sáb 13:00–14:00 | Revisión de equipo |
 | **Bloque 2** | Sáb 14:00–17:30 | Desarrollo técnico + prototipo |
 | Bloque 3 | Sáb 18:00–20:30 | Mock-up avanzado + integración |
-| **Bloque 4** | Sáb 21:00–Dom 12:00 | Desarrollo nocturno + demo funcional ← estamos aquí |
-| Bloque Final | Dom 09:00–12:00 | Pulido + validación del pitch |
+| **Bloque 4** | Sáb 21:00–Dom 12:00 | Desarrollo nocturno + demo funcional ✅ |
+| **Bloque Final** | Dom 09:00–12:00 | Pulido + validación del pitch ← estamos aquí |
 | Submission | Dom 12:00 | Entrega al comité organizador |
 | Pitch | Dom 14:00–17:30 | 5 min presentación + 3 min preguntas |
 
@@ -97,10 +97,11 @@ Cuando un caso supera las capacidades del agente, deriva al área de soporte hum
 |---|---|---|---|---|---|
 | 🟣 EP-01 | Análisis y definición del problema | **Bloque 1** (Sáb 10:15–13:00) | — | Diego, Melina, Carla, Adrián, Luis, Nathanael | ✅ Closed |
 | 🟡 EP-02 | Base de Conocimiento | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Luis / Nathanael (+ Adrián en validación) | ✅ Closed |
-| 🔵 EP-03 | Agente IA — Motor conversacional | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3, Bloque 4 | Adrián / Luis / Nathanael | 🔄 In Progress |
-| 🟢 EP-04 | UI/UX — Widget embebido | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3 | Diego (widget funcional) / Melina (diseño pendiente) | 🔄 In Progress |
-| 🟠 EP-05 | Integración con el Portal Web | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián / Luis / Nathanael | 🔒 Bloqueado por EP-03 (EP-04 widget ✅) |
-| 🔴 EP-06 | Derivación a Soporte Humano | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián | 🔒 Bloqueado por EP-03 |
+| 🔵 EP-03 | Agente IA — Motor conversacional | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3, Bloque 4 | Adrián / Luis / Nathanael | 🔄 In Progress (mock funcional; backend real pendiente) |
+| 🟢 EP-04 | UI/UX — Widget embebido | **Bloque 2** (Sáb 14:00–17:30) | Bloque 3, Bloque 4 | Luis (BetoHerbas) + Diego | ✅ Closed |
+| 🆘 EP-SALVAVIDAS | Copiloto Contextual Mock | **Bloque 4** (Dom 00:00–05:30) | Bloque Final | Luis (BetoHerbas) | 🔄 In Progress (correcciones UI) |
+| 🟠 EP-05 | Integración con el Portal Web | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián / Luis / Nathanael | 🔒 Bloqueado por EP-03 real |
+| 🔴 EP-06 | Derivación a Soporte Humano | **Bloque 3** (Sáb 18:00–20:30) | Bloque 4 | Adrián | 🔄 In Progress (mock en EP-SALVAVIDAS ✅; GLPI real pendiente) |
 | ⚫ EP-07 | Trazabilidad e historial | **Bloque 4** (Sáb 21:00–Dom 12:00) | — | TBD | 🔒 Baja prioridad / concepto pitch |
 | 🟤 EP-08 | Costos de Implementación | **Bloque 4** (Sáb 21:00–Dom 12:00) | Bloque Final | Luis / Nathanael + Diego | 🔒 Bloqueado por EP-03, EP-05 |
 | 🔶 EP-09 | Modelo de Negocio | **Bloque 2** (paralelo, Sáb 14:00+) | Bloque Final | Diego | 🔄 In Progress |

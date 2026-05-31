@@ -2,7 +2,7 @@
 
 **Commit de referencia:** `09dfcea` — "copiloto" (BetoHerbas, 31/05/2026 04:45)
 **Autor:** Luis (BetoHerbas)
-**Estado:** Done — integrado en `main`
+**Estado:** In Progress — correcciones UI en curso (Bloque Final)
 **Rama origen:** `main` (commit directo sobre EP-04 anterior)
 
 ---

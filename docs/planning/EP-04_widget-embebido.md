@@ -1,7 +1,7 @@
 # EP-04 — UI/UX Widget Embebido
 
 **Objetivo asociado:** Diseñar e implementar el widget de chat flotante del asistente virtual, integrable al Portal Web de Hipermaxi mediante script tag, cubriendo las dos modalidades de interacción: Consulta y Copiloto.
-**Estado:** In Progress
+**Estado:** Closed
 **Bloque:** Bloque 2 (Sáb 14:00 – 17:30) · Bloque 3 (Sáb 18:00 – 20:30)
 **Responsables principales:** Melina (UI/UX + lead) / Carla (Frontend)
 **Bloquea:** EP-05 (Integración con el Portal Web)
@@ -104,10 +104,10 @@ widget-bundle (Vanilla JS / Preact)
 
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
-| EP-04-S05-T01 | `HighlightHelper` — función `highlight(selector: string, message: string)` que aplica clase CSS de resaltado + tooltip al elemento DOM indicado | To Do |
-| EP-04-S05-T02 | `clearHighlights()` — limpia todos los resaltados activos al avanzar al siguiente paso | To Do |
+| EP-04-S05-T01 | `HighlightHelper` — función `highlight(selector: string, message: string)` que aplica clase CSS de resaltado + tooltip al elemento DOM indicado | Done — `widget/src/app.jsx` (commit be12451) |
+| EP-04-S05-T02 | `clearHighlights()` — limpia todos los resaltados activos al avanzar al siguiente paso | Done — `widget/src/app.jsx` + `resetLauncherPosition()` (commit be12451) |
 | EP-04-S05-T03 | Componente `ConfirmModal` — diálogo con descripción de la acción a ejecutar, botón "Confirmar" y botón "Cancelar" | Done — `widget/src/components/ConfirmModal.jsx` |
-| EP-04-S05-T04 | Flujo completo de confirmación: el widget pausa la acción, muestra el modal, y solo ejecuta/descarta según la respuesta del usuario | To Do |
+| EP-04-S05-T04 | Flujo completo de confirmación: el widget pausa la acción, muestra el modal, y solo ejecuta/descarta según la respuesta del usuario | Done — `widget/src/app.jsx` (acciones: highlight, navigate, show_alert) |
 
 ---
 
@@ -120,9 +120,9 @@ widget-bundle (Vanilla JS / Preact)
 | Sub-tarea | Entregable | Estado |
 |---|---|---|
 | EP-04-S06-T01 | Servidor WebSocket mock (`mock_server.py` o `mock_server.js`) con respuestas predefinidas para UC-01 y UC-02 | Done — `widget/mock/mock_server.js` |
-| EP-04-S06-T02 | Flujo UC-01 Modalidad Consulta: pregunta sobre credenciales → respuesta del agente con pasos | To Do |
-| EP-04-S06-T03 | Flujo UC-02 Modalidad Copiloto: carga de factura → resaltado de campos → ConfirmModal → confirmación | To Do |
-| EP-04-S06-T04 | Reporte de pruebas: captura de pantalla o video de los dos flujos completados sin errores | To Do |
+| EP-04-S06-T02 | Flujo UC-01 Modalidad Consulta: pregunta sobre credenciales → respuesta del agente con pasos | Done — FAQ detection + smart page context (commit e315041) |
+| EP-04-S06-T03 | Flujo UC-02 Modalidad Copiloto: carga de factura → resaltado de campos → ConfirmModal → confirmación | Done — copiloto contextual mock (EP-SALVAVIDAS, commit 09dfcea/357af73) |
+| EP-04-S06-T04 | Reporte de pruebas: captura de pantalla o video de los dos flujos completados sin errores | To Do — pendiente para Bloque Final |
 
 ---
 
