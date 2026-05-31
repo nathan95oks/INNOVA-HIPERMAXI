@@ -3,15 +3,18 @@
 
 Este README es la guía de entrada para cualquier agente de IA o desarrollador que trabaje con esta documentación. Define la estructura del repositorio de docs, las reglas de lectura, las convenciones de nombrado y el protocolo de actualización tras completar cada épica.
 
+> 🧭 **¿Buscás cómo funciona el código (backend, widget) y cómo levantarlo?** → **[`ARCHITECTURE.md`](ARCHITECTURE.md)** es el mapa técnico maestro. Este README cubre la *documentación*; `ARCHITECTURE.md` cubre el *código*.
+
 ---
 
 ## Estructura de directorios
 
 ```
 docs/
-├── README.md                          ← Este archivo. Leer primero.
+├── README.md                          ← Este archivo. Índice de la documentación. Leer primero.
+├── ARCHITECTURE.md                    ← Mapa técnico del CÓDIGO (backend + widget + frontend). Leer segundo.
 │
-├── base_problem_files/                ← FUENTE DE VERDAD — datos reales de Hipermaxi
+├── base_problem_files/                ← FUENTE DE VERDAD — datos reales de Hipermaxi (NO modificar)
 │   ├── transcripcion_desafio_hipermaxi.md
 │   ├── CREDENCIALES DE ACCESO.md
 │   ├── REENVÍO DE CREDENCIALES DE ACCESO.md
@@ -20,8 +23,8 @@ docs/
 │   ├── ASISTENCIA AL CARGAR FACTURA.md
 │   └── ASISTENCIA EN AVD.md
 │
-├── planning/                          ← PLANIFICACIÓN VIVA — actualizar tras cada épica
-│   ├── propuesta-equipo-almuerzo.md
+├── planning/                          ← PLANIFICACIÓN VIVA — backlog Scrum, actualizar tras cada épica
+│   ├── propuesta-equipo-almuerzo.md   ← estado global del proyecto
 │   ├── EP-01_analisis-definicion-problema.md
 │   ├── EP-02_base-de-conocimiento.md
 │   ├── EP-03_agente-ia.md
@@ -30,19 +33,26 @@ docs/
 │   └── EP-09_modelo-de-negocio.md
 │
 ├── EP-01/                             ← ENTREGABLES REALES — un directorio por épica
-│   ├── EP-01-S01-T01_consultas-frecuentes.md
-│   ├── EP-01-S01-T02_casos-de-uso.md
-│   ├── EP-01-S02-T01_diagrama-flujo-as-is.md
-│   ├── EP-01-S03-T01_user-persona.html
-│   ├── EP-01-S03-T03_user-persona-mapa-necesidades.html
-│   ├── EP-01-S04-T01_stack-tecnologico-portal.md
-│   └── EP-01-S05-T01_presentacion-del-problema.md
+│   └── [análisis: casos de uso, AS-IS, user persona, stack, pitch]
+├── EP-02/                             ← Base de Conocimiento RAG — entregables del pipeline (✅)
+│   └── [parseo, chunking, embeddings, vector store, matriz de cobertura]
+├── EP-04/                             ← Widget embebido — diseño y solución frontend (✅)
+│   └── EP-04-S01-T01_frontend-estado-previo-y-solucion.md
+├── EP-09/                             ← Modelo de negocio (🔄)
+│   ├── EP-09_modelo-de-negocio-consolidado.md   ← entregable maestro (BMC, ROI, costos, roadmap, slides)
+│   └── EP-09-S03-T03_datos-cuantificables-pitch.md
+├── EP-SALVAVIDAS/                     ← Copiloto contextual mock — Bloque 4
+│   └── EP-SALVAVIDAS-S01-T01_copiloto-contextual-mock.md
 │
-├── EP-02/                             ← Base de Conocimiento RAG (completado)
-│   └── [entregables del pipeline RAG]
-│
-└── EP-SALVAVIDAS/                     ← Copiloto contextual mock — Bloque 4 (completado)
-    └── EP-SALVAVIDAS-S01-T01_copiloto-contextual-mock.md
+└── prompts/                           ← Prompts reutilizables del equipo (ej. generación de docs)
+    └── documentalo.md
+```
+
+Además, el **código** vive fuera de `docs/` (documentado en `ARCHITECTURE.md`):
+```
+backend/   ← FastAPI + RAG (EP-02, EP-03) · ver backend/README.md
+widget/    ← Preact + Vite (EP-04) · ver widget/DESIGN.md
+frontend/  ← maqueta HTML de referencia
 ```
 
 > Los directorios `EP-03/`, `EP-05/`, etc. se crean cuando se completa la épica correspondiente, siguiendo el mismo patrón que `EP-01/`.
@@ -157,10 +167,11 @@ Si un agente entra frío a este repositorio sin contexto previo, debe leer en es
 ```
 1. docs/README.md                                          ← Este archivo
 2. docs/base_problem_files/transcripcion_desafio_hipermaxi.md  ← Qué pide Hipermaxi
-3. docs/planning/propuesta-equipo-almuerzo.md              ← Qué estamos construyendo
-4. docs/base_problem_files/*.md (los 6 SOPs)               ← Datos reales del negocio
-5. docs/EP-01/ (todos los archivos)                        ← Análisis ya realizado
-6. docs/planning/EP-XX_*.md (épica en la que se trabaja)   ← Qué hacer a continuación
+3. docs/planning/propuesta-equipo-almuerzo.md              ← Qué estamos construyendo (estado global)
+4. docs/ARCHITECTURE.md                                    ← Cómo funciona el código y cómo levantarlo
+5. docs/base_problem_files/*.md (los 6 SOPs)               ← Datos reales del negocio
+6. docs/EP-01/ (todos los archivos)                        ← Análisis ya realizado
+7. docs/planning/EP-XX_*.md (épica en la que se trabaja)   ← Qué hacer a continuación
 ```
 
 ### Árbol de dependencias de documentación
@@ -183,18 +194,20 @@ transcripcion_desafio_hipermaxi.md
 
 ## 5. Épicas y su estado actual
 
-| ID | Épica | Directorio de entregables | Estado |
+> Fuente de verdad del estado: `planning/propuesta-equipo-almuerzo.md`. El código asociado a cada épica está en `ARCHITECTURE.md` (§7).
+
+| ID | Épica | Entregables / código | Estado |
 |---|---|---|---|
-| EP-01 | Análisis y Definición del Problema | `docs/EP-01/` | ✅ Completado |
-| EP-02 | Base de Conocimiento (RAG) | `docs/EP-02/` | ✅ Completado |
-| EP-03 | Agente IA — Motor Conversacional | `docs/EP-03/` ← por crear | 🔄 In Progress (backend real pendiente; mock funcional vía EP-SALVAVIDAS) |
-| EP-04 | UI/UX — Widget Embebido | `docs/EP-04/` ← entregables en CLAUDE.md + widget/ | ✅ Completado |
+| EP-01 | Análisis y Definición del Problema | `docs/EP-01/` | ✅ Closed |
+| EP-02 | Base de Conocimiento (RAG) | `docs/EP-02/` · código en `backend/app/rag/` | ✅ Closed |
+| EP-03 | Agente IA — Motor Conversacional | `backend/app/main.py`, `gemini_client.py`, `security/` | 🔄 In Progress (backend funcional, no desplegado; copiloto demo estático) |
+| EP-04 | UI/UX — Widget Embebido | `docs/EP-04/` · código en `widget/` | ✅ Closed |
 | EP-SALVAVIDAS | Copiloto Contextual Mock — Bloque 4 | `docs/EP-SALVAVIDAS/` | 🔄 In Progress (correcciones UI en curso) |
-| EP-05 | Integración con el Portal Web | `docs/EP-05/` ← por crear | 🔒 Bloqueado por EP-03 real |
-| EP-06 | Derivación a Soporte Humano | `docs/EP-06/` ← por crear | 🔄 In Progress (mock hecho en EP-SALVAVIDAS; GLPI real pendiente) |
-| EP-07 | Trazabilidad e Historial | `docs/EP-07/` ← por crear | 🔒 Baja prioridad |
-| EP-08 | Costos de Implementación | `docs/EP-08/` ← por crear | 🔒 Bloqueado |
-| EP-09 | Modelo de Negocio | `docs/EP-09/` ← por crear | 🔄 In Progress |
+| EP-05 | Integración con el Portal Web | reconciliar contrato WS (ver `ARCHITECTURE.md` §5) | 🔒 Bloqueado por EP-03 real |
+| EP-06 | Derivación a Soporte Humano | escalación mock + `MessageList.jsx`; GLPI real pendiente | 🔄 In Progress |
+| EP-07 | Trazabilidad e Historial | `_sessions` en memoria (`main.py`) — falta persistencia | 🔒 Baja prioridad |
+| EP-08 | Costos de Implementación | sección de costos en `docs/EP-09/` | 🔒 Bloqueado por EP-03, EP-05 |
+| EP-09 | Modelo de Negocio | `docs/EP-09/` | 🔄 In Progress |
 
 ---
 
@@ -208,5 +221,5 @@ transcripcion_desafio_hipermaxi.md
 
 ---
 
-*Última actualización: Bloque Final — Innova Hack Santa Cruz 2026 · 31 de mayo*
+*Última actualización: 31 de mayo de 2026 — reorganización de documentación + creación de `ARCHITECTURE.md` (mapa técnico) y `backend/README.md`. EP-09 consolidado.*
 *Mantenido por: Diego (Product Owner)*

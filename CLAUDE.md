@@ -25,22 +25,30 @@ npm run preview    # previsualiza el bundle compilado
 INNOVA-HIPERMAXI/
 ├── CLAUDE.md              ← Este archivo
 ├── docs/
-│   ├── README.md          ← Guía completa de la documentación (leer antes de tocar docs/)
+│   ├── README.md          ← Índice de la documentación (leer antes de tocar docs/)
+│   ├── ARCHITECTURE.md    ← Mapa técnico del código (backend + widget + frontend) y cómo levantarlo
 │   ├── base_problem_files/ ← SOPs reales de Hipermaxi — NO modificar
 │   ├── planning/          ← Backlog Scrum por épica — actualizar al cerrar cada épica
-│   ├── EP-01/             ← Entregables completados de EP-01 (referencia de estructura)
-│   ├── EP-02/             ← Entregables del pipeline RAG
-│   └── EP-SALVAVIDAS/     ← Copiloto contextual mock — Bloque 4 (completado)
+│   ├── EP-01/ … EP-09/    ← Entregables por épica (EP-01 es la referencia de estructura)
+│   └── EP-SALVAVIDAS/     ← Copiloto contextual mock — Bloque 4
+├── backend/               ← FastAPI + RAG (EP-02, EP-03) — ver backend/README.md
+│   ├── app/               ← main.py (WS + endpoints), gemini_client, rag/, security/
+│   ├── scripts/           ← ingest.py (pipeline RAG), test_retrieval.py
+│   └── knowledge/         ← raw/ (.docx SOPs), images/, vector_store/ (ChromaDB, gitignored)
+├── frontend/              ← maqueta HTML de referencia (independiente del widget)
 └── widget/                ← Código fuente del widget (EP-04)
     ├── src/
-    │   ├── components/    ← ChatLauncher, ChatWindow, ConfirmModal, InputBar, MessageList, TypingIndicator
+    │   ├── components/    ← ChatLauncher, ChatWindow, ConfirmModal, CopilotBubble, InputBar, MessageList, TypingIndicator
     │   ├── lib/           ← WebSocketClient.js
     │   ├── styles/        ← widget.css (todo bajo selector #hx-widget)
     │   └── main.jsx       ← punto de entrada, monta el widget en el DOM
     ├── mock/              ← mock_server.js — servidor WebSocket para desarrollo local
-    ├── dist/              ← bundle compilado (generado por `npm run build`)
-    └── index.html         ← página de prueba con Bootstrap 3.3.7 + jQuery (replica el portal)
+    ├── tests/e2e/         ← tests Playwright
+    ├── DESIGN.md          ← handoff de diseño UI/UX
+    └── *.html             ← páginas de prueba (login, productos, factura) que replican el portal
 ```
+
+> El backend tiene comandos propios (venv, `uvicorn`, ingesta). Ver `backend/README.md` y `docs/ARCHITECTURE.md`.
 
 ---
 
@@ -61,10 +69,12 @@ widget-bundle (Preact + Vite)
     └── WebSocketClient    — conexión persistente con el backend (FastAPI)
 ```
 
-**Contrato de mensajes WebSocket** (acordado con EP-03 backend):
+**Contrato de mensajes WebSocket** (usado por el widget ↔ mock server):
 ```json
 { "type": "user_message" | "agent_response" | "copilot_action", "payload": {} }
 ```
+
+> ⚠️ El **backend real** (`backend/app/main.py`) usa otro contrato (`{"message"}` → `{"mensaje","accion_ui"...}`). Reconciliar ambos es el trabajo de EP-05. Detalle en `docs/ARCHITECTURE.md` §5.
 
 ---
 
@@ -84,6 +94,7 @@ widget-bundle (Preact + Vite)
 |---|---|
 | Entender qué pide Hipermaxi | `docs/base_problem_files/transcripcion_desafio_hipermaxi.md` |
 | Lógica de negocio de cualquier proceso | `docs/base_problem_files/<SOP>.md` (fuente de verdad) |
+| Cómo funciona el código y cómo levantarlo | `docs/ARCHITECTURE.md` (+ `backend/README.md`) |
 | Estado global del proyecto y épicas | `docs/planning/propuesta-equipo-almuerzo.md` |
 | Qué hacer en EP-04 (widget) | `docs/planning/EP-04_widget-embebido.md` |
 | Qué hacer en EP-09 (modelo de negocio) | `docs/planning/EP-09_modelo-de-negocio.md` |
