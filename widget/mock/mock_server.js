@@ -375,12 +375,12 @@ async function sendDynamicFlow(ws, messages) {
       ws.send(JSON.stringify(msg))
     }
     
-    // Calculate wait time before sending next message
-    let delay = 1000
+    // Calculate wait time before sending next message (+1s extra de lectura)
+    let delay = 2000
     if (msg.type === 'copilot_action' && msg.payload?.action === 'highlight') {
-      delay = 3000 // Give user 3 seconds to see the highlight
+      delay = 4000 // Give user 4 seconds to see the highlight
     } else if (msg.type === 'agent_response' && msg.payload?.text) {
-      delay = Math.min(3000, Math.max(1200, msg.payload.text.length * 25))
+      delay = Math.min(4000, Math.max(2200, msg.payload.text.length * 25))
     }
     
     if (i < messages.length - 1) {

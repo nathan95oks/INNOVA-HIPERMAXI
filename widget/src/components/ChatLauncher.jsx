@@ -1,4 +1,4 @@
-export function ChatLauncher({ isOpen, onClick, wsStatus, unreadCount, avoidTarget }) {
+export function ChatLauncher({ isOpen, onClick, wsStatus, unreadCount }) {
   const hasUnread = unreadCount > 0 && !isOpen
 
   return (
@@ -7,7 +7,6 @@ export function ChatLauncher({ isOpen, onClick, wsStatus, unreadCount, avoidTarg
         'hx-launcher',
         isOpen ? 'hx-launcher--open' : '',
         hasUnread ? 'hx-launcher--unread' : '',
-        avoidTarget ? 'hx-launcher--avoid-target' : '',
       ].filter(Boolean).join(' ')}
       onClick={onClick}
       aria-label={isOpen ? 'Cerrar asistente' : 'Abrir asistente Hipermaxi'}

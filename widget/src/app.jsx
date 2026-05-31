@@ -209,14 +209,6 @@ function needsPageContext(text) {
   return true
 }
 
-// El elemento resaltado está en la esquina inferior derecha, donde vive el
-// launcher / la burbuja del copiloto. Si es así, hay que desplazarlos a la izquierda.
-function isTargetNearBottomRight(el) {
-  if (!el) return false
-  const rect = el.getBoundingClientRect()
-  return rect.right > window.innerWidth - 400 && rect.bottom > window.innerHeight - 600
-}
-
 export function App({ level, wsUrl, context = 'portal' }) {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([makeWelcome(context)])
@@ -227,8 +219,6 @@ export function App({ level, wsUrl, context = 'portal' }) {
   // Copiloto activo = hay un elemento resaltado en el portal. Mientras dure,
   // la ventana del chat se encoge a una burbuja para no tapar lo señalado.
   const [copilotActive, setCopilotActive] = useState(false)
-  // Desplazar launcher/burbuja a la izquierda cuando el target está bottom-right.
-  const [avoidTarget, setAvoidTarget] = useState(false)
   const isOpenRef = useRef(false)
   const wsRef = useRef(null)
   const clickOutsideRef = useRef(null)
@@ -447,7 +437,6 @@ export function App({ level, wsUrl, context = 'portal' }) {
     el.classList.add('hx-highlight', 'hx-highlight--error')
     // Encoger el chat a una burbuja para liberar la vista del elemento resaltado.
     setCopilotActive(true)
-    setAvoidTarget(isTargetNearBottomRight(el))
 
     // Tooltip — always a box
     const tooltip = document.createElement('div')
@@ -490,7 +479,6 @@ export function App({ level, wsUrl, context = 'portal' }) {
     })
     // El resaltado terminó: la burbuja vuelve a su estado original de chat.
     setCopilotActive(false)
-    setAvoidTarget(false)
 
     if (clickOutsideRef.current) {
       document.removeEventListener('click', clickOutsideRef.current)
@@ -557,7 +545,6 @@ export function App({ level, wsUrl, context = 'portal' }) {
         onClick={handleOpen}
         wsStatus={wsStatus}
         unreadCount={unreadCount}
-        avoidTarget={avoidTarget}
       />
 
       {isOpen && !copilotActive && (
@@ -571,7 +558,7 @@ export function App({ level, wsUrl, context = 'portal' }) {
       )}
 
       {isOpen && copilotActive && (
-        <CopilotBubble onExpand={clearHighlights} avoidTarget={avoidTarget} />
+        <CopilotBubble onExpand={clearHighlights} />
       )}
 
       {confirmModal && (
